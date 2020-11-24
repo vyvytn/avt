@@ -25,13 +25,80 @@
             filter=".action-button"
             class="w-full max-w-md"
             tag="ol"
+            :scroll-sensitivity="200"
+            :force-fallback="true"
           >
-            <user-card
+            <song-card
               v-for="s in songlist"
               :key="s.id"
               :s="s"
-            ></user-card>
+            ></song-card>
           </draggable>
+
+          <b-button block variant="primary" id="modalBtn" @click="togglePlaylistModal">Bibliothek
+            <b-icon icon="Box-arrow-up-right"></b-icon>
+          </b-button>
+
+          <!--MENU FOR PLAYLIST EDITING BEGIN-->
+          <b-modal ref="playlistModal"  title="Playlist bearbeiten" visible="modalOpen">
+            <b-tabs pills card>
+              <b-tab title="Bibliothek" active>
+                <b-card-text>
+                  <b-container>
+                    <b-row>
+                      <h3>Draggable 1</h3>
+                      <draggable class="list-group" :list="list1" group="people" @change="log">
+                        <div
+                          class="list-group-item"
+                          v-for="(element, index) in list1"
+                          :key="element.name"
+                        >
+                          {{ element.name }} {{ index }}
+                        </div>
+                      </draggable>
+                    </b-row>
+                    <b-row>
+                      <b-col>
+                        <h3>Draggable 2</h3>
+                        <draggable class="list-group" :list="list2" group="people" @change="log">
+                          <div
+                            class="list-group-item"
+                            v-for="(element, index) in list2"
+                            :key="element.name"
+                          >
+                            {{ element.name }} {{ index }}
+                          </div>
+                        </draggable>
+                      </b-col>
+                      <b-col>
+                        <h3>Draggable 2</h3>
+                        <draggable class="list-group" :list="list2" group="people" @change="log">
+                          <div
+                            class="list-group-item"
+                            v-for="(element, index) in list2"
+                            :key="element.name"
+                          >
+                            {{ element.name }} {{ index }}
+                          </div>
+                        </draggable>
+                      </b-col>
+
+                    </b-row>
+                  </b-container>
+
+                </b-card-text>
+              </b-tab>
+              <b-tab title="Musik importieren">
+                <b-card-text>Tab contents 2</b-card-text>
+              </b-tab>
+              <b-tab title="Freesound">
+                <b-card-text>
+                </b-card-text>
+              </b-tab>
+            </b-tabs>
+          </b-modal>
+          <!--MENU FOR PLAYLIST EDITING END-->
+
         </b-card-text>
       </b-tab>
       <b-tab title="EQ">
@@ -54,17 +121,25 @@
         <b-card-text>Tab contents 2</b-card-text>
       </b-tab>
     </b-tabs>
+    <drop-zone></drop-zone>
+
   </div>
 </template>
 
 <script>
 import draggable from 'vuedraggable';
-import UserCard from './UserCard';
-
+import SongCard from './SongCard';
+import DropZone from './DropZone';
 export default {
   name: 'deck',
+  components: {
+    draggable,
+    SongCard,
+    DropZone
+  },
   data() {
     return {
+      modalOpen: Boolean,
       effect1On: false,
       effect2On: false,
       effect3On: false,
@@ -99,15 +174,43 @@ export default {
           img: ''
 
         }
+      ],
+      list1: [
+        { name: 'John', id: 1 },
+        { name: 'Joao', id: 2 },
+        { name: 'Jean', id: 3 },
+        { name: 'Gerard', id: 4 }
+      ],
+      list2: [
+        { name: 'Juan', id: 5 },
+        { name: 'Edgard', id: 6 },
+        { name: 'Johnson', id: 7 }
       ]
     };
   },
   methods: {
-    onEdit(user) {
-      alert(`Editing ${user.name}`);
+    onEdit(song) {
+      alert(`Editing ${song.name}`);
     },
-    onDelete(user) {
-      alert(`Deleting ${user.name}`);
+    onDelete(song) {
+      alert(`Deleting ${song.name}`);
+    },
+    add: function () {
+      this.list.push({ name: 'Juan' });
+    },
+    replace: function () {
+      this.list = [{ name: 'Edgard' }];
+    },
+    clone: function (el) {
+      return {
+        name: el.name + ' cloned'
+      };
+    },
+    log: function (evt) {
+      window.console.log(evt);
+    },
+    togglePlaylistModal() {
+      this.$refs['playlistModal'].show();
     }
   },
   mounted() {
@@ -115,10 +218,7 @@ export default {
   /*methods: {
   },
    */
-  components: {
-    draggable,
-    UserCard,
-  },
+
 };
 
 </script>
