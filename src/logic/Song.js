@@ -1,5 +1,5 @@
 export default class Song {
-  // meta-data: { title, artist, album }
+  // metaData: MetaData
   // song buffer: arraybuffer
   // ? audio encoding props: { bitrate, encoding, etc. }
 }
