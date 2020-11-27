@@ -3,7 +3,7 @@ export default class Playlist {
 
   // list: libraryListIndices[] - index of Song in Library.list
   // move( fromIndex, toIndex )
-  // insert( atIndex )
+  // insert( atIndex ) - check for duplicates
   // delete( index )
 
   // active: index
