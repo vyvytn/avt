@@ -11,8 +11,14 @@
     "start": "npm run dev",
     "test": "npm run unit",
     "unit": "jest --config test/unit/jest.conf.js --coverage"
+    "lint": "eslint --ext .js,.vue src test/unit --fix",
+    "server": "node server",
+    "prod": "node build/build.js"
   },
   "dependencies": {
+    "axios": "^0.21.0",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
     "@mdi/font": "^5.8.55",
     "@vue/cli": "^4.5.9",
     "bootstrap": "^4.5.3",
