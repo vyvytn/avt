@@ -23,11 +23,10 @@ import Router from 'vue-router';
 
 // eslint-disable-next-line import/first,import/no-duplicates
 import BootstrapVueIcons from 'bootstrap-vue';
+import './../node_modules/dropzone/dist/dropzone.css';
+import AudioVisual from 'vue-audio-visual';
 
-import './../node_modules/dropzone/dist/dropzone.css'
-import vueDropzone from 'vue2-dropzone'
-
-Vue.use(vueDropzone);
+Vue.use(AudioVisual);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 Vue.use(BootstrapVue);

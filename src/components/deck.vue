@@ -1,6 +1,11 @@
 <template>
   <div id="deckRoot">
     <div>
+      <av-waveform
+        audio-src="example.mp3"
+      ></av-waveform>
+    </div>
+    <div>
       <b-button variant="success">
         <b-icon icon="play-fill"></b-icon>
       </b-button>
@@ -17,24 +22,7 @@
     <b-tabs pills card>
       <b-tab title="Playlist" active>
         <b-card-text>
-          <draggable
-            :list="songlist"
-            :animation="100"
-            ghost-class="moving-card"
-            group="songs"
-            filter=".action-button"
-            class="w-full max-w-md"
-            tag="ol"
-            :scroll-sensitivity="200"
-            :force-fallback="true"
-          >
-            <song-card
-              v-for="s in songlist"
-              :key="s.id"
-              :s="s"
-            ></song-card>
-          </draggable>
-
+          <Playlist></Playlist>
           <b-button block variant="primary" id="modalBtn" @click="togglePlaylistModal">Bibliothek
             <b-icon icon="Box-arrow-up-right"></b-icon>
           </b-button>
@@ -44,48 +32,7 @@
             <b-tabs pills card>
               <b-tab title="Bibliothek" active>
                 <b-card-text>
-                  <b-container>
-                    <b-row>
-                      <h3>Draggable 1</h3>
-                      <draggable class="list-group" :list="list1" group="people" @change="log">
-                        <div
-                          class="list-group-item"
-                          v-for="(element, index) in list1"
-                          :key="element.name"
-                        >
-                          {{ element.name }} {{ index }}
-                        </div>
-                      </draggable>
-                    </b-row>
-                    <b-row>
-                      <b-col>
-                        <h3>Draggable 2</h3>
-                        <draggable class="list-group" :list="list2" group="people" @change="log">
-                          <div
-                            class="list-group-item"
-                            v-for="(element, index) in list2"
-                            :key="element.name"
-                          >
-                            {{ element.name }} {{ index }}
-                          </div>
-                        </draggable>
-                      </b-col>
-                      <b-col>
-                        <h3>Draggable 2</h3>
-                        <draggable class="list-group" :list="list2" group="people" @change="log">
-                          <div
-                            class="list-group-item"
-                            v-for="(element, index) in list2"
-                            :key="element.name"
-                          >
-                            {{ element.name }} {{ index }}
-                          </div>
-                        </draggable>
-                      </b-col>
-
-                    </b-row>
-                  </b-container>
-
+                  <edit-play-list></edit-play-list>
                 </b-card-text>
               </b-tab>
               <b-tab title="Musik importieren">
@@ -127,14 +74,18 @@
 
 <script>
 import draggable from 'vuedraggable';
+import EditPlayList from './EditPlayList';
+/*
 import SongCard from './SongCard';
-import DropZone from './DropZone';
+*/
+import Playlist from './PlayList';
 export default {
   name: 'deck',
   components: {
+    EditPlayList,
+    Playlist,
     draggable,
-    SongCard,
-    DropZone
+    /*SongCard,*/
   },
   data() {
     return {
@@ -143,7 +94,7 @@ export default {
       effect2On: false,
       effect3On: false,
       effect4On: false,
-      songlist: [
+      /*songlist: [
         {
           id: 1,
           name: 'Song 1',
@@ -173,8 +124,8 @@ export default {
           img: ''
 
         }
-      ],
-      list1: [
+      ],*/
+      /*list1: [
         { name: 'John', id: 1 },
         { name: 'Joao', id: 2 },
         { name: 'Jean', id: 3 },
@@ -184,7 +135,7 @@ export default {
         { name: 'Juan', id: 5 },
         { name: 'Edgard', id: 6 },
         { name: 'Johnson', id: 7 }
-      ]
+      ]*/
     };
   },
   methods: {

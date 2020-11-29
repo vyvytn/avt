@@ -5,21 +5,18 @@
         <deck id="deckA"></deck>
       </b-col>
       <b-col>
-        <vue-slider
-          v-model="value"
-          direction="ttb"
-          style="display: inline-block; margin: 30px 0; height: 300px;"
-        ></vue-slider>
-        <vue-slider
-          v-model="value"
-          direction="ttb"
-          style="display: inline-block; margin: 30px 0; height: 300px;"
-        ></vue-slider>
-        <vue-slider
-          v-model="value"
-          direction="ttb"
-          style="display: inline-block; margin: 30px 0; height: 300px;"
-        ></vue-slider>
+        <b-row>
+          <VolumeSlider :horizontal="false"></VolumeSlider>
+          <VolumeSlider :horizontal="false"></VolumeSlider>
+          <VolumeSlider :horizontal="false"></VolumeSlider>
+        </b-row>
+        <b-row>
+          <VolumeSlider :horizontal="false"></VolumeSlider>
+          <VolumeSlider :horizontal="false"></VolumeSlider>
+        </b-row>
+        <b-row>
+          <VolumeSlider :horizontal="true"></VolumeSlider>
+        </b-row>
       </b-col>
       <b-col>
         <deck id="deckB"></deck>
@@ -32,15 +29,14 @@
 <script>
 
 import deck from './deck';
-import VueSlider from 'vue-slider-component';
-import 'vue-slider-component/theme/default.css';
-
+//import VueSlider from 'vue-slider-component';
+//import 'vue-slider-component/theme/default.css';
+import VolumeSlider from './VolumeSlider';
 export default {
   name: 'djtool',
   components: {
-    deck,
-    VueSlider,
-
+    VolumeSlider,
+    deck
   },
   data() {
     return {
