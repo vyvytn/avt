@@ -5,16 +5,16 @@
         <deck id="deckA"></deck>
       </b-col>
       <b-col>
-        <b-row>
+        <b-row class="row justify-content-center">
           <VolumeSlider :horizontal="false"></VolumeSlider>
           <VolumeSlider :horizontal="false"></VolumeSlider>
           <VolumeSlider :horizontal="false"></VolumeSlider>
         </b-row>
-        <b-row>
+        <b-row class="row justify-content-center">
           <VolumeSlider :horizontal="false"></VolumeSlider>
           <VolumeSlider :horizontal="false"></VolumeSlider>
         </b-row>
-        <b-row>
+        <b-row class="row justify-content-center">
           <VolumeSlider :horizontal="true"></VolumeSlider>
         </b-row>
       </b-col>

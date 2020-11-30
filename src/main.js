@@ -25,7 +25,9 @@ import Router from 'vue-router';
 import BootstrapVueIcons from 'bootstrap-vue';
 import './../node_modules/dropzone/dist/dropzone.css';
 import AudioVisual from 'vue-audio-visual';
+import FileUpload from 'v-file-upload'
 
+Vue.use(FileUpload);
 Vue.use(AudioVisual);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
