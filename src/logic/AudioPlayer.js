@@ -1,17 +1,51 @@
 export default class AudioPlayer {
-  // constructor( AudioContext, output ) - ctx shared among players
-  //   output isn't ctx.destination itself, but the master gainNode
+  constructor( audioCtx, outputNode, playlist ) {
+    this.ctx = audioCtx;
+    this.playlist = playlist;
 
-  // current: Song
-  // play()
-  // pause()
-  // stop()
-  // seek( secToSeekTo )
+    this.gain = ctx.createGain();
+    this.gain.connect( outputNode );
+    this.gain.value = 1.0;
+    this.outputNode = this.gain;
+  }
 
-  // playlist: Playlist
-  // skip() - delegate to playlist
-  // prev() - delegate to playlist
+  get current() {
+    return this.playlist.activeSong;
+  }
 
-  // setVolume( val ) - resets at song change
-  // setTempo( val )  - resets at song change
+  pausedOffset = 0; // in sec
+  play() {
+    const bufferSrc = this.ctx.createBufferSource();
+    bufferSrc.buffer = this.current.buffer;
+    bufferSrc.connect( this.outputNode );
+    const TIME_DELAY = 0;
+    bufferSrc.start( TIME_DELAY, this.pausedOffset );
+    this.pausedOffset = 0;
+    this.bufferSrc = bufferSrc;
+
+    // set timer for pause
+  }
+  pause() {
+    // this.pausedOffset = xy;
+  }
+  stop() {
+    this.bufferSrc.stop();
+    this.pausedOffset = 0;
+  }
+  seek( offset ) {
+    this.bufferSrc.stop();
+    this.pausedOffset = offset;
+    this.play(); // continue from pausedOffset
+  }
+
+  next() { this.playlist.next() }
+  prev() { this.playlist.prev() }
+
+  setVolume( value ) { // resets at song change
+    if ( value <= 1 && value >= 0 )
+      this.gain.value = value;
+  }
+  setTempo( value ) { // resets at song change
+
+  }
 }

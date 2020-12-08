@@ -1,9 +1,17 @@
-export default class MusicLibrary {
-  // list: Song[]
-  // insert( Song )
+import Song from "./Song";
 
-  // playlists: Playlist[] - to maintain colors - 0=red, 1=green
-  // registerAsPlaylist( Playlist ): playlistId
-  // updatePlaylist( playlistId ) - tell the library that own playlist got updated (insert, delete)
-  //  so the library can update colors
+export default class MusicLibrary {
+  list = []; // Song[]
+  insert( song ) {
+    this.list.push( song );
+  }
+
+  playlists = [];
+  registerAsPlaylist( playlist ) {
+    if ( this.playlists.length === 2 )
+      throw new Error( "MusicLibrary takes only two Playlists" );
+
+    this.playlists.push( playlist );
+    return this.playlists.length - 1;
+  }
 }
