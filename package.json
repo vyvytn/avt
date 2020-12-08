@@ -75,6 +75,12 @@
     "node": ">= 6.0.0",
     "npm": ">= 3.0.0"
   },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/**/__tests__/*.test.js"
+    ]
+  },
   "browserslist": [
     "> 1%",
     "last 2 versions",
