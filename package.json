@@ -76,10 +76,12 @@
     "npm": ">= 3.0.0"
   },
   "jest": {
-    "testEnvironment": "node",
+    "testEnvironment": "jsdom",
     "testMatch": [
       "**/**/__tests__/*.test.js"
-    ]
+    ],
+    "verbose": true,
+    "testURL": "http://localhost/"
   },
   "browserslist": [
     "> 1%",
