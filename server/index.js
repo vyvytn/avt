@@ -11,6 +11,8 @@ const server = express();
 server.use( bodyParser.json() );
 server.use( bodyParser.urlencoded( { extended: true } ) );
 
+server.use( express.static( `${__dirname}/../static` ) );
+
 /* Todo:
  * - cleanup refresh routes
  * - refactor routes into own file
