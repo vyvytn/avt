@@ -14,16 +14,27 @@ export default class AudioPlayer {
   }
 
   pausedOffset = 0; // in sec
+  playingSpeed = 1;
   play() {
+    if ( this.bufferSrc )
+      this.bufferSrc.stop();
+
     const bufferSrc = this.ctx.createBufferSource();
     bufferSrc.buffer = this.current.buffer;
+    bufferSrc.onend = this.handleSongEnd;
     bufferSrc.connect( this.outputNode );
+
     const TIME_DELAY = 0;
+    bufferSrc.playbackRate = this.playingSpeed;
     bufferSrc.start( TIME_DELAY, this.pausedOffset );
     this.pausedOffset = 0;
     this.bufferSrc = bufferSrc;
 
     // set timer for pause
+  }
+  handleSongEnd( event ) {
+    this.next();
+    this.play();
   }
   pause() {
     // this.pausedOffset = xy;
@@ -31,6 +42,7 @@ export default class AudioPlayer {
   stop() {
     this.bufferSrc.stop();
     this.pausedOffset = 0;
+    this.playingSpeed = 1;
   }
   seek( offset ) {
     this.bufferSrc.stop();
@@ -46,6 +58,8 @@ export default class AudioPlayer {
       this.gain.value = value;
   }
   setTempo( value ) { // resets at song change
-
+    this.playingSpeed = value;
+    this.pause();
+    this.play();
   }
 }
