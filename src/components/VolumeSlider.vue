@@ -3,12 +3,23 @@
     <div v-if="!horizontal">
       <vue-slider
         v-model="value"
-        direction="ttb"
-        style="display: inline-block; margin: 30px 0; height: 300px;"
+        :interval="25"
+        :marks="true"
+        :hide-label="true"
+        direction="btt"
+        style="display: inline-block; margin: 5em 1.5em; height: 15em;"
       ></vue-slider>
     </div>
     <div v-if="horizontal">
-      <vue-slider v-model="value"></vue-slider>
+      <vue-slider
+        v-model="value2"
+        :interval="10"
+        :marks="true"
+        :hide-label="true"
+        :tooltip=" 'none' "
+        direction="ltr"
+        style="display: block; margin: 2em 1em; width: 15em;"
+      ></vue-slider>
     </div>
   </div>
 </template>
@@ -23,6 +34,7 @@ export default {
   data() {
     return {
       value: 100,
+      value2: 50,
     };
   },
   props: {

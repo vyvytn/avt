@@ -5,14 +5,14 @@
 <script>
 export default {
   name: 'FXButton',
-  data: function (){
-    return{
+  data() {
+    return {
       effectOn: false,
-      buttonLabel: this.label
-    }
+      buttonLabel: this.label,
+    };
   },
-  props:{
-    label:''
+  props: {
+    label: '',
   }
 };
 </script>

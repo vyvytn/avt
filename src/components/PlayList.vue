@@ -5,10 +5,11 @@
     ghost-class="moving-card"
     group="songs"
     filter=".action-button"
-    class="w-full max-w-md"
+    class="w-full max-w-md list-group"
     tag="ol"
     :scroll-sensitivity="200"
-    :force-fallback="true"
+    forceFallback="true"
+    style="list-style-type: none"
   >
     <song-card
       v-for="s in songlist"
@@ -35,30 +36,30 @@ export default {
         {
           id: 1,
           name: 'Song 1',
-          img: ''
+          img: '',
         },
         {
           id: 2,
           name: 'Song 2',
-          img: ''
+          img: '',
 
         },
         {
           id: 3,
           name: 'Song 3',
-          img: ''
+          img: '',
 
         },
         {
           id: 4,
           name: 'Song 4',
-          img: ''
+          img: '',
 
         },
         {
           id: 5,
           name: 'Song 5',
-          img: ''
+          img: '',
 
         }
       ],
@@ -66,7 +67,7 @@ export default {
         { name: 'John', id: 1 },
         { name: 'Joao', id: 2 },
         { name: 'Jean', id: 3 },
-        { name: 'Gerard', id: 4 }
+        { name: 'Gerard', id: 4 },
       ],
     }
   }
@@ -74,5 +75,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
