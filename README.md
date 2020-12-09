@@ -1,27 +1,41 @@
-# avt
+# avt-dj
 
-> A Vue.js project
+> DJ Tool, Gruppenarbeit im Rahmen von Audio- und Videotechnik an der HTW Berlin
 
-## Build Setup
+## Install
 
-``` bash
-# install dependencies
+```sh
 npm install
 
-# serve with hot reload at localhost:8080
 npm run dev
+```
+<!--
+# concurrently run vue server and server
+-->
 
-# build for production with minification
-npm run build
+## Test
 
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run all tests
+```sh
 npm test
+
+# only unit tests
+npm run unit
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## Deployment
+
+```sh
+npm run prod
+```
+<!--
+# fill in these freesound config files (server)
+# start server - server static files via server?
+-->
+
+## Dependencies
+
+- `axios` - ajax/fetch library
+- `body-parser` - express middleware
+- `express` - http server
+- `vue` - spa framework
+
