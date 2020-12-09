@@ -7,7 +7,9 @@
         :marks="true"
         :hide-label="true"
         direction="btt"
-        style="display: inline-block; margin: 5em 1.5em; height: 15em;"
+        contained="true"
+        drag-on-click="true"
+        style="display: inline-block; height: 12em"
       ></vue-slider>
     </div>
     <div v-if="horizontal">
@@ -18,7 +20,9 @@
         :hide-label="true"
         :tooltip=" 'none' "
         direction="ltr"
-        style="display: block; margin: 2em 1em; width: 15em;"
+        contained="true"
+        drag-on-click="true"
+        style="display: block; width: 18em;"
       ></vue-slider>
     </div>
   </div>
@@ -26,13 +30,15 @@
 
 <script>
 import VueSlider from 'vue-slider-component';
-import 'vue-slider-component/theme/default.css';
+import 'vue-slider-component/theme/material.css';
 
 export default {
   name: 'VolumeSlider',
   components: { VueSlider },
   data() {
     return {
+      marks: {
+      },
       value: 100,
       value2: 50,
     };
@@ -46,5 +52,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

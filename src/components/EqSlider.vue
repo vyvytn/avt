@@ -1,13 +1,35 @@
 <template>
-  <vue-slider
-    v-model="value2"
-    :interval="10"
-    :marks="true"
-    :hide-label="true"
-    :tooltip=" 'none' "
-    direction="btt"
-    style="display: inline-block; margin: 5em 1em; height: 15em;"
-  ></vue-slider>
+  <div>
+    <div v-if="on">
+      <label v-model="this.value"></label>
+      <vue-slider
+        v-model="value2"
+        :interval="10"
+        :marks="true"
+        :hide-label="true"
+        :tooltip=" 'none' "
+        direction="btt"
+        contained="true"
+        drag-on-click="true"
+        style="display: inline-block; margin: 5em 1em; height: 15em;"
+      ></vue-slider>
+    </div>
+    <div v-if="!on">
+      <label v-model="this.value"></label>
+      <vue-slider
+        v-model="value2"
+        :interval="10"
+        :marks="true"
+        :hide-label="true"
+        :tooltip=" 'none' "
+        direction="btt"
+        contained="true"
+        disabled="true"
+        drag-on-click="true"
+        style="display: inline-block; margin: 5em 1em; height: 15em;"
+      ></vue-slider>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -20,26 +42,12 @@ export default {
   },
   props: {
     value: 0,
+    on: Boolean,
   },
   name: 'EqSlider',
   data() {
     return {
       value2: 50,
-      /*marks2: {
-        0: {
-          label: this.value,
-          style: {
-            width: '8px',
-            height: '8px',
-            display: 'block',
-            backgroundColor: 'red',
-            transform: 'translate(-2px, -2px)',
-          },
-          labelStyle: {
-            color: 'red',
-          },
-        },
-      },*/
     };
   },
 };

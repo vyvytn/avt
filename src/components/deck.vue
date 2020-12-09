@@ -10,7 +10,6 @@
       img-src=""
       img-alt=""
       img-left
-      tag="sound-info"
       style="padding: 1em; background-color: #c49aef"
     ></b-card>
     <div style="padding: 1em" align="center">
@@ -31,7 +30,9 @@
     <b-tabs pills fill card>
       <b-tab title="Playlist" active>
         <b-card-text>
-          <Playlist></Playlist>
+          <div style="overflow-y: auto ; max-height: 60vh">
+            <Playlist></Playlist>
+          </div>
           <div align="center">
             <b-button variant="secondary" id="modalBtn" @click="togglePlaylistModal">Bibliothek
               <b-icon icon="Box-arrow-up-right"></b-icon>
@@ -66,13 +67,12 @@
             <b-row>
               <b-checkbox
                 v-model="eqStatus"
-                value="on"
-                unchecked-value="off"
               >Ein</b-checkbox>
               <eq-slider
                 v-for="el in equalizerList"
                 :key="el.name"
                 :value="el.label"
+                :on=eqStatus
               ></eq-slider>
             </b-row>
           </b-col>
@@ -117,7 +117,7 @@ export default {
   },
   data() {
     return {
-      eqStatus: 'off',
+      eqStatus: false,
       audioExample: Audio,
       equalizerList: [
         { name: '32', label: '32' },
@@ -146,6 +146,7 @@ export default {
     };
   },
   methods: {
+
     onEdit(song) {
       alert(`Editing ${song.name}`);
     },

@@ -9,7 +9,7 @@
     tag="ol"
     :scroll-sensitivity="200"
     forceFallback="true"
-    style="list-style-type: none"
+    style="list-style: none"
   >
     <song-card
       v-for="s in songlist"

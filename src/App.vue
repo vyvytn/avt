@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <djtool></djtool>
-  </div>
+  <djtool></djtool>
 </template>
 
 <script>
