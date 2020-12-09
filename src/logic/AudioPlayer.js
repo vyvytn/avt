@@ -13,8 +13,14 @@ export default class AudioPlayer {
     return this.playlist.activeSong;
   }
 
-  pausedOffset = 0; // in sec
+  pausedOffset = 0; // in sec, applied on play()
+
+  // for using pause
+  pausedTimer = null;
+  pausedTimerOffset = 0;
+
   playingSpeed = 1;
+
   play() {
     if ( this.bufferSrc )
       this.bufferSrc.stop();
@@ -30,14 +36,20 @@ export default class AudioPlayer {
     this.pausedOffset = 0;
     this.bufferSrc = bufferSrc;
 
-    // set timer for pause
+    this.pausedTimer = Date.now();
   }
   handleSongEnd( event ) {
     this.next();
     this.play();
   }
   pause() {
-    // this.pausedOffset = xy;
+    let secsElapsed = Math.round( (Date.now()-this.pausedTimer)/1000, 0 ); // read timer
+    secsElapsed = secsElapsed * this.playingSpeed; // apply playing speed
+    secsElapsed = secsElapsed + this.pausedTimerOffset; // apply timer offset from pause/playing more than once on song
+
+    // offset to be applied
+    this.pausedOffset = secsElapsed;
+    this.pausedTimerOffset = secsElapsed;
   }
   stop() {
     this.bufferSrc.stop();
@@ -50,8 +62,14 @@ export default class AudioPlayer {
     this.play(); // continue from pausedOffset
   }
 
-  next() { this.playlist.next() }
-  prev() { this.playlist.prev() }
+  next() {
+    this.pausedTimerOffset = 0;
+    this.playlist.next()
+  }
+  prev() {
+    this.pausedTimerOffset = 0;
+    this.playlist.prev()
+  }
 
   setVolume( value ) { // resets at song change
     if ( value <= 1 && value >= 0 )
