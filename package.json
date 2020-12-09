@@ -11,7 +11,7 @@
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit --fix",
     "server": "node server",
-    "prod": "node build/build.js"
+    "build": "node build/build.js"
   },
   "dependencies": {
     "axios": "^0.21.0",
