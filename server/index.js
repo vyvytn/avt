@@ -17,12 +17,19 @@ server.use( "/static", express.static( `${__dirname}/../static` ) );
  * - cleanup refresh routes
  * - convert expires_in into comparable date object
  * - automatic refresh if expired
- * - error handling middleware
  *
  * - heroku deployment with data.json possible?
  */
 
 server.use( "/", require( "./routes" ) );
+
+// error handler (fallback)
+server.use( "/", ( err, req, res ) => {
+  res.status( 500 ).json( {
+    error: true,
+    errorMsg: err.message || "generic server error",
+  } );
+} );
 
 const port = 8090;
 server.listen( port, () => console.log( `Listening on port: ${port}` ) );
