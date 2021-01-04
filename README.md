@@ -32,6 +32,30 @@ npm run prod
 # start server - server static files via server?
 -->
 
+## API
+
+Response format:
+```json
+{
+  "error": false,
+  "errorMsg": "",
+  ...
+}
+```
+
+### GET `/sounds/:id`
+
+Get sound meta data.
+
+<!-- Todo: insert docu url -->
+Res: [see freesound docs]()
+
+### GET `/download/:id`
+
+Download sound data.
+
+Res: Stream of audio data. Encoding specified in the meta data.
+
 ## Dependencies
 
 - `axios` - ajax/fetch library
