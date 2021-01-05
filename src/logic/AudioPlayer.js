@@ -21,14 +21,13 @@ export default class AudioPlayer {
 
   playingSpeed = 1;
 
-  async play() {
+  play() {
     if ( this.bufferSrc )
       this.bufferSrc.stop();
 
     const bufferSrc = this.ctx.createBufferSource();
-    bufferSrc.buffer = this.current.audioBuffer ?
-      this.current.audioBuffer :
-      await this.current.decodeAudioData( this.ctx ); // buffer needs to be decoded once prior to playing
+    bufferSrc.buffer = this.current.audioBuffer;
+
     bufferSrc.onend = this.handleSongEnd;
     bufferSrc.connect( this.outputNode );
 

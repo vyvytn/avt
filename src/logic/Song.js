@@ -10,14 +10,23 @@ export default class Song {
       throw new Error( "passed invalid class instance to constructor. needs one of: " + acceptedTypes );
   }
 
-  get buffer() {
+  get rawBuffer() {
     return this.obj.buffer;
   }
+  audioBuffer = null;
+  metaData = null;
 
-  async getMetaData() {
-    if ( this.metaData )
-      return this.metaData;
+  async prepareForPlayback( ctx ) { // needs to be run together w/ counstructor, otherwise obj not usable
+    const [ tags, audioBuffer ] = await Promise.all( [
+      this.getRawTags(),
+      this.decodeAudioData( ctx ),
+    ] );
 
+    tags.duration = audioBuffer.duration;
+    this.metaData = new MetaData( tags );
+}
+
+  async getRawTags() {
     let tags;
     switch( this.type ) {
       case "MP3":
@@ -28,13 +37,11 @@ export default class Song {
         break;
     }
 
-    const metaData = new MetaData( tags );
-    this.metaData = metaData;
-    return metaData;
+    return tags;
   }
 
   async decodeAudioData( ctx ) {
-    this.audioBuffer = await ctx.decodeAudioData( this.buffer );
+    this.audioBuffer = await ctx.decodeAudioData( this.rawBuffer );
     return this.audioBuffer;
   }
 
