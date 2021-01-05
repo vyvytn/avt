@@ -1,5 +1,6 @@
 const express = require( "express" );
 const bodyParser = require( "body-parser" );
+const cors = require( "cors" );
 const fs = require( "./fs" );
 const freesound = require( "./freesound" );
 
@@ -11,7 +12,8 @@ const server = express();
 server.use( bodyParser.json() );
 server.use( bodyParser.urlencoded( { extended: true } ) );
 
-server.use( express.static( `${__dirname}/../static` ) );
+server.use( cors() ); // allow for access from vue router
+server.use( "/static", express.static( `${__dirname}/../static` ) );
 
 /* Todo:
  * - cleanup refresh routes
