@@ -54,8 +54,6 @@ export default class AudioPlayer {
   }
   stop() {
     this.bufferSrc.stop();
-    this.pausedOffset = 0;
-    this.playingSpeed = 1;
   }
   seek( offset ) {
     this.bufferSrc.stop();
@@ -63,16 +61,23 @@ export default class AudioPlayer {
     this.play(); // continue from pausedOffset
   }
 
+  resetPlayer() {
+    this.bufferSrc.stop();
+    this.setVolume();
+    this.playingSpeed = 1;
+    this.isPaused = false;
+  }
+  stop() {
+    this.resetPlayer();
+  }
   next() {
-    this.pausedTimerOffset = 0;
+    this.resetPlayer();
     this.playlist.next();
-    this.stop();
     this.play();
   }
   prev() {
-    this.pausedTimerOffset = 0;
+    this.resetPlayer();
     this.playlist.prev();
-    this.stop();
     this.play();
   }
 
