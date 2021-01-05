@@ -3,7 +3,7 @@ export default class AudioPlayer {
     this.ctx = audioCtx;
     this.playlist = playlist;
 
-    this.gain = ctx.createGain();
+    this.gain = audioCtx.createGain();
     this.gain.connect( outputNode );
     this.gain.value = 1.0;
     this.outputNode = this.gain;
@@ -21,17 +21,19 @@ export default class AudioPlayer {
 
   playingSpeed = 1;
 
-  play() {
+  async play() {
     if ( this.bufferSrc )
       this.bufferSrc.stop();
 
     const bufferSrc = this.ctx.createBufferSource();
-    bufferSrc.buffer = this.current.buffer;
+    bufferSrc.buffer = this.current.audioBuffer ?
+      this.current.audioBuffer :
+      await this.current.decodeAudioData( this.ctx ); // buffer needs to be decoded once prior to playing
     bufferSrc.onend = this.handleSongEnd;
     bufferSrc.connect( this.outputNode );
 
     const TIME_DELAY = 0;
-    bufferSrc.playbackRate = this.playingSpeed;
+    // bufferSrc.playbackRate = this.playingSpeed;
     bufferSrc.start( TIME_DELAY, this.pausedOffset );
     this.pausedOffset = 0;
     this.bufferSrc = bufferSrc;
@@ -64,11 +66,15 @@ export default class AudioPlayer {
 
   next() {
     this.pausedTimerOffset = 0;
-    this.playlist.next()
+    this.playlist.next();
+    this.stop();
+    this.play();
   }
   prev() {
     this.pausedTimerOffset = 0;
-    this.playlist.prev()
+    this.playlist.prev();
+    this.stop();
+    this.play();
   }
 
   setVolume( value ) { // resets at song change

@@ -1,15 +1,17 @@
 import MetaData from "./MetaData";
 
 export default class Song {
-  acceptedTypes = [ "MP3", "Freesound" ];
   constructor( obj ) {
     this.obj = obj;
+    this.type = obj.constructor.name;
 
-    const type = obj.constructor.name;
-    if ( !~this.acceptedTypes.indexOf( type ) )
-      throw new Error( "passed invalid class instance to constructor. needs one of: " + this.acceptedTypes );
+    const acceptedTypes = [ "MP3", "Freesound" ];
+    if ( !~acceptedTypes.indexOf( this.type ) )
+      throw new Error( "passed invalid class instance to constructor. needs one of: " + acceptedTypes );
+  }
 
-    this.type = type;
+  get buffer() {
+    return this.obj.buffer;
   }
 
   async getMetaData() {
@@ -30,5 +32,11 @@ export default class Song {
     this.metaData = metaData;
     return metaData;
   }
+
+  async decodeAudioData( ctx ) {
+    this.audioBuffer = await ctx.decodeAudioData( this.buffer );
+    return this.audioBuffer;
+  }
+
   // ? audio encoding props: { bitrate, encoding, etc. }
 }
