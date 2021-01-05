@@ -1,6 +1,7 @@
 export default class MetaData {
-  // constructor() - provide default for artist, album
-  // title - required
-  // artist
-  // album
+  constructor( data ) {
+    this.artist = data.artist ? data.artist : null;
+    this.title = data.title ? data.title : "No title"; // required?
+    this.image = data.image ? data.image : null;
+  }
 }
