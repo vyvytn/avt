@@ -38,9 +38,12 @@ export default class AudioPlayer {
 
       const START_DELAY = 0;
       this.bufferSrc.start( START_DELAY, this.seekTo );
+
+      if ( this.isPause )
+        this.lastTimestamp = this.now; // on pause time continues to elapse
     } else {
       this.bufferSrc.start();
-      this.lastTimestamp = this.now;
+      this.lastTimestamp = this.now; // initial timestamp
     }
   }
   handleSongEnd = event => {
@@ -55,24 +58,28 @@ export default class AudioPlayer {
       this.next();
     }
   }
-  pause() {
-    /* debug
+  currentPosition() {
+    /* // debug
     console.log( "now+time", this.now, this.lastTimestamp )
     console.log( "tempo bonus", this.tempoTimeBonus )
     console.log( "now-last*playing", ((this.now - this.lastTimestamp) * this.playingSpeed) )
     console.log( "seek", this.seekTo || 0 )
     */
 
-    const res =
-      ((this.now - this.lastTimestamp) * this.playingSpeed) + // speed * time elapsed
+    return ((this.now - this.lastTimestamp) * this.playingSpeed) + // speed * time elapsed
       this.tempoTimeBonus + // pre calculated extra time at other speed
       (this.seekTo !== null ? this.seekTo : 0); // previous seek time
+  }
+  pause() {
+    const res = this.currentPosition();
     this.seekTo = res;
     this.tempoTimeBonus = 0; // reset bonus, as it is now part of seekTo
-    this.lastTimestamp = this.now; // put last timestamp here, as past speed has been factored in and is now part of seekTo
 
     this.bufferSrc.manuallyStopped = true;
     this.bufferSrc.stop();
+
+    this.lastTimestamp = this.now;
+    this.isPause = true;
   }
   seek( pointInTime ) { // only absolute values, i.e. 30 = at the 30sec mark, not +30sec
     if ( this.current.metaData.length.total > pointInTime ) {
@@ -81,6 +88,7 @@ export default class AudioPlayer {
       this.bufferSrc.manuallyStopped = true;
       this.bufferSrc.stop();
 
+      this.isPause = false;
       this.play();
     }
   }
@@ -93,6 +101,7 @@ export default class AudioPlayer {
     this.tempoTimeBonus = 0;
     this.lastTimestamp = 0;
     this.seekTo = null;
+    this.isSeek = false;
   }
   stop() {
     this.resetPlayer();

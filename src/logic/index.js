@@ -19,7 +19,7 @@ const playlist = new Playlist( lib );
 const player = new AudioPlayer( ctx, masterGain, playlist );
 
 (async () => {
-  await axios.get( "http://localhost:8090/static/Bosshafte Beats - Sunglass Evo.mp3", { responseType: "arraybuffer" } )
+  axios.get( "http://localhost:8090/static/Bosshafte Beats - Sunglass Evo.mp3", { responseType: "arraybuffer" } )
     .then( async res => {
       const bb = new Song( new MP3( res.data ) );
       await bb.prepareForPlayback( ctx );
