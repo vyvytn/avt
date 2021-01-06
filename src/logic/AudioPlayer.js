@@ -13,13 +13,14 @@ export default class AudioPlayer {
     return this.playlist.activeSong;
   }
 
-  pausedOffset = 0; // in sec, applied on play()
-
-  // for using pause
-  pausedTimer = null;
-  pausedTimerOffset = 0;
+  requiresOffset = false;
+  lastTimestamp = 0;
+  get now() {
+    return this.ctx.currentTime;
+  }
 
   playingSpeed = 1;
+  tempoTimeBonus = 0;
 
   play() {
     if ( this.bufferSrc )
@@ -31,41 +32,39 @@ export default class AudioPlayer {
     bufferSrc.onend = this.handleSongEnd;
     bufferSrc.connect( this.outputNode );
 
-    const TIME_DELAY = 0;
-    // bufferSrc.playbackRate = this.playingSpeed;
-    bufferSrc.start( TIME_DELAY, this.pausedOffset );
-    this.pausedOffset = 0;
-    this.bufferSrc = bufferSrc;
+    if ( this.requiresOffset ) {
+      bufferSrc.playbackRate.value = this.playingSpeed;
 
-    this.pausedTimer = Date.now();
+      const START_DELAY = 0;
+      console.log( "play:", this.lastTimestamp )
+      bufferSrc.start( START_DELAY, this.lastTimestamp );
+    } else
+      bufferSrc.start();
+
+    this.bufferSrc = bufferSrc;
   }
   handleSongEnd( event ) {
     this.next();
     this.play();
   }
   pause() {
-    let secsElapsed = Math.round( (Date.now()-this.pausedTimer)/1000, 0 ); // read timer
-    secsElapsed = secsElapsed * this.playingSpeed; // apply playing speed
-    secsElapsed = secsElapsed + this.pausedTimerOffset; // apply timer offset from pause/playing more than once on song
+    this.requiresOffset = true;
+    this.lastTimestamp = (this.now - this.lastTimestamp) * this.playingSpeed + this.tempoTimeBonus;
 
-    // offset to be applied
-    this.pausedOffset = secsElapsed;
-    this.pausedTimerOffset = secsElapsed;
-  }
-  stop() {
     this.bufferSrc.stop();
   }
   seek( offset ) {
     this.bufferSrc.stop();
-    this.pausedOffset = offset;
-    this.play(); // continue from pausedOffset
+    this.play(); // continue from lastTimetamp
   }
 
   resetPlayer() {
+    this.requiresOffset = false;
     this.bufferSrc.stop();
     this.setVolume();
     this.playingSpeed = 1;
-    this.isPaused = false;
+    this.tempoTimeBonus = 0;
+    this.lastTimestamp = 0;
   }
   stop() {
     this.resetPlayer();
@@ -81,13 +80,21 @@ export default class AudioPlayer {
     this.play();
   }
 
-  setVolume( value ) { // resets at song change
+  setVolume( value = 1 ) { // reset w/ song change
     if ( value <= 1 && value >= 0 )
-      this.gain.value = value;
+      this.gain.gain.value = value;
+    else
+      throw new Error( "invalid value for setVolume, must be >=0 and <=1" );
   }
-  setTempo( value ) { // resets at song change
+  setTempo( value ) { // reset w/ song change
+    if ( !(value <= 2 && value > 0) ) // arbitrary restriction, can go negative
+      throw new Error( "invalid value for setTempo, must be >0 and <=2" );
+
+    this.bufferSrc.playbackRate.value = value;
+
+    const timePlayedInLastTempo = (this.now - this.lastTimestamp) * this.playingSpeed;
+    this.lastTimestamp = timePlayedInLastTempo;
+    this.tempoTimeBonus += timePlayedInLastTempo;
     this.playingSpeed = value;
-    this.pause();
-    this.play();
   }
 }
