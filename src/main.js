@@ -4,7 +4,7 @@ import Vue from 'vue';
 import App from './App';
 import router from './router';
 
-import * as audioLogic from "./logic";
+// import * as audioLogic from "./logic"; // uncomment to run player example
 
 Vue.config.productionTip = false;
 
