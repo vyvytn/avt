@@ -17,6 +17,7 @@ export default class AudioPlayer {
   get now() {
     return this.ctx.currentTime;
   }
+  seekTo = null; // for pause & seek
 
   playingSpeed = 1;
   tempoTimeBonus = 0;
@@ -32,13 +33,15 @@ export default class AudioPlayer {
     this.bufferSrc.onended = this.handleSongEnd;
     this.bufferSrc.connect( this.outputNode );
 
-    if ( this.lastTimestamp !== 0 ) {
+    if ( this.seekTo !== null ) {
       this.bufferSrc.playbackRate.value = this.playingSpeed;
 
       const START_DELAY = 0;
-      this.bufferSrc.start( START_DELAY, this.lastTimestamp );
-    } else
+      this.bufferSrc.start( START_DELAY, this.seekTo );
+    } else {
       this.bufferSrc.start();
+      this.lastTimestamp = this.now;
+    }
   }
   handleSongEnd = event => {
     /* triggered on
@@ -53,18 +56,32 @@ export default class AudioPlayer {
     }
   }
   pause() {
-    this.lastTimestamp = (this.now - this.lastTimestamp) * this.playingSpeed + this.tempoTimeBonus;
+    /* debug
+    console.log( "now+time", this.now, this.lastTimestamp )
+    console.log( "tempo bonus", this.tempoTimeBonus )
+    console.log( "now-last*playing", ((this.now - this.lastTimestamp) * this.playingSpeed) )
+    console.log( "seek", this.seekTo || 0 )
+    */
 
+    const res =
+      ((this.now - this.lastTimestamp) * this.playingSpeed) + // speed * time elapsed
+      this.tempoTimeBonus + // pre calculated extra time at other speed
+      (this.seekTo !== null ? this.seekTo : 0); // previous seek time
+    this.seekTo = res;
+    this.tempoTimeBonus = 0; // reset bonus, as it is now part of seekTo
+    this.lastTimestamp = this.now; // put last timestamp here, as past speed has been factored in and is now part of seekTo
+
+    this.bufferSrc.manuallyStopped = true;
     this.bufferSrc.stop();
   }
   seek( pointInTime ) { // only absolute values, i.e. 30 = at the 30sec mark, not +30sec
     if ( this.current.metaData.length.total > pointInTime ) {
-      this.lastTimestamp = pointInTime;
+      this.seekTo = pointInTime;
 
       this.bufferSrc.manuallyStopped = true;
       this.bufferSrc.stop();
 
-      this.play(); // play from lastTimestamp
+      this.play();
     }
   }
 
@@ -75,6 +92,7 @@ export default class AudioPlayer {
     this.playingSpeed = 1;
     this.tempoTimeBonus = 0;
     this.lastTimestamp = 0;
+    this.seekTo = null;
   }
   stop() {
     this.resetPlayer();
@@ -103,8 +121,8 @@ export default class AudioPlayer {
     this.bufferSrc.playbackRate.value = value;
 
     const timePlayedInLastTempo = (this.now - this.lastTimestamp) * this.playingSpeed;
-    this.lastTimestamp = timePlayedInLastTempo;
     this.tempoTimeBonus += timePlayedInLastTempo;
+    this.lastTimestamp = this.now;
     this.playingSpeed = value;
   }
 }
