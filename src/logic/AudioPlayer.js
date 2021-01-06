@@ -21,34 +21,43 @@ export default class AudioPlayer {
     node.connect( this.outputNode );
     this.outputNode = node;
 
-    this.pause(); // apply to current playback
-    this.play(); // what if paused?
+    if ( this.isPlaying ) {
+      this.pause(); // restart to apply to current playback
+      this.play();
+    }
   }
   /**
    * Remove all effect nodes
    */
   resetAllNodes() {
+    const wasPlaying = this.isPlaying;
+
     this.pause(); // seperate from bufferSrc
     this.gain.disconnect(); // seperate from added nodes
 
     this.gain.connect( this.globalOutputNode );
     this.outputNode = this.gain;
 
-    this.play();
+    if ( wasPlaying )
+      this.play();
   }
 
   get current() {
     return this.playlist.activeSong;
   }
 
+  // helper variables for calculating the position
   lastTimestamp = 0;
   get now() {
     return this.ctx.currentTime;
   }
   seekTo = null; // for pause & seek
-
-  playingSpeed = 1;
+  isPause = false;
   tempoTimeBonus = 0;
+
+  // status variables
+  isPlaying = false;
+  playingSpeed = 1;
 
   play() {
     if ( this.bufferSrc ) {
@@ -73,6 +82,7 @@ export default class AudioPlayer {
       this.bufferSrc.start();
       this.lastTimestamp = this.now; // initial timestamp
     }
+    this.isPlaying = true;
   }
   handleSongEnd = event => {
     /* triggered on
@@ -108,16 +118,21 @@ export default class AudioPlayer {
 
     this.lastTimestamp = this.now;
     this.isPause = true;
+    this.isPlaying = false;
   }
   seek( pointInTime ) { // only absolute values, i.e. 30 = at the 30sec mark, not +30sec
     if ( this.current.metaData.length.total > pointInTime ) {
       this.seekTo = pointInTime;
 
-      this.bufferSrc.manuallyStopped = true;
-      this.bufferSrc.stop();
+      if ( this.bufferSrc ) {
+        this.bufferSrc.manuallyStopped = true;
+        this.bufferSrc.stop();
+      }
 
       this.isPause = false;
-      this.play();
+
+      if ( this.isPlaying )
+        this.play();
     }
   }
 
@@ -135,6 +150,7 @@ export default class AudioPlayer {
   }
   stop() {
     this.resetPlayer();
+    this.isPlaying = false;
   }
   next() {
     this.resetPlayer();
