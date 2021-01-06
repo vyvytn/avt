@@ -10,7 +10,7 @@ import MP3 from "./MP3";
 
 const ctx = new AudioContext(); // shared context
 
-const masterGain = ctx.createGain();
+const masterGain = ctx.createGain(); // gain shared accross players
 masterGain.connect( ctx.destination );
 masterGain.value = 1.0;
 

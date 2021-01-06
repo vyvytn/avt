@@ -1,6 +1,9 @@
 import MetaData from "./MetaData";
 
 export default class Song {
+  /**
+   * metaData - meta data object, see metaData for content
+   */
   constructor( obj ) {
     this.obj = obj;
     this.type = obj.constructor.name;
@@ -16,7 +19,10 @@ export default class Song {
   audioBuffer = null;
   metaData = null;
 
-  async prepareForPlayback( ctx ) { // needs to be run together w/ counstructor, otherwise obj not usable
+  /**
+   * initialize the song, required to be usable
+   */
+  async prepareForPlayback( ctx ) {
     const [ tags, audioBuffer ] = await Promise.all( [
       this.getRawTags(),
       this.decodeAudioData( ctx ),
@@ -44,6 +50,4 @@ export default class Song {
     this.audioBuffer = await ctx.decodeAudioData( this.rawBuffer );
     return this.audioBuffer;
   }
-
-  // ? audio encoding props: { bitrate, encoding, etc. }
 }

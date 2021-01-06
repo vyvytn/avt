@@ -2,6 +2,12 @@ import Song from "./Song";
 
 export default class MusicLibrary {
   list = []; // Song[]
+
+  /**
+   * insert a song into the library
+   * @returns index - the index of the added song,
+   *                    for adding it to a playlist
+   */
   insert( song ) {
     return this.list.push( song ) -1; // return index
   }
