@@ -6,7 +6,7 @@ export default class MetaData {
 
     if ( data.duration )
       this.length = {
-        total: Math.floor( data.duration ), // in secs for calculation
+        total: data.duration, // in secs for calculation
         minutes: Math.floor( data.duration / 60 ), // for min:sec for humans
         seconds: data.duration % 60,
       };
