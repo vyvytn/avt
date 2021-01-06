@@ -13,7 +13,6 @@ export default class AudioPlayer {
     return this.playlist.activeSong;
   }
 
-  requiresOffset = false;
   lastTimestamp = 0;
   get now() {
     return this.ctx.currentTime;
@@ -22,38 +21,42 @@ export default class AudioPlayer {
   playingSpeed = 1;
   tempoTimeBonus = 0;
 
+  naturalEnd = true;
+
   play() {
     if ( this.bufferSrc )
       this.bufferSrc.stop();
 
-    const bufferSrc = this.ctx.createBufferSource();
-    bufferSrc.buffer = this.current.audioBuffer;
+    this.bufferSrc = this.ctx.createBufferSource();
+    this.bufferSrc.buffer = this.current.audioBuffer;
 
-    bufferSrc.onended = this.handleSongEnd;
-    bufferSrc.connect( this.outputNode );
+    this.bufferSrc.onended = this.handleSongEnd;
+    this.naturalEnd = true;
 
-    if ( this.requiresOffset ) {
-      bufferSrc.playbackRate.value = this.playingSpeed;
+    this.bufferSrc.connect( this.outputNode );
+
+    if ( this.lastTimestamp !== 0 ) {
+      this.bufferSrc.playbackRate.value = this.playingSpeed;
 
       const START_DELAY = 0;
-      bufferSrc.start( START_DELAY, this.lastTimestamp );
-
-      this.requiresOffset = false; // reset for handleSongEnd
+      this.bufferSrc.start( START_DELAY, this.lastTimestamp );
     } else
-      bufferSrc.start();
-
-    this.bufferSrc = bufferSrc;
+      this.bufferSrc.start();
   }
   handleSongEnd = event => {
-    // triggered on the natural end of a song
-    // or bufferSrc.stop()
-    if ( !this.requiresOffset ) { // only trigger on natural end
+    /* triggered on
+       1) the natural end of a song
+       2) bufferSrc.stop()
+       We only want the 1. case
+
+       naturalEnd is set to
+       true) in play()
+       false) in resetPlayer()
+    */
+    if ( this.naturalEnd )
       this.next();
-      this.play();
-    }
   }
   pause() {
-    this.requiresOffset = true;
     this.lastTimestamp = (this.now - this.lastTimestamp) * this.playingSpeed + this.tempoTimeBonus;
 
     this.bufferSrc.stop();
@@ -64,8 +67,8 @@ export default class AudioPlayer {
   }
 
   resetPlayer() {
+    this.naturalEnd = false;
     this.bufferSrc.stop();
-    this.requiresOffset = false; // reset after stop, don't trigger handleSongEnd
     this.setVolume();
     this.playingSpeed = 1;
     this.tempoTimeBonus = 0;
