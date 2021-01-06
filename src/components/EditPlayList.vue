@@ -3,12 +3,13 @@
     <b-row>
       <b-col>
         <h3>Bibliothek</h3>
-        <div style="overflow-y: auto ; max-height: 100px">
-          <draggable class="list-group" :list="list1" group="people" @change="log">
+        <div style="overflow-y: auto ; max-height: 200px">
+          <draggable class="list-group" :list="list1" group="people" @change="log" :scroll-sensitivity="200" forceFallback="true" style="list-style: none">
             <div
               class="list-group-item"
               v-for="(element, index) in list1"
               :key="element.name"
+
             >
               {{ element.name }} {{ index }}
             </div>
@@ -20,8 +21,8 @@
     <b-row>
       <b-col>
         <h3>Deck A</h3>
-        <div style="overflow-y: auto ; max-height: 100px">
-          <draggable class="list-group" :list="list2" group="people" @change="log">
+        <div style="overflow-y: auto ; max-height: 200px">
+          <draggable class="list-group" :list="list2" group="people" @change="log" :scroll-sensitivity="200" forceFallback="true" style="list-style: none">
             <div
               class="list-group-item"
               v-for="(element, index) in list2"
@@ -34,8 +35,8 @@
       </b-col>
       <b-col>
         <h3>Deck B</h3>
-        <div style="overflow-y: auto ; max-height: 100px">
-          <draggable class="list-group" :list="list2" group="people" @change="log">
+        <div style="overflow-y: auto ; max-height: 200px">
+          <draggable class="list-group" :list="list2" group="people" @change="log" :scroll-sensitivity="200" forceFallback="true" style="list-style: none">
             <div
               class="list-group-item"
               v-for="(element, index) in list2"

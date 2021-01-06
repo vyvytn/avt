@@ -6,8 +6,10 @@
       <b-icon icon="grip-horizontal"></b-icon>
     </i>
     <div class="">
-      <img class="w-20 h-20 rounded-full" :src="s.img">
-      <p class="text-gray-700 font-semibold font-sans font-weight-bold ">{{ s.name }}</p>
+      <b-avatar badge=""></b-avatar>
+      <p class="text-gray-700 font-weight-bold font-sans">{{ s.name }}</p>
+      <p class="font-weight-medium font-sans">{{s.interpret}}</p>
+      <p class="font-weight-medium font-sans">{{ s.album }}</p>
     </div>
     <i
       class="action-button p-1 focus:outline-none focus:shadow-outline text-teal-500 hover:text-teal-600"

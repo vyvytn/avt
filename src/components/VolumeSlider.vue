@@ -4,11 +4,11 @@
       <vue-slider
         v-model="value"
         :interval="25"
-        :marks="true"
-        :hide-label="true"
+        :marks=true
+        :hide-label=true
         direction="btt"
-        contained="true"
-        drag-on-click="true"
+        :contained=true
+        :drag-on-click=true
         style="display: inline-block; height: 12em"
       ></vue-slider>
     </div>
@@ -16,12 +16,12 @@
       <vue-slider
         v-model="value2"
         :interval="10"
-        :marks="true"
-        :hide-label="true"
+        :marks=true
+        :hide-label=true
         :tooltip=" 'none' "
         direction="ltr"
-        contained="true"
-        drag-on-click="true"
+        :contained=true
+        :drag-on-click=true
         style="display: block; width: 18em;"
       ></vue-slider>
     </div>

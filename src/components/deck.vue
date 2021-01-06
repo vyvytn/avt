@@ -6,12 +6,17 @@
           ></av-media>
         </div>-->
     <b-card
-      title=""
-      img-src=""
-      img-alt=""
-      img-left
       style="padding: 1em; background-color: #c49aef"
-    ></b-card>
+    >
+      <b-card-text>
+        <b-avatar></b-avatar>
+        <p class="font-weight-bold">Song Titel</p>
+        <p class="font-weight-medium">Interpret Name</p>
+        <p class="font-weight-medium">Album Name</p>
+        <p class="font-weight-bold">-6:23</p>
+      </b-card-text>
+      <canvas class="" id="songVisualizer" width="200" height="50"></canvas>
+    </b-card>
     <div style="padding: 1em" align="center">
       <b-button class="" variant="success" @click="playAudio">
         <b-icon font-scale="2" icon="play-fill"></b-icon>

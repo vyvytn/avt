@@ -36,29 +36,39 @@ export default {
         {
           id: 1,
           name: 'Song 1',
+          interpret: 'Interpret 1',
+          album: 'Album 1',
           img: '',
         },
         {
           id: 2,
           name: 'Song 2',
+          interpret: 'Interpret 2',
+          album: 'Album 2',
           img: '',
 
         },
         {
           id: 3,
           name: 'Song 3',
+          interpret: 'Interpret 3',
+          album: 'Album 3',
           img: '',
 
         },
         {
           id: 4,
           name: 'Song 4',
+          interpret: 'Interpret 4',
+          album: 'Album 4',
           img: '',
 
         },
         {
           id: 5,
           name: 'Song 5',
+          interpret: 'Interpret 5',
+          album: 'Album 5',
           img: '',
 
         }
