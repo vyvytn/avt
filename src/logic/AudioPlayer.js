@@ -29,23 +29,28 @@ export default class AudioPlayer {
     const bufferSrc = this.ctx.createBufferSource();
     bufferSrc.buffer = this.current.audioBuffer;
 
-    bufferSrc.onend = this.handleSongEnd;
+    bufferSrc.onended = this.handleSongEnd;
     bufferSrc.connect( this.outputNode );
 
     if ( this.requiresOffset ) {
       bufferSrc.playbackRate.value = this.playingSpeed;
 
       const START_DELAY = 0;
-      console.log( "play:", this.lastTimestamp )
       bufferSrc.start( START_DELAY, this.lastTimestamp );
+
+      this.requiresOffset = false; // reset for handleSongEnd
     } else
       bufferSrc.start();
 
     this.bufferSrc = bufferSrc;
   }
-  handleSongEnd( event ) {
-    this.next();
-    this.play();
+  handleSongEnd = event => {
+    // triggered on the natural end of a song
+    // or bufferSrc.stop()
+    if ( !this.requiresOffset ) { // only trigger on natural end
+      this.next();
+      this.play();
+    }
   }
   pause() {
     this.requiresOffset = true;
@@ -59,8 +64,8 @@ export default class AudioPlayer {
   }
 
   resetPlayer() {
-    this.requiresOffset = false;
     this.bufferSrc.stop();
+    this.requiresOffset = false; // reset after stop, don't trigger handleSongEnd
     this.setVolume();
     this.playingSpeed = 1;
     this.tempoTimeBonus = 0;
