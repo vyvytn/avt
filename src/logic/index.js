@@ -10,7 +10,7 @@ import MP3 from "./MP3";
 
 const ctx = new AudioContext(); // shared context
 
-const masterGain = ctx.createGain();
+const masterGain = ctx.createGain(); // gain shared accross players
 masterGain.connect( ctx.destination );
 masterGain.value = 1.0;
 
@@ -46,11 +46,13 @@ const player = new AudioPlayer( ctx, masterGain, playlist );
         player.play();
       }, 10000 );
       window.setTimeout( () => {
-        console.log( "1x" )
+        console.log( "1x + bass boosted" )
+        player.setEq( 64, 25 );
         player.setTempo( 1 );
       }, 12000 );
       window.setTimeout( () => {
         console.log( "next" )
+        player.setEq( 64 );
         player.next();
         console.log( "playing: " + player.current.metaData.artist + " - " + player.current.metaData.title );
       }, 15000 );
