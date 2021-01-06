@@ -5,8 +5,31 @@ export default class AudioPlayer {
 
     this.gain = audioCtx.createGain();
     this.gain.connect( outputNode );
+    this.globalOutputNode = outputNode;
     this.gain.value = 1.0;
     this.outputNode = this.gain;
+  }
+  /**
+   * Add effect node to current playback
+   */
+  addNode( node ) {
+    node.connect( this.outputNode );
+    this.outputNode = node;
+
+    this.pause(); // apply to current playback
+    this.play(); // what if paused?
+  }
+  /**
+   * Remove all effect nodes
+   */
+  resetAllNodes() {
+    this.pause(); // seperate from bufferSrc
+    this.gain.disconnect(); // seperate from added nodes
+
+    this.gain.connect( this.globalOutputNode );
+    this.outputNode = this.gain;
+
+    this.play();
   }
 
   get current() {
@@ -96,12 +119,14 @@ export default class AudioPlayer {
   resetPlayer() {
     this.bufferSrc.manuallyStopped = true;
     this.bufferSrc.stop();
+    this.resetAllNodes(); // disable effects
     this.setVolume();
+    this.isPause = false;
     this.playingSpeed = 1;
+
     this.tempoTimeBonus = 0;
     this.lastTimestamp = 0;
     this.seekTo = null;
-    this.isSeek = false;
   }
   stop() {
     this.resetPlayer();
