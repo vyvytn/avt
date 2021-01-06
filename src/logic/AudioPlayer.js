@@ -54,7 +54,7 @@ export default class AudioPlayer {
 
        manuallyStopped needs to be maintained on the bufferSrc, a variable on this leads to inconsistent results
     */
-    if ( !event.explicitOriginalTarget.manuallyStopped ) {
+    if ( !event.srcElement.manuallyStopped ) {
       this.next();
     }
   }
