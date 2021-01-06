@@ -57,8 +57,7 @@
                 </b-card-text>
               </b-tab>
               <b-tab title="Freesound">
-                <b-card-text>
-                </b-card-text>
+                  <FreeSoundList></FreeSoundList>
               </b-tab>
             </b-tabs>
           </b-modal>
@@ -110,10 +109,12 @@ import EditPlayList from './EditPlayList';
 import Playlist from './PlayList';
 import EqSlider from './EqSlider';
 import FXButton from './FXButton';
+import FreeSoundList from './FreeSoundList';
 
 export default {
   name: 'deck',
   components: {
+    FreeSoundList,
     FXButton,
     EqSlider,
     EditPlayList,
