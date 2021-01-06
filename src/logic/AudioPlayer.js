@@ -21,18 +21,15 @@ export default class AudioPlayer {
   playingSpeed = 1;
   tempoTimeBonus = 0;
 
-  naturalEnd = true;
-
   play() {
-    if ( this.bufferSrc )
+    if ( this.bufferSrc ) {
+      this.bufferSrc.manuallyStopped = true;
       this.bufferSrc.stop();
+    }
 
     this.bufferSrc = this.ctx.createBufferSource();
     this.bufferSrc.buffer = this.current.audioBuffer;
-
     this.bufferSrc.onended = this.handleSongEnd;
-    this.naturalEnd = true;
-
     this.bufferSrc.connect( this.outputNode );
 
     if ( this.lastTimestamp !== 0 ) {
@@ -49,25 +46,30 @@ export default class AudioPlayer {
        2) bufferSrc.stop()
        We only want the 1. case
 
-       naturalEnd is set to
-       true) in play()
-       false) in resetPlayer()
+       manuallyStopped needs to be maintained on the bufferSrc, a variable on this leads to inconsistent results
     */
-    if ( this.naturalEnd )
+    if ( !event.explicitOriginalTarget.manuallyStopped ) {
       this.next();
+    }
   }
   pause() {
     this.lastTimestamp = (this.now - this.lastTimestamp) * this.playingSpeed + this.tempoTimeBonus;
 
     this.bufferSrc.stop();
   }
-  seek( offset ) {
-    this.bufferSrc.stop();
-    this.play(); // continue from lastTimetamp
+  seek( pointInTime ) { // only absolute values, i.e. 30 = at the 30sec mark, not +30sec
+    if ( this.current.metaData.length.total > pointInTime ) {
+      this.lastTimestamp = pointInTime;
+
+      this.bufferSrc.manuallyStopped = true;
+      this.bufferSrc.stop();
+
+      this.play(); // play from lastTimestamp
+    }
   }
 
   resetPlayer() {
-    this.naturalEnd = false;
+    this.bufferSrc.manuallyStopped = true;
     this.bufferSrc.stop();
     this.setVolume();
     this.playingSpeed = 1;
