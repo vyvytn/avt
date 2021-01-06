@@ -54,6 +54,7 @@
               </b-tab>
               <b-tab title="Musik importieren">
                 <b-card-text>
+                  <FileExplorer></FileExplorer>
                 </b-card-text>
               </b-tab>
               <b-tab title="Freesound">
@@ -110,10 +111,12 @@ import Playlist from './PlayList';
 import EqSlider from './EqSlider';
 import FXButton from './FXButton';
 import FreeSoundList from './FreeSoundList';
+import FileExplorer from './FileExplorer';
 
 export default {
   name: 'deck',
   components: {
+    FileExplorer,
     FreeSoundList,
     FXButton,
     EqSlider,
@@ -145,7 +148,6 @@ export default {
         { name: 'Verzerrer' },
         { name: 'Hall' },
         { name: 'Delay' },
-
       ],
       isReady: false,
       isPlaying: false,

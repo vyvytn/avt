@@ -1,5 +1,5 @@
 <template>
-  <b-card-text>
+  <div id="freesoundList">
     <b-form-input :list="freeSoundList" placeholder="Search for free Sounds"></b-form-input>
     <b-list-group>
       <b-list-group-item v-for="element in freeSoundList" :key = "element.name">
@@ -9,7 +9,7 @@
         <b-button>Add</b-button>
       </b-list-group-item>
     </b-list-group>
-  </b-card-text>
+  </div>
 </template>
 
 <script>
