@@ -10,12 +10,12 @@
     >
       <b-card-text>
         <b-avatar></b-avatar>
-        <p class="font-weight-bold">Song Titel</p>
-        <p class="font-weight-medium">Interpret Name</p>
-        <p class="font-weight-medium">Album Name</p>
-        <p class="font-weight-bold">-6:23</p>
+        <p id="songTitle" class="font-weight-bold">Song Titel</p>
+        <p id="interpretName" class="font-weight-medium">Interpret Name</p>
+        <p id="albumName" class="font-weight-medium">Album Name</p>
+        <p id="timeToLeft" class="font-weight-bold">-6:23</p>
       </b-card-text>
-      <canvas class="" id="songVisualizer" width="200" height="50"></canvas>
+      <canvas id="songVisualizer" width="200" height="50"></canvas>
     </b-card>
     <div style="padding: 1em" align="center">
       <b-button class="" variant="success" @click="playAudio">
@@ -36,7 +36,7 @@
       <b-tab title="Playlist" active>
         <b-card-text>
           <div style="overflow-y: auto ; max-height: 60vh">
-            <Playlist></Playlist>
+            <Playlist :array-playlist="playListA"></Playlist>
           </div>
           <div align="center">
             <b-button variant="secondary" id="modalBtn" @click="togglePlaylistModal">Bibliothek
@@ -44,7 +44,7 @@
             </b-button>
           </div>
 
-          <!--MENU FOR PLAYLIST EDITING BEGIN-->
+         <!-- MENU FOR PLAYLIST EDITING BEGIN
           <b-modal ref="playlistModal" title="Playlist bearbeiten">
             <b-tabs pills card fill>
               <b-tab title="Bibliothek" active>
@@ -62,7 +62,7 @@
               </b-tab>
             </b-tabs>
           </b-modal>
-          <!--MENU FOR PLAYLIST EDITING END-->
+          MENU FOR PLAYLIST EDITING END-->
 
         </b-card-text>
       </b-tab>
@@ -106,21 +106,16 @@
 
 <script>
 import draggable from 'vuedraggable';
-import EditPlayList from './EditPlayList';
 import Playlist from './PlayList';
 import EqSlider from './EqSlider';
 import FXButton from './FXButton';
-import FreeSoundList from './FreeSoundList';
-import FileExplorer from './FileExplorer';
+
 
 export default {
   name: 'deck',
   components: {
-    FileExplorer,
-    FreeSoundList,
     FXButton,
     EqSlider,
-    EditPlayList,
     Playlist,
     draggable,
   },
@@ -151,7 +146,11 @@ export default {
       ],
       isReady: false,
       isPlaying: false,
+      playListA: this.arrayPlaylist,
     };
+  },
+  props: {
+    arrayPlaylist: Array,
   },
   methods: {
 
@@ -176,61 +175,17 @@ export default {
       window.console.log(evt);
     },
     togglePlaylistModal() {
-      this.$refs.playlistModal.show();
+      //this.$refs.playlistModal.show();
+      this.$emit('openLibraryClicked')
     },
     playAudio() {
       if (!this.isReady) return;
-      this.bufferSource.start();
+      //this.bufferSource.start();
     },
     stopAudio() {
-      this.bufferSource.stop();
+      //this.bufferSource.stop();
     },
   },
-  beforeCreate() {
-    /* -----WEB AUDIO API BEGIN-----*/
-    const path = './assets/example.mp3';
-
-    if (!window.AudioContext) { // window.webkitAudioContext
-      alert('Web Audio API not supported!');
-      return;
-    }
-
-    this.audioCtx = new window.AudioContext();
-
-    // Prepare Gain Node
-    this.gainNode = this.audioCtx.createGain();
-    this.gainNode.connect(this.audioCtx.destination);
-    this.gainNode.gain.value = 1.0;
-
-    this.request = new XMLHttpRequest();
-    this.request.open('GET', path, true);
-    this.request.responseType = 'arraybuffer';
-
-    this.request.onload = () => {
-      // eslint-disable-next-line no-use-before-define
-      receiveAudio();
-    };
-    this.request.send();
-
-    function receiveAudio() {
-      this.buffer = this.request.response;
-      this.audioCtx.decodeAudioData(this.buffer).then(
-        // eslint-disable-next-line no-use-before-define
-        setBuffer.bind(this),
-      );
-    }
-
-    function setBuffer(decodedBuffer) {
-      this.buffer = decodedBuffer;
-      this.isReady = true;
-      this.bufferSource = this.audioCtx.createBufferSource();
-      this.bufferSource.buffer = this.buffer;
-      this.bufferSource.connect(this.gainNode);
-      this.bufferSource.start();
-    }
-    /* -----WEB AUDIO API END-----*/
-  }
-  ,
 };
 </script>
 

@@ -5,6 +5,7 @@
       :state="Boolean(file)"
       placeholder="Choose a file or drop it here..."
       drop-placeholder="Drop file here..."
+      accept=".mp3"
     ></b-form-file>
     <b-list-group>
       <b-list-group-item></b-list-group-item>

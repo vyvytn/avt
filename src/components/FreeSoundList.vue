@@ -1,6 +1,6 @@
 <template>
   <div id="freesoundList">
-    <b-form-input :list="freeSoundList" placeholder="Search for free Sounds"></b-form-input>
+    <b-form-input placeholder="Search for free Sounds"></b-form-input>
     <b-list-group>
       <b-list-group-item v-for="element in freeSoundList" :key = "element.name">
         <div>

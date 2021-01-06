@@ -4,11 +4,21 @@
       <b-col>
         <h3>Bibliothek</h3>
         <div style="overflow-y: auto ; max-height: 200px">
-          <draggable class="list-group" :list="list1" group="people" @change="log" :scroll-sensitivity="200" forceFallback="true" style="list-style: none">
+          <draggable
+            class="list-group"
+            :list="library"
+            @change="log"
+            :scroll-sensitivity="200"
+            forceFallback="true"
+            :clone="cloneSong"
+            :group="{name:'song', pull:'clone', put:false}"
+            style="list-style: none"
+          >
             <div
               class="list-group-item"
-              v-for="(element, index) in list1"
+              v-for="(element, index) in library"
               :key="element.name"
+              :songName="element.name"
 
             >
               {{ element.name }} {{ index }}
@@ -22,10 +32,17 @@
       <b-col>
         <h3>Deck A</h3>
         <div style="overflow-y: auto ; max-height: 200px">
-          <draggable class="list-group" :list="list2" group="people" @change="log" :scroll-sensitivity="200" forceFallback="true" style="list-style: none">
+          <draggable
+            class="list-group"
+            :list="songListA"
+            @change="log"
+            :scroll-sensitivity="200"
+            forceFallback="true"
+            group="song"
+            style="list-style: none">
             <div
               class="list-group-item"
-              v-for="(element, index) in list2"
+              v-for="(element, index) in songListA"
               :key="element.name"
             >
               {{ element.name }} {{ index }}
@@ -36,10 +53,17 @@
       <b-col>
         <h3>Deck B</h3>
         <div style="overflow-y: auto ; max-height: 200px">
-          <draggable class="list-group" :list="list2" group="people" @change="log" :scroll-sensitivity="200" forceFallback="true" style="list-style: none">
+          <draggable
+            class="list-group"
+            :list="songListB"
+            @change="log"
+            :scroll-sensitivity="200"
+            forceFallback="true"
+            group="song"
+            style="list-style: none">
             <div
               class="list-group-item"
-              v-for="(element, index) in list2"
+              v-for="(element, index) in songListB"
               :key="element.name"
             >
               {{ element.name }} {{ index }}
@@ -61,23 +85,27 @@ export default {
   },
   data() {
     return {
-      list1: [
-        { name: 'John', id: 1 },
-        { name: 'Joao', id: 2 },
-        { name: 'Jean', id: 3 },
-        { name: 'Gerard', id: 4 },
-      ],
-      list2: [
-        { name: 'Juan', id: 5 },
-        { name: 'Edgard', id: 6 },
-        { name: 'Johnson', id: 7 },
-      ],
+      songListA: this.playListArrayA,
+      songListB: this.playListArrayB,
+      library: this.songLibrary,
+      idGlobal: 5,
+      songName:0
     };
   },
   methods: {
     log(evt) {
       window.console.log(evt);
     },
+    cloneSong({ id }){
+      id: this.idGlobal ++;
+      name: `name ${ id }`;
+    }
+  },
+
+  props:{
+    playListArrayA: Array,
+    playListArrayB: Array,
+    songLibrary: Array,
   },
 };
 </script>

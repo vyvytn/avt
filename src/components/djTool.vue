@@ -2,7 +2,7 @@
   <b-container fluid="">
     <b-row>
       <b-col col>
-        <deck id="deckA"></deck>
+        <deck @openLibraryClicked="togglePlaylistModal" id="deckA" :array-playlist="listA"></deck>
       </b-col>
       <b-col cols="12" md="auto">
         <h4>Volume</h4>
@@ -45,10 +45,30 @@
           </b-col>
         </b-row>
       </b-col>
-      <b-col col >
-        <deck id="deckB"></deck>
+      <b-col col>
+        <deck @openLibraryClicked="togglePlaylistModal" id="deckB" :array-playlist="listB"></deck>
       </b-col>
     </b-row>
+
+    <!--MENU FOR PLAYLIST EDITING BEGIN-->
+    <b-modal ref="playlistModal" title="Playlist bearbeiten">
+      <b-tabs pills card fill>
+        <b-tab title="Bibliothek" active>
+          <b-card-text>
+            <edit-play-list :play-list-array-a="listA" :play-list-array-b="listB" :song-library="songLibrary"></edit-play-list>
+          </b-card-text>
+        </b-tab>
+        <b-tab title="Musik importieren">
+          <b-card-text>
+            <FileExplorer></FileExplorer>
+          </b-card-text>
+        </b-tab>
+        <b-tab title="Freesound">
+          <FreeSoundList></FreeSoundList>
+        </b-tab>
+      </b-tabs>
+    </b-modal>
+    <!--MENU FOR PLAYLIST EDITING END-->
   </b-container>
 
 </template>
@@ -57,18 +77,51 @@
 
 import deck from './deck';
 import VolumeSlider from './VolumeSlider';
+import FreeSoundList from './FreeSoundList';
+import FileExplorer from './FileExplorer';
+import EditPlayList from './EditPlayList';
 
 export default {
   name: 'djtool',
   components: {
     VolumeSlider,
     deck,
+    FileExplorer,
+    FreeSoundList,
+    EditPlayList,
   },
   data() {
     return {
       value: 0,
+      listA: [
+        { name: 'John', id: 1 },
+        { name: 'Joao', id: 2 },
+        { name: 'Jean', id: 3 },
+        { name: 'Gerard', id: 4 },
+      ],
+      listB: [
+        { name: 'John', id: 1 },
+        { name: 'Joao', id: 2 },
+        { name: 'Jean', id: 3 },
+        { name: 'Gerard', id: 4 },
+      ],
+      songLibrary:[
+        { name: 'John', id: 1 },
+        { name: 'Joao', id: 2 },
+        { name: 'Jean', id: 3 },
+        { name: 'Gerard', id: 4 },
+      ]
     };
   },
+  methods: {
+    togglePlaylistModal() {
+      this.$refs.playlistModal.show();
+    }
+
+  },
+  mounted() {
+
+  }
 };
 </script>
 
@@ -78,13 +131,13 @@ export default {
   padding: 1em;
 }
 
-.col-auto{
+.col-auto {
   padding: .5em;
   margin: .2em .8em;
 
 }
 
-.row{
+.row {
   justify-content: center;
   margin-bottom: 1.5em;
 }
