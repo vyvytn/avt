@@ -1,10 +1,15 @@
+import Equalizer from "./Equalizer";
+
 export default class AudioPlayer {
   constructor( audioCtx, outputNode, playlist ) {
     this.ctx = audioCtx;
     this.playlist = playlist;
 
+    this.eq = new Equalizer( audioCtx );
     this.gain = audioCtx.createGain();
-    this.gain.connect( outputNode );
+    this.gain.connect( this.eq.entryNode );
+    this.eq.outputNode.connect( outputNode );
+
     this.globalOutputNode = outputNode;
     this.gain.value = 1.0;
     this.outputNode = this.gain;
@@ -158,5 +163,24 @@ export default class AudioPlayer {
     this.tempoTimeBonus += timePlayedInLastTempo;
     this.lastTimestamp = this.now;
     this.playingSpeed = value;
+  }
+
+  /**
+   * set the db gain of an equalizer
+   * indexOrFrequency - either
+   *                      1) the index of a node (0-9)
+   *                      2) the frequency (32, 64, 125, etc.) of a node
+   * value            - db level to set the eq gain to (default: 0; min: -40; max: 40)
+   */
+  setEq( indexOrFrequency, value = 0 ) {
+    let node;
+    if ( indexOrFrequency < this.eq.nodes.length && indexOrFrequency > 0 ) {
+      node = this.eq.nodes[indexOrFrequency];
+    } else {
+      node = this.eq.frequencies[indexOrFrequency];
+      if ( node === undefined )
+        throw new Error( `invalid frequency, pick one of: ${Object.keys( this.eq.frequencies )}\nor a valid node index: <${this.eq.nodes.length}`  );
+    }
+    node.gain.value = value;
   }
 }
