@@ -64,7 +64,7 @@
           </b-card-text>
         </b-tab>
         <b-tab title="Freesound">
-          <FreeSoundList></FreeSoundList>
+          <FreeSoundList @update="updateLibrary"></FreeSoundList>
         </b-tab>
       </b-tabs>
     </b-modal>
@@ -116,6 +116,9 @@ export default {
   methods: {
     togglePlaylistModal() {
       this.$refs.playlistModal.show();
+    },
+    updateLibrary(value){
+      this.songLibrary.push(value)
     }
 
   },
