@@ -5,13 +5,12 @@
         <h3>Bibliothek</h3>
         <div style="overflow-y: auto ; max-height: 200px">
           <draggable
-            class="list-group"
+            class="dragArea list-group"
             :list="library"
+            :group="{name:'song', pull:'clone', put:false}"
             @change="log"
             :scroll-sensitivity="200"
             forceFallback="true"
-            :clone="cloneSong"
-            :group="{name:'song', pull:'clone', put:false}"
             style="list-style: none"
           >
             <div
@@ -33,12 +32,12 @@
         <h3>Deck A</h3>
         <div style="overflow-y: auto ; max-height: 200px">
           <draggable
-            class="list-group"
+            class="dragArea list-group"
             :list="songListA"
+            group="song"
             @change="log"
             :scroll-sensitivity="200"
             forceFallback="true"
-            group="song"
             style="list-style: none">
             <div
               class="list-group-item"
