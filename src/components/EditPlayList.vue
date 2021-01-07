@@ -16,9 +16,6 @@
             <div
               class="list-group-item"
               v-for="(element, index) in library"
-              :key="element.name"
-              :songName="element.name"
-
             >
               {{ element.name }} {{ index }}
             </div>
@@ -42,7 +39,6 @@
             <div
               class="list-group-item"
               v-for="(element, index) in songListA"
-              :key="element.name"
             >
               {{ element.name }} {{ index }}
             </div>
@@ -63,7 +59,6 @@
             <div
               class="list-group-item"
               v-for="(element, index) in songListB"
-              :key="element.name"
             >
               {{ element.name }} {{ index }}
             </div>
@@ -87,7 +82,6 @@ export default {
       songListA: this.playListArrayA,
       songListB: this.playListArrayB,
       library: this.songLibrary,
-      idGlobal: 5,
       songName:0
     };
   },
@@ -95,10 +89,6 @@ export default {
     log(evt) {
       window.console.log(evt);
     },
-    cloneSong({ id }){
-      id: this.idGlobal ++;
-      name: `name ${ id }`;
-    }
   },
 
   props:{

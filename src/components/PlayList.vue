@@ -13,7 +13,6 @@
   >
     <song-card
       v-for="s in songlist"
-      :key="s.id"
       :s="s"
     >{{printStatus}}</song-card>
   </draggable>
