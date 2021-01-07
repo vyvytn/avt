@@ -55,7 +55,8 @@
       <b-tabs pills card fill>
         <b-tab title="Bibliothek" active>
           <b-card-text>
-            <edit-play-list :play-list-array-a="listA" :play-list-array-b="listB" :song-library="songLibrary"></edit-play-list>
+            <edit-play-list :play-list-array-a="listA" :play-list-array-b="listB"
+                            :song-library="songLibrary"></edit-play-list>
           </b-card-text>
         </b-tab>
         <b-tab title="Musik importieren">
@@ -75,78 +76,78 @@
 
 <script>
 
-import deck from './deck';
-import VolumeSlider from './VolumeSlider';
-import FreeSoundList from './FreeSoundList';
-import FileExplorer from './FileExplorer';
-import EditPlayList from './EditPlayList';
+  import deck from './deck';
+  import VolumeSlider from './VolumeSlider';
+  import FreeSoundList from './FreeSoundList';
+  import FileExplorer from './FileExplorer';
+  import EditPlayList from './EditPlayList';
 
-export default {
-  name: 'djtool',
-  components: {
-    VolumeSlider,
-    deck,
-    FileExplorer,
-    FreeSoundList,
-    EditPlayList,
-  },
-  data() {
-    return {
-      value: 0,
-      listA: [
-        { name: 'John', id: 1 },
-        { name: 'Joao', id: 2 },
-        { name: 'Jean', id: 3 },
-        { name: 'Gerard', id: 4 },
-      ],
-      listB: [
-        { name: 'John', id: 1 },
-        { name: 'Joao', id: 2 },
-        { name: 'Jean', id: 3 },
-        { name: 'Gerard', id: 4 },
-      ],
-      songLibrary:[
-        { name: 'John', id: 1 },
-        { name: 'Joao', id: 2 },
-        { name: 'Jean', id: 3 },
-        { name: 'Gerard', id: 4 },
-      ]
-    };
-  },
-  methods: {
-    togglePlaylistModal() {
-      this.$refs.playlistModal.show();
+  export default {
+    name: 'djtool',
+    components: {
+      VolumeSlider,
+      deck,
+      FileExplorer,
+      FreeSoundList,
+      EditPlayList,
     },
-    updateLibrary(value){
-      this.songLibrary.push(value)
+    data() {
+      return {
+        value: 0,
+        listA: [
+          { name: 'John', id: 1 },
+          { name: 'Joao', id: 2 },
+          { name: 'Jean', id: 3 },
+          { name: 'Gerard', id: 4 },
+        ],
+        listB: [
+          { name: 'John', id: 1 },
+          { name: 'Joao', id: 2 },
+          { name: 'Jean', id: 3 },
+          { name: 'Gerard', id: 4 },
+        ],
+        songLibrary: [
+          { name: 'John', id: 1 },
+          { name: 'Joao', id: 2 },
+          { name: 'Jean', id: 3 },
+          { name: 'Gerard', id: 4 },
+        ]
+      };
+    },
+    methods: {
+      togglePlaylistModal() {
+        this.$refs.playlistModal.show();
+      },
+      updateLibrary(value) {
+        this.songLibrary.push(value);
+      }
+
+    },
+    mounted() {
+
     }
-
-  },
-  mounted() {
-
-  }
-};
+  };
 </script>
 
 <style scoped>
-.container-fluid {
-  max-height: 100vh;
-  padding: 1em;
-}
+  .container-fluid {
+    max-height: 100vh;
+    padding: 1em;
+  }
 
-.col-auto {
-  padding: .5em;
-  margin: .2em .8em;
+  .col-auto {
+    padding: .5em;
+    margin: .2em .8em;
 
-}
+  }
 
-.row {
-  justify-content: center;
-  margin-bottom: 1.5em;
-}
+  .row {
+    justify-content: center;
+    margin-bottom: 1.5em;
+  }
 
-h6, h4 {
-  margin-bottom: 0.5em;
-  text-align: center;
-}
+  h6, h4 {
+    margin-bottom: 0.5em;
+    text-align: center;
+  }
 </style>
