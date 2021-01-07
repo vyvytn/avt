@@ -1,6 +1,7 @@
 <template>
   <div>
-    {{name}} <b-button @click="$emit('addSong')">Add</b-button>
+    {{name}}
+    <b-button @click="$emit('addSong')">Add</b-button>
   </div>
 </template>
 

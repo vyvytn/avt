@@ -18,6 +18,7 @@
               v-for="(element, index) in library"
             >
               {{ element.name }} {{ index }}
+              <b-button @click="">delete</b-button>
             </div>
           </draggable>
         </div>
