@@ -1,5 +1,11 @@
 <template>
   <div id="freesoundList">
+    <b-form-input placeholder="Search for free Sounds"></b-form-input>
+    <b-list-group>
+      <b-list-group-item v-for="element in freeSoundList">
+        <free-sound-item :name="element.name" @addSong="updateLibrary(element)"></free-sound-item>
+      </b-list-group-item>
+    </b-list-group>
     <b-alert
       variant="success"
       :show="dismissCountDown"
@@ -7,12 +13,6 @@
       @dismissed="dismissCountDown=0"
       @dismiss-count-down="countDownChanged"
     >Song has been added to library</b-alert>
-    <b-form-input placeholder="Search for free Sounds"></b-form-input>
-    <b-list-group>
-      <b-list-group-item v-for="element in freeSoundList">
-        <free-sound-item :name="element.name" @addSong="updateLibrary(element)"></free-sound-item>
-      </b-list-group-item>
-    </b-list-group>
   </div>
 </template>
 
