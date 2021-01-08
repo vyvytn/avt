@@ -99,17 +99,18 @@
         window.console.log(evt);
       },
       deleteSong(name, idx){
+        console.log(idx);
         this.library.splice(idx, 1);
         for(let i=0; i < this.songListA.length; i++){
           if(this.songListA[i].name===name){
             console.log(this.songListA[i]);
-            this.songListA.splice(idx, 1);
+            this.songListA.splice(i, 1);
           }
         }
         for(let i=0; i < this.songListB.length; i++){
           if(this.songListB[i].name===name){
             console.log(this.songListB[i]);
-            this.songListB.splice(idx, 1);
+            this.songListB.splice(i, 1);
           }
         }
       }
