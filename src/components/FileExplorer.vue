@@ -33,7 +33,7 @@ export default {
       this.fileList.push(file.name);
     },
     addToLibrary(){
-      /*song hochladen und als stream im emit übergeben*/
+      /*song hochladen und als buffer im emit übergeben*/
       this.$emit("update")
     }
   }

@@ -1,10 +1,5 @@
 <template>
   <div id="deckRoot">
-    <!--    <div>
-          <av-media
-            :media="audioExample"
-          ></av-media>
-        </div>-->
     <b-card
       style="padding: 1em; background-color: #c49aef"
     >
@@ -110,7 +105,6 @@ import Playlist from './PlayList';
 import EqSlider from './EqSlider';
 import FXButton from './FXButton';
 
-
 export default {
   name: 'deck',
   components: {
@@ -122,7 +116,6 @@ export default {
   data() {
     return {
       eqStatus: false,
-      audioExample: Audio,
       equalizerList: [
         { name: '32', label: '32' },
         { name: '64', label: '64' },
@@ -151,6 +144,9 @@ export default {
   },
   props: {
     arrayPlaylist: Array,
+    /*currentTitel: String,
+    currentArtist:String,
+    currentImg:,*/
   },
   methods: {
 

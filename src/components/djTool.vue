@@ -93,10 +93,11 @@
     },
     data() {
       return {
+
         value: 0,
         listA: [
           { name: 'John', id: 1 },
-          { name: 'Joao', id: 2 },
+         { name: 'Joao', id: 2 },
           { name: 'Jean', id: 3 },
           { name: 'Gerard', id: 4 },
         ],
