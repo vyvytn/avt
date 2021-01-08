@@ -61,11 +61,11 @@
         </b-tab>
         <b-tab title="Musik importieren">
           <b-card-text>
-            <FileExplorer></FileExplorer>
+            <FileExplorer @update="updateLibraryFile"></FileExplorer>
           </b-card-text>
         </b-tab>
         <b-tab title="Freesound">
-          <FreeSoundList @update="updateLibrary"></FreeSoundList>
+          <FreeSoundList @update="updateLibraryFree" :duplicate="duplicateFreesound"></FreeSoundList>
         </b-tab>
       </b-tabs>
     </b-modal>
@@ -111,17 +111,36 @@
           { name: 'Joao', id: 2 },
           { name: 'Jean', id: 3 },
           { name: 'Gerard', id: 4 },
-        ]
+        ],
+        duplicateFreesound: false,
       };
     },
     methods: {
       togglePlaylistModal() {
         this.$refs.playlistModal.show();
       },
-      updateLibrary(value) {
+      updateLibraryFile(value) {
+        for (let i = 0; i < this.songLibrary.length; i++) {
+          if (this.songLibrary[i].name === value.name) {
+            console.log('Duplikat ' + this.songLibrary[i].name);
+            return;
+          }
+        }
+        /*buffer kacke*/
         this.songLibrary.push(value);
+      },
+      updateLibraryFree(value) {
+        for (let i = 0; i < this.songLibrary.length; i++) {
+          if (this.songLibrary[i].name === value.name) {
+            console.log('Duplikat' + this.songLibrary[i].name);
+            this.duplicateFreesound = true;
+            return;
+          }
+        }
+        this.duplicateFreesound = false;
+        this.songLibrary.push(value);
+        console.log('kein Duplikat');
       }
-
     },
     mounted() {
 

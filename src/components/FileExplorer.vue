@@ -32,7 +32,10 @@ export default {
     uploadSong(file){
       this.fileList.push(file.name);
     },
-    addToLibrary(){}
+    addToLibrary(){
+      /*song hochladen und als stream im emit übergeben*/
+      this.$emit("update")
+    }
   }
 };
 </script>

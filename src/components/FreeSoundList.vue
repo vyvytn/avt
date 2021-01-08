@@ -13,6 +13,14 @@
       @dismissed="dismissCountDown=0"
       @dismiss-count-down="countDownChanged"
     >Song has been added to library</b-alert>
+
+    <!--<b-alert v-if="this.duplicate"
+             variant="danger"
+             :show="dismissCountDown"
+             dismissible
+             @dismissed="dismissCountDown=0"
+             @dismiss-count-down="countDownChanged"
+    >{{showAlert}}Song was already added to library</b-alert>-->
   </div>
 </template>
 
@@ -31,7 +39,7 @@ export default {
         { name: 'song 3'},
       ],
       dismissSecs: 1,
-      dismissCountDown: 0
+      dismissCountDown: 0,
     }
   },
   methods:{
@@ -45,7 +53,10 @@ export default {
     showAlert() {
       this.dismissCountDown = this.dismissSecs
     }
-  }
+  },
+  props:{
+    duplicate:Boolean
+  },
 };
 </script>
 
