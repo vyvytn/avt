@@ -88,12 +88,6 @@
           </div>
         </b-card-text>
       </b-tab>
-      <b-tab title="Scratch">
-        <b-card-text>Tab contents 2</b-card-text>
-      </b-tab>
-      <b-tab title="Beats">
-        <b-card-text>Tab contents 2</b-card-text>
-      </b-tab>
     </b-tabs>
 
   </div>

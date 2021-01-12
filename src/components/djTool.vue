@@ -20,13 +20,13 @@
             <h6>R</h6>
           </b-col>
         </b-row>
-        <b-row>
+<!--        <b-row> Record Button
           <b-col cols="auto">
             <b-button variant="secondary">
               <b-icon font-scale="1.5em" icon="mic-fill" style="color: orangered"></b-icon>
             </b-button>
           </b-col>
-        </b-row>
+        </b-row>-->
         <h4>Tempo</h4>
         <b-row>
           <b-col cols="auto">
