@@ -13,19 +13,29 @@
       <canvas id="songVisualizer" width="200" height="50"></canvas>
     </b-card>
     <div style="padding: 1em" align="center">
-      <b-button class="" variant="success" @click="buttonClickedPlay">
+      <b-button
+        variant="success"
+        @click="buttonClickedPlay"
+      :pressed.sync="isPlaying">
         <b-icon font-scale="2" icon="play-fill"></b-icon>
       </b-button>
-      <b-button variant="success" @click="buttonClickedPause">
+      <b-button
+        variant="success"
+        @click="buttonClickedPause"
+        :pressed.sync="isPausing">
         <b-icon font-scale="2" icon="pause-fill"></b-icon>
       </b-button>
-      <b-button variant="danger" @click="buttonClickedStop">
+      <b-button
+        variant="danger"
+        @click="buttonClickedStop">
         <b-icon font-scale="2" icon="stop-fill"></b-icon>
       </b-button>
-      <b-button variant="outline-secondary">
+      <b-button
+        variant="outline-secondary">
         <b-icon font-scale="2" icon="skip-start-fill"></b-icon>
       </b-button>
-      <b-button variant="outline-secondary">
+      <b-button
+        variant="outline-secondary">
         <b-icon font-scale="2" icon="skip-end-fill"></b-icon>
       </b-button>
     </div>
@@ -135,6 +145,7 @@ export default {
       ],
       isReady: false,
       isPlaying: false,
+      isPausing:false,
       playListA: this.arrayPlaylist,
     };
   },
@@ -171,14 +182,20 @@ export default {
       this.$emit('openLibraryClicked')
     },
     buttonClickedPlay(){
-      this.$emit('play')
+      this.$emit('play');
+      this.isPlaying=true;
+      this.isPausing=false;
     }
     ,
     buttonClickedPause(){
-      this.$emit('pause')
+      this.$emit('pause');
+      this.isPlaying=false;
+      this.isPausing=true;
     },
     buttonClickedStop(){
-      this.$emit('stop')
+      this.$emit('stop');
+      this.isPlaying=false;
+      this.isPausing=false;
     },
     playAudio() {
       if (!this.isReady) return;
