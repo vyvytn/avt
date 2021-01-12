@@ -2,7 +2,7 @@
   <b-container fluid="">
     <b-row>
       <b-col col>
-        <deck @openLibraryClicked="togglePlaylistModal" id="deckA" :array-playlist="listA"></deck>
+        <deck @openLibraryClicked="togglePlaylistModal" id="deckA" :array-playlist="listA" @playA="playDeckA"></deck>
       </b-col>
       <b-col cols="12" md="auto">
         <h4>Volume</h4>
@@ -81,6 +81,34 @@
   import FreeSoundList from './FreeSoundList';
   import FileExplorer from './FileExplorer';
   import EditPlayList from './EditPlayList';
+  import AudioPlayer from '../logic/AudioPlayer';
+  import AudioEffects from '../logic/AudioEffects';
+  import Playlist from '../logic/Playlist';
+  import MusicLibrary from '../logic/MusicLibrary';
+  import MP3 from '../logic/MP3';
+  import Song from '../logic/Song';
+
+ /* var ctx = new AudioContext(); // shared context
+  const masterGain = ctx.createGain(); // gain shared accross players
+  masterGain.connect( ctx.destination );
+  masterGain.value = 1.0;
+
+  const lib = new MusicLibrary();
+  const playlist = new Playlist( lib );
+
+  const player = new AudioPlayer( ctx, masterGain, playlist );
+
+  let songUrl='../assets/example.mp3'
+  var request = new XMLHttpRequest();
+  request.open('GET', songUrl, true);
+  request.responseType = 'arraybuffer';
+  let bb=null;
+  request.onload = () => {
+    bb= new Song( new MP3( request.response));
+    console.log(request.response)
+  };
+  bb.prepareForPlayback( ctx );
+  playlist.add( lib.insert( bb ) );*/
 
   export default {
     name: 'djtool',
@@ -114,6 +142,7 @@
           { name: 'Gerard', id: 3 },
         ],
         duplicateFreesound: false,
+        playerA: null,
       };
     },
     methods: {
@@ -141,9 +170,35 @@
         this.duplicateFreesound = false;
         this.songLibrary.push(value);
         console.log('kein Duplikat');
+      },
+      playDeckA(){
+        this.playerA.play();
+        console.log('Deck A sollte spielen.')
       }
     },
     mounted() {
+   /*   this.ctx = new AudioContext(); // shared context
+      const masterGain = this.ctx.createGain(); // gain shared accross players
+      masterGain.connect( this.ctx.destination );
+      masterGain.value = 1.0;
+
+      const lib = new MusicLibrary();
+      const playlist = new Playlist( lib );
+
+      const player = new AudioPlayer( this.ctx, masterGain, playlist );*/
+      /*this.playerA=player;
+
+      let songUrl='../assets/example.mp3'
+      this.request = new XMLHttpRequest();
+      this.request.open('GET', songUrl, true);
+      this.request.responseType = 'arraybuffer';
+      this.request.onload = () => {
+        this.bb= new Song( new MP3( this.request.response.data))
+      };
+      this.bb.prepareForPlayback( this.ctx );
+      playlist.add( lib.insert( this.bb ) );*/
+    },
+    beforeMount() {
 
     }
   };

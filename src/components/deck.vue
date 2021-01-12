@@ -13,7 +13,7 @@
       <canvas id="songVisualizer" width="200" height="50"></canvas>
     </b-card>
     <div style="padding: 1em" align="center">
-      <b-button class="" variant="success" @click="playAudio">
+      <b-button class="" variant="success" @click="this.$emit('playA')">
         <b-icon font-scale="2" icon="play-fill"></b-icon>
         <b-icon font-scale="2" icon="pause-fill"></b-icon>
       </b-button>
