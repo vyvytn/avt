@@ -2,7 +2,7 @@
   <b-container fluid="">
     <b-row>
       <b-col col>
-        <deck @openLibraryClicked="togglePlaylistModal" id="deckA" :array-playlist="listA" @playA="playDeckA"></deck>
+        <deck @openLibraryClicked="togglePlaylistModal" id="deckA" :array-playlist="listA" @play="playMusic()" @pause="pauseMusic" @stop="stopMusic"></deck>
       </b-col>
       <b-col cols="12" md="auto">
         <h4>Volume</h4>
@@ -20,13 +20,6 @@
             <h6>R</h6>
           </b-col>
         </b-row>
-        <!--        <b-row> Record Button
-                  <b-col cols="auto">
-                    <b-button variant="secondary">
-                      <b-icon font-scale="1.5em" icon="mic-fill" style="color: orangered"></b-icon>
-                    </b-button>
-                  </b-col>
-                </b-row>-->
         <h4>Tempo</h4>
         <b-row>
           <b-col cols="auto">
@@ -194,8 +187,16 @@ export default {
       this.songLibrary.push(value);
       console.log('kein Duplikat');
     },
-    playDeckA() {
+    playMusic() {
       player.play();
+      console.log('Deck A sollte spielen.');
+    },
+    pauseMusic() {
+      player.pause();
+      console.log('Deck A sollte spielen.');
+    },
+    stopMusic() {
+      player.stop();
       console.log('Deck A sollte spielen.');
     },
     print(val){

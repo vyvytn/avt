@@ -15,9 +15,11 @@
     <div style="padding: 1em" align="center">
       <b-button class="" variant="success" @click="buttonClickedPlay">
         <b-icon font-scale="2" icon="play-fill"></b-icon>
+      </b-button>
+      <b-button variant="success" @click="buttonClickedPause">
         <b-icon font-scale="2" icon="pause-fill"></b-icon>
       </b-button>
-      <b-button variant="danger" @click="stopAudio">
+      <b-button variant="danger" @click="buttonClickedStop">
         <b-icon font-scale="2" icon="stop-fill"></b-icon>
       </b-button>
       <b-button variant="outline-secondary">
@@ -169,9 +171,15 @@ export default {
       this.$emit('openLibraryClicked')
     },
     buttonClickedPlay(){
-      this.$emit('playA')
+      this.$emit('play')
     }
     ,
+    buttonClickedPause(){
+      this.$emit('pause')
+    },
+    buttonClickedStop(){
+      this.$emit('stop')
+    },
     playAudio() {
       if (!this.isReady) return;
       //this.bufferSource.start();
