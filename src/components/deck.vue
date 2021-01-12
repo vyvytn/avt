@@ -13,7 +13,7 @@
       <canvas id="songVisualizer" width="200" height="50"></canvas>
     </b-card>
     <div style="padding: 1em" align="center">
-      <b-button class="" variant="success" @click="this.$emit('playA')">
+      <b-button class="" variant="success" @click="buttonClickedPlay">
         <b-icon font-scale="2" icon="play-fill"></b-icon>
         <b-icon font-scale="2" icon="pause-fill"></b-icon>
       </b-button>
@@ -168,6 +168,10 @@ export default {
       //this.$refs.playlistModal.show();
       this.$emit('openLibraryClicked')
     },
+    buttonClickedPlay(){
+      this.$emit('playA')
+    }
+    ,
     playAudio() {
       if (!this.isReady) return;
       //this.bufferSource.start();

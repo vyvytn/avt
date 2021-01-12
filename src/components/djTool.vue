@@ -108,14 +108,30 @@ const player = new AudioPlayer(ctx, masterGain, playlist);
 /**
  * get song and connect to mastergain
  */
-let songUrl = 'http://localhost:8080/static/Bosshafte Beats - Sunglass Evo.mp3';
+let songUrl = 'http://localhost:8080/static/example.mp3';
 axios.get(songUrl, { responseType: 'arraybuffer' })
   .then(async res => {
     const bb = new Song(new MP3(res.data));
     await bb.prepareForPlayback(ctx);
-    playlist.add( lib.insert( bb ) );
-    player.play();
-    console.log('playing: ' + bb.metaData.artist +" "+ bb.metaData.title);
+    playlist.add(lib.insert(bb));
+    console.log('playing: ' + bb.metaData.artist + ' ' + bb.metaData.title);
+  })
+  .then(() => axios.get('http://localhost:8080/static/Black Muffin - Die and Retry.mp3', { responseType: 'arraybuffer' }))
+  .then(async res => {
+    const bm = new Song(new MP3(res.data));
+    await bm.prepareForPlayback(ctx);
+    playlist.add(lib.insert(bm));
+    console.log('playing: ' + bm.metaData.artist + ' ' + bm.metaData.title);
+    console.log(playlist.list);
+
+  })
+  .then(() => axios.get('http://localhost:8080/static/Black Muffin - Die and Retry.mp3', { responseType: 'arraybuffer' }))
+  .then(async res => {
+    const m = new Song(new MP3(res.data));
+    await m.prepareForPlayback(ctx);
+    playlist.add(lib.insert(m));
+    console.log('playing: ' + m.metaData.artist + ' ' + m.metaData.title);
+    console.log(playlist.list);
   });
 export default {
   name: 'djtool',
@@ -179,31 +195,15 @@ export default {
       console.log('kein Duplikat');
     },
     playDeckA() {
-      this.playerA.play();
+      player.play();
       console.log('Deck A sollte spielen.');
+    },
+    print(val){
+      console.log(val)
     }
   },
   mounted() {
-    /*   this.ctx = new AudioContext(); // shared context
-       const masterGain = this.ctx.createGain(); // gain shared accross players
-       masterGain.connect( this.ctx.destination );
-       masterGain.value = 1.0;
 
-       const lib = new MusicLibrary();
-       const playlist = new Playlist( lib );
-
-       const player = new AudioPlayer( this.ctx, masterGain, playlist );*/
-    /*this.playerA=player;
-
-    let songUrl='../assets/example.mp3'
-    this.request = new XMLHttpRequest();
-    this.request.open('GET', songUrl, true);
-    this.request.responseType = 'arraybuffer';
-    this.request.onload = () => {
-      this.bb= new Song( new MP3( this.request.response.data))
-    };
-    this.bb.prepareForPlayback( this.ctx );
-    playlist.add( lib.insert( this.bb ) );*/
   },
   beforeMount() {
 
