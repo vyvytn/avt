@@ -20,13 +20,13 @@
             <h6>R</h6>
           </b-col>
         </b-row>
-<!--        <b-row> Record Button
-          <b-col cols="auto">
-            <b-button variant="secondary">
-              <b-icon font-scale="1.5em" icon="mic-fill" style="color: orangered"></b-icon>
-            </b-button>
-          </b-col>
-        </b-row>-->
+        <!--        <b-row> Record Button
+                  <b-col cols="auto">
+                    <b-button variant="secondary">
+                      <b-icon font-scale="1.5em" icon="mic-fill" style="color: orangered"></b-icon>
+                    </b-button>
+                  </b-col>
+                </b-row>-->
         <h4>Tempo</h4>
         <b-row>
           <b-col cols="auto">
@@ -76,153 +76,160 @@
 
 <script>
 
-  import deck from './deck';
-  import VolumeSlider from './VolumeSlider';
-  import FreeSoundList from './FreeSoundList';
-  import FileExplorer from './FileExplorer';
-  import EditPlayList from './EditPlayList';
-  import AudioPlayer from '../logic/AudioPlayer';
-  import AudioEffects from '../logic/AudioEffects';
-  import Playlist from '../logic/Playlist';
-  import MusicLibrary from '../logic/MusicLibrary';
-  import MP3 from '../logic/MP3';
-  import Song from '../logic/Song';
+import deck from './deck';
+import VolumeSlider from './VolumeSlider';
+import FreeSoundList from './FreeSoundList';
+import FileExplorer from './FileExplorer';
+import EditPlayList from './EditPlayList';
+import AudioPlayer from '../logic/AudioPlayer';
+import AudioEffects from '../logic/AudioEffects';
+import Playlist from '../logic/Playlist';
+import MusicLibrary from '../logic/MusicLibrary';
+import MP3 from '../logic/MP3';
+import Song from '../logic/Song';
+import axios from 'axios';
 
- /* var ctx = new AudioContext(); // shared context
-  const masterGain = ctx.createGain(); // gain shared accross players
-  masterGain.connect( ctx.destination );
-  masterGain.value = 1.0;
+/**
+ * Web Audio Api
+ * creating audio context and mastergain
+ */
+const ctx = new AudioContext(); // shared context
+const masterGain = ctx.createGain(); // gain shared accross players
+masterGain.connect(ctx.destination);
+masterGain.value = 1.0;
 
-  const lib = new MusicLibrary();
-  const playlist = new Playlist( lib );
+/**
+ * creating player and playlists for deck a and b
+ */
+const lib = new MusicLibrary();
+const playlist = new Playlist(lib);
+const player = new AudioPlayer(ctx, masterGain, playlist);
 
-  const player = new AudioPlayer( ctx, masterGain, playlist );
+/**
+ * get song and connect to mastergain
+ */
+let songUrl = 'http://localhost:8080/static/Bosshafte Beats - Sunglass Evo.mp3';
+axios.get(songUrl, { responseType: 'arraybuffer' })
+  .then(async res => {
+    const bb = new Song(new MP3(res.data));
+    await bb.prepareForPlayback(ctx);
+    playlist.add( lib.insert( bb ) );
+    player.play();
+    console.log('playing: ' + bb.metaData.artist +" "+ bb.metaData.title);
+  });
+export default {
+  name: 'djtool',
+  components: {
+    VolumeSlider,
+    deck,
+    FileExplorer,
+    FreeSoundList,
+    EditPlayList,
+  },
+  data() {
+    return {
 
-  let songUrl='../assets/example.mp3'
-  var request = new XMLHttpRequest();
-  request.open('GET', songUrl, true);
-  request.responseType = 'arraybuffer';
-  let bb=null;
-  request.onload = () => {
-    bb= new Song( new MP3( request.response));
-    console.log(request.response)
-  };
-  bb.prepareForPlayback( ctx );
-  playlist.add( lib.insert( bb ) );*/
-
-  export default {
-    name: 'djtool',
-    components: {
-      VolumeSlider,
-      deck,
-      FileExplorer,
-      FreeSoundList,
-      EditPlayList,
+      value: 0,
+      listA: [
+        { name: 'John', id: 0 },
+        { name: 'Joao', id: 1 },
+        { name: 'Jean', id: 2 },
+        { name: 'Gerard', id: 3 },
+      ],
+      listB: [
+        { name: 'John', id: 0 },
+        { name: 'Joao', id: 1 },
+        { name: 'Jean', id: 2 },
+        { name: 'Gerard', id: 3 },
+      ],
+      songLibrary: [
+        { name: 'John', id: 0 },
+        { name: 'Joao', id: 1 },
+        { name: 'Jean', id: 2 },
+        { name: 'Gerard', id: 3 },
+      ],
+      duplicateFreesound: false,
+      playerA: null,
+    };
+  },
+  methods: {
+    togglePlaylistModal() {
+      this.$refs.playlistModal.show();
     },
-    data() {
-      return {
-
-        value: 0,
-        listA: [
-          { name: 'John', id: 0 },
-         { name: 'Joao', id: 1 },
-          { name: 'Jean', id: 2 },
-          { name: 'Gerard', id: 3 },
-        ],
-        listB: [
-          { name: 'John', id: 0},
-          { name: 'Joao', id: 1 },
-          { name: 'Jean', id: 2 },
-          { name: 'Gerard', id: 3 },
-        ],
-        songLibrary: [
-          { name: 'John', id: 0 },
-          { name: 'Joao', id: 1 },
-          { name: 'Jean', id: 2 },
-          { name: 'Gerard', id: 3 },
-        ],
-        duplicateFreesound: false,
-        playerA: null,
-      };
-    },
-    methods: {
-      togglePlaylistModal() {
-        this.$refs.playlistModal.show();
-      },
-      updateLibraryFile(value) {
-        for (let i = 0; i < this.songLibrary.length; i++) {
-          if (this.songLibrary[i].name === value.name) {
-            console.log('Duplikat ' + this.songLibrary[i].name);
-            return;
-          }
+    updateLibraryFile(value) {
+      for (let i = 0; i < this.songLibrary.length; i++) {
+        if (this.songLibrary[i].name === value.name) {
+          console.log('Duplikat ' + this.songLibrary[i].name);
+          return;
         }
-        /*buffer kacke*/
-        this.songLibrary.push(value);
-      },
-      updateLibraryFree(value) {
-        for (let i = 0; i < this.songLibrary.length; i++) {
-          if (this.songLibrary[i].name === value.name) {
-            console.log('Duplikat' + this.songLibrary[i].name);
-            this.duplicateFreesound = true;
-            return;
-          }
-        }
-        this.duplicateFreesound = false;
-        this.songLibrary.push(value);
-        console.log('kein Duplikat');
-      },
-      playDeckA(){
-        this.playerA.play();
-        console.log('Deck A sollte spielen.')
       }
+      /*buffer kacke*/
+      this.songLibrary.push(value);
     },
-    mounted() {
-   /*   this.ctx = new AudioContext(); // shared context
-      const masterGain = this.ctx.createGain(); // gain shared accross players
-      masterGain.connect( this.ctx.destination );
-      masterGain.value = 1.0;
-
-      const lib = new MusicLibrary();
-      const playlist = new Playlist( lib );
-
-      const player = new AudioPlayer( this.ctx, masterGain, playlist );*/
-      /*this.playerA=player;
-
-      let songUrl='../assets/example.mp3'
-      this.request = new XMLHttpRequest();
-      this.request.open('GET', songUrl, true);
-      this.request.responseType = 'arraybuffer';
-      this.request.onload = () => {
-        this.bb= new Song( new MP3( this.request.response.data))
-      };
-      this.bb.prepareForPlayback( this.ctx );
-      playlist.add( lib.insert( this.bb ) );*/
+    updateLibraryFree(value) {
+      for (let i = 0; i < this.songLibrary.length; i++) {
+        if (this.songLibrary[i].name === value.name) {
+          console.log('Duplikat' + this.songLibrary[i].name);
+          this.duplicateFreesound = true;
+          return;
+        }
+      }
+      this.duplicateFreesound = false;
+      this.songLibrary.push(value);
+      console.log('kein Duplikat');
     },
-    beforeMount() {
-
+    playDeckA() {
+      this.playerA.play();
+      console.log('Deck A sollte spielen.');
     }
-  };
+  },
+  mounted() {
+    /*   this.ctx = new AudioContext(); // shared context
+       const masterGain = this.ctx.createGain(); // gain shared accross players
+       masterGain.connect( this.ctx.destination );
+       masterGain.value = 1.0;
+
+       const lib = new MusicLibrary();
+       const playlist = new Playlist( lib );
+
+       const player = new AudioPlayer( this.ctx, masterGain, playlist );*/
+    /*this.playerA=player;
+
+    let songUrl='../assets/example.mp3'
+    this.request = new XMLHttpRequest();
+    this.request.open('GET', songUrl, true);
+    this.request.responseType = 'arraybuffer';
+    this.request.onload = () => {
+      this.bb= new Song( new MP3( this.request.response.data))
+    };
+    this.bb.prepareForPlayback( this.ctx );
+    playlist.add( lib.insert( this.bb ) );*/
+  },
+  beforeMount() {
+
+  }
+};
 </script>
 
 <style scoped>
-  .container-fluid {
-    max-height: 100vh;
-    padding: 1em;
-  }
+.container-fluid {
+  max-height: 100vh;
+  padding: 1em;
+}
 
-  .col-auto {
-    padding: .5em;
-    margin: .2em .8em;
+.col-auto {
+  padding: .5em;
+  margin: .2em .8em;
 
-  }
+}
 
-  .row {
-    justify-content: center;
-    margin-bottom: 1.5em;
-  }
+.row {
+  justify-content: center;
+  margin-bottom: 1.5em;
+}
 
-  h6, h4 {
-    margin-bottom: 0.5em;
-    text-align: center;
-  }
+h6, h4 {
+  margin-bottom: 0.5em;
+  text-align: center;
+}
 </style>
