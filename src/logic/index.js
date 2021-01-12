@@ -11,7 +11,7 @@ import Crossfader from "./Crossfader";
 
 const ctx = new AudioContext(); // shared context
 
-const masterGain = ctx.createGain();
+const masterGain = ctx.createGain(); // gain shared accross players
 masterGain.connect( ctx.destination );
 masterGain.value = 1.0;
 
@@ -53,7 +53,8 @@ const rightPlayer = new AudioPlayer( ctx, rightOutNode, rightPlaylist );
         player.play();
       }, 10000 );
       window.setTimeout( () => {
-        console.log( "1x" )
+        console.log( "1x + bass boosted" )
+        player.setEq( 64, 25 );
         player.setTempo( 1 );
       }, 12000 );
       // window.setTimeout( () => {
