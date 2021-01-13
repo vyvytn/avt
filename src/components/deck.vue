@@ -5,8 +5,8 @@
     >
       <b-card-text>
         <b-avatar></b-avatar>
-        <p id="songTitle" class="font-weight-bold">Song Titel</p>
-        <p id="interpretName" class="font-weight-medium">Interpret Name</p>
+        <p id="songTitle" class="font-weight-bold">{{currentTitle}}</p>
+        <p id="interpretName" class="font-weight-medium">{{currentArtist}}</p>
         <p id="albumName" class="font-weight-medium">Album Name</p>
         <p id="timeToLeft" class="font-weight-bold">-6:23</p>
       </b-card-text>
@@ -151,9 +151,13 @@ export default {
   },
   props: {
     arrayPlaylist: Array,
-    /*currentTitel: String,
-    currentArtist:String,
-    currentImg:,*/
+    title: {
+      type: String,
+    },
+    artist:{
+      type:String,
+    }
+    // currentImg:
   },
   methods: {
 
@@ -205,6 +209,14 @@ export default {
       //this.bufferSource.stop();
     },
   },
+  computed: {
+    currentArtist: function (){
+      return this.artist
+    },
+    currentTitle: function(){
+      return this.title
+    }
+  }
 };
 </script>
 

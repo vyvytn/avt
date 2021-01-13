@@ -2,7 +2,14 @@
   <b-container fluid="">
     <b-row>
       <b-col col>
-        <deck @openLibraryClicked="togglePlaylistModal" id="deckA" :array-playlist="listA" @play="playA()" @pause="pauseA" @stop="stopA"></deck>
+        <deck @openLibraryClicked="togglePlaylistModal"
+              id="deckA" :array-playlist="listA"
+              @play="playA()"
+              @pause="pauseA"
+              @stop="stopA"
+              :artist.sync="currentArtist"
+              :title.sync="currentTitle"
+        ></deck>
       </b-col>
       <b-col cols="12" md="auto">
         <h4>Volume</h4>
@@ -39,7 +46,8 @@
         </b-row>
       </b-col>
       <b-col col>
-        <deck @openLibraryClicked="togglePlaylistModal" id="deckB" :array-playlist="listB" @play="playB()" @pause="pauseB" @stop="stopB"></deck>
+        <deck @openLibraryClicked="togglePlaylistModal" id="deckB" :array-playlist="listB" @play="playB()"
+              @pause="pauseB" @stop="stopB"></deck>
       </b-col>
     </b-row>
 
@@ -119,7 +127,6 @@ axios.get(songUrl, { responseType: 'arraybuffer' })
     playlistB.add(lib.insert(bm));
 
     console.log('playing: ' + bm.metaData.artist + ' ' + bm.metaData.title);
-    console.log(playlist.list);
 
   })
   .then(() => axios.get('http://localhost:8080/static/Black Muffin - Die and Retry.mp3', { responseType: 'arraybuffer' }))
@@ -130,7 +137,10 @@ axios.get(songUrl, { responseType: 'arraybuffer' })
     playlistB.add(lib.insert(m));
     console.log('playing: ' + m.metaData.artist + ' ' + m.metaData.title);
     console.log(playlistA.list);
+
+    console.log('NOW PLAYING' + playerA.current.metaData.artist);
   });
+
 export default {
   name: 'djtool',
   components: {
@@ -139,11 +149,13 @@ export default {
     FileExplorer,
     FreeSoundList,
     EditPlayList,
+    counter:0
   },
   data() {
     return {
 
       value: 0,
+      playlistA:playlistA.list,
       listA: [
         { name: 'John', id: 0 },
         { name: 'Joao', id: 1 },
@@ -163,6 +175,8 @@ export default {
         { name: 'Gerard', id: 3 },
       ],
       duplicateFreesound: false,
+      currentArtist:String,
+      currentTitle:String,
     };
   },
   methods: {
@@ -194,36 +208,54 @@ export default {
     playA() {
       playerA.play();
       console.log('Deck A sollte spielen.');
+       this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
     },
     pauseA() {
       playerA.pause();
-      console.log('Deck A sollte spielen.');
+      console.log('Deck A sollte pausieren.');
     },
     stopA() {
       playerA.stop();
-      console.log('Deck A sollte spielen.');
-    },playB() {
+      console.log('Deck A sollte stoppen.');
+    }, playB() {
       playerB.play();
-      console.log('Deck A sollte spielen.');
+      console.log('Deck B sollte spielen.');
     },
     pauseB() {
       playerB.pause();
-      console.log('Deck A sollte spielen.');
+      console.log('Deck B sollte pausieren.');
     },
     stopB() {
       playerB.stop();
-      console.log('Deck A sollte spielen.');
+      console.log('Deck B sollte stoppen.');
     },
-    print(val){
-      console.log(val)
+    print(val) {
+      console.log(val);
+    },
+    insertMetadata(artist, title) {
+      this.currentArtist=artist;
+      this.currentTitle=title;
+    },
+    refreshA(){
+      this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
     }
   },
   mounted() {
+  },
+  computed(){
+
+   /* currentArtist: function (){
+      return playerA.current.metaData.artist;
+    },
+    currentTitle: function (){
+      return playerA.current.metaData.title;
+    }*/
+  },
+  beforeUpdate() {
+    this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
 
   },
-  beforeMount() {
 
-  }
 };
 </script>
 
