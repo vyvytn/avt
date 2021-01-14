@@ -17,13 +17,22 @@ export default class Song {
   metaData = null;
 
   async prepareForPlayback( ctx ) { // needs to be run together w/ counstructor, otherwise obj not usable
-    const [ tags, audioBuffer ] = await Promise.all( [
-      this.getRawTags(),
-      this.decodeAudioData( ctx ),
-    ] );
 
-    tags.duration = audioBuffer.duration;
-    this.metaData = new MetaData( tags );
+    if ( this.type === "MP3" ) {
+      const [ tags, audioBuffer ] = await Promise.all( [
+        this.getRawTags(),
+        this.decodeAudioData( ctx ),
+      ] );
+
+      tags.duration = audioBuffer.duration;
+      this.metaData = new MetaData( tags );
+    }
+    if ( this.type === "Freesound" ) {
+      // const [ tags, audioBuffer ] = await Promise.all( [
+      //   this.getRawTags(),
+      //   this.decodeAudioData( ctx ),
+      // ] );
+    }
 }
 
   async getRawTags() {
