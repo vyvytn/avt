@@ -1,77 +1,94 @@
 <template>
-  <b-container fluid="">
-    <b-row>
-      <b-col col>
-        <deck @openLibraryClicked="togglePlaylistModal"
-              id="deckA" :array-playlist="listA"
-              @play="playA()"
-              @pause="pauseA"
-              @stop="stopA"
-              :artist.sync="currentArtist"
-              :title.sync="currentTitle"
-        ></deck>
-      </b-col>
-      <b-col cols="12" md="auto">
-        <h4>Volume</h4>
+  <div>
+    <div v-if="!isClicked">
+      <b-button @click="initialize()" variant="danger">Click me</b-button>
+    </div>
+    <div v-if="isClicked">
+      <b-container fluid="">
         <b-row>
-          <b-col cols="auto">
-            <VolumeSlider id="gainLeftDeckSlider" :horizontal="false"></VolumeSlider>
-            <h6>L</h6>
+          <b-col col>
+            <deck @openLibraryClicked="togglePlaylistModal"
+                  id="deckA" :array-playlist="listA"
+                  @play="playA()"
+                  @pause="pauseA"
+                  @stop="stopA"
+                  @next="nextA"
+                  @prev="prevA"
+                  :artist.sync="currentArtistA"
+                  :title.sync="currentTitleA"
+            ></deck>
           </b-col>
-          <b-col cols="auto">
-            <VolumeSlider id="gainMasterSlider" :horizontal="false"></VolumeSlider>
-            <h6>M</h6>
+          <b-col cols="12" md="auto">
+            <h4>Volume</h4>
+            <b-row>
+              <b-col cols="auto">
+                <VolumeSlider id="gainLeftDeckSlider" :horizontal="false"></VolumeSlider>
+                <h6>L</h6>
+              </b-col>
+              <b-col cols="auto">
+                <VolumeSlider id="gainMasterSlider" :horizontal="false"></VolumeSlider>
+                <h6>M</h6>
+              </b-col>
+              <b-col cols="auto">
+                <VolumeSlider id="gainRightDeckSlider" :horizontal="false"></VolumeSlider>
+                <h6>R</h6>
+              </b-col>
+            </b-row>
+            <h4>Tempo</h4>
+            <b-row>
+              <b-col cols="auto">
+                <VolumeSlider id="tempoLeftDeckSlider" :horizontal="false"></VolumeSlider>
+                <h6>L</h6>
+              </b-col>
+              <b-col cols="auto">
+                <VolumeSlider id="tempoRightDeckSlider" :horizontal="false"></VolumeSlider>
+                <h6>R</h6>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col cols="auto">
+                <h4>Fading</h4>
+                <VolumeSlider id="crossfadeSlider" :horizontal="true"></VolumeSlider>
+              </b-col>
+            </b-row>
           </b-col>
-          <b-col cols="auto">
-            <VolumeSlider id="gainRightDeckSlider" :horizontal="false"></VolumeSlider>
-            <h6>R</h6>
+          <b-col col>
+            <deck @openLibraryClicked="togglePlaylistModal"
+                  id="deckB"
+                  :array-playlist="listB"
+                  @play="playB()"
+                  @pause="pauseB"
+                  @stop="stopB"
+                  @next="nextB"
+                  @prev="prevB"
+                  :artist.sync="currentArtistB"
+                  :title.sync="currentTitleB"></deck>
           </b-col>
         </b-row>
-        <h4>Tempo</h4>
-        <b-row>
-          <b-col cols="auto">
-            <VolumeSlider id="tempoLeftDeckSlider" :horizontal="false"></VolumeSlider>
-            <h6>L</h6>
-          </b-col>
-          <b-col cols="auto">
-            <VolumeSlider id="tempoRightDeckSlider" :horizontal="false"></VolumeSlider>
-            <h6>R</h6>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col cols="auto">
-            <h4>Fading</h4>
-            <VolumeSlider id="crossfadeSlider" :horizontal="true"></VolumeSlider>
-          </b-col>
-        </b-row>
-      </b-col>
-      <b-col col>
-        <deck @openLibraryClicked="togglePlaylistModal" id="deckB" :array-playlist="listB" @play="playB()"
-              @pause="pauseB" @stop="stopB"></deck>
-      </b-col>
-    </b-row>
 
-    <!--MENU FOR PLAYLIST EDITING BEGIN-->
-    <b-modal ref="playlistModal" title="Playlist bearbeiten">
-      <b-tabs pills card fill>
-        <b-tab title="Bibliothek" active>
-          <b-card-text>
-            <edit-play-list :play-list-array-a="listA" :play-list-array-b="listB"
-                            :song-library="songLibrary"></edit-play-list>
-          </b-card-text>
-        </b-tab>
-        <b-tab title="Musik importieren">
-          <b-card-text>
-            <FileExplorer @update="updateLibraryFile"></FileExplorer>
-          </b-card-text>
-        </b-tab>
-        <b-tab title="Freesound">
-          <FreeSoundList @update="updateLibraryFree" :duplicate="duplicateFreesound"></FreeSoundList>
-        </b-tab>
-      </b-tabs>
-    </b-modal>
-    <!--MENU FOR PLAYLIST EDITING END-->
-  </b-container>
+        <!--MENU FOR PLAYLIST EDITING BEGIN-->
+        <b-modal ref="playlistModal" title="Playlist bearbeiten">
+          <b-tabs pills card fill>
+            <b-tab title="Bibliothek" active>
+              <b-card-text>
+                <edit-play-list :play-list-array-a="listA" :play-list-array-b="listB"
+                                :song-library="songLibrary"></edit-play-list>
+              </b-card-text>
+            </b-tab>
+            <b-tab title="Musik importieren">
+              <b-card-text>
+                <FileExplorer @update="updateLibraryFile"></FileExplorer>
+              </b-card-text>
+            </b-tab>
+            <b-tab title="Freesound">
+              <FreeSoundList @update="updateLibraryFree" :duplicate="duplicateFreesound"></FreeSoundList>
+            </b-tab>
+          </b-tabs>
+        </b-modal>
+        <!--MENU FOR PLAYLIST EDITING END-->
+      </b-container>
+    </div>
+  </div>
 
 </template>
 
@@ -117,7 +134,6 @@ axios.get(songUrl, { responseType: 'arraybuffer' })
     await bb.prepareForPlayback(ctx);
     playlistA.add(lib.insert(bb));
     playlistB.add(lib.insert(bb));
-    console.log('playing: ' + bb.metaData.artist + ' ' + bb.metaData.title);
   })
   .then(() => axios.get('http://localhost:8080/static/Black Muffin - Die and Retry.mp3', { responseType: 'arraybuffer' }))
   .then(async res => {
@@ -126,19 +142,14 @@ axios.get(songUrl, { responseType: 'arraybuffer' })
     playlistA.add(lib.insert(bm));
     playlistB.add(lib.insert(bm));
 
-    console.log('playing: ' + bm.metaData.artist + ' ' + bm.metaData.title);
 
   })
-  .then(() => axios.get('http://localhost:8080/static/Black Muffin - Die and Retry.mp3', { responseType: 'arraybuffer' }))
+  .then(() => axios.get('http://localhost:8080/static/Bosshafte Beats - Sunglass Evo.mp3', { responseType: 'arraybuffer' }))
   .then(async res => {
     const m = new Song(new MP3(res.data));
     await m.prepareForPlayback(ctx);
     playlistA.add(lib.insert(m));
     playlistB.add(lib.insert(m));
-    console.log('playing: ' + m.metaData.artist + ' ' + m.metaData.title);
-    console.log(playlistA.list);
-
-    console.log('NOW PLAYING' + playerA.current.metaData.artist);
   });
 
 export default {
@@ -149,13 +160,13 @@ export default {
     FileExplorer,
     FreeSoundList,
     EditPlayList,
-    counter:0
+    counter: 0
   },
   data() {
     return {
-
+      isClicked: false,
       value: 0,
-      playlistA:playlistA.list,
+      playlistA: playlistA.list,
       listA: [
         { name: 'John', id: 0 },
         { name: 'Joao', id: 1 },
@@ -175,11 +186,19 @@ export default {
         { name: 'Gerard', id: 3 },
       ],
       duplicateFreesound: false,
-      currentArtist:String,
-      currentTitle:String,
+      currentArtistA: String,
+      currentTitleA: String,
+      currentArtistB: String,
+      currentTitleB: String,
     };
   },
   methods: {
+    initialize() {
+      playlistA.musicLibrary.list.forEach(el => console.log(el.metaData.artist + ' '));
+      this.insertMetadataA();
+      this.insertMetadataB();
+      this.isClicked = true;
+    },
     togglePlaylistModal() {
       this.$refs.playlistModal.show();
     },
@@ -190,7 +209,6 @@ export default {
           return;
         }
       }
-      /*buffer kacke*/
       this.songLibrary.push(value);
     },
     updateLibraryFree(value) {
@@ -208,7 +226,6 @@ export default {
     playA() {
       playerA.play();
       console.log('Deck A sollte spielen.');
-       this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
     },
     pauseA() {
       playerA.pause();
@@ -217,7 +234,16 @@ export default {
     stopA() {
       playerA.stop();
       console.log('Deck A sollte stoppen.');
-    }, playB() {
+    },
+    nextA() {
+      playerA.next();
+      this.insertMetadataA();
+    },
+    prevA() {
+      playerA.prev();
+      this.insertMetadataA();
+    },
+    playB() {
       playerB.play();
       console.log('Deck B sollte spielen.');
     },
@@ -229,32 +255,52 @@ export default {
       playerB.stop();
       console.log('Deck B sollte stoppen.');
     },
-    print(val) {
-      console.log(val);
+    nextB() {
+      playerB.next();
+      this.insertMetadataB();
     },
-    insertMetadata(artist, title) {
-      this.currentArtist=artist;
-      this.currentTitle=title;
+    prevB() {
+      playerB.prev();
+      this.insertMetadataB();
     },
-    refreshA(){
-      this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
+    printTest(val) {
+      console.log('test print ' + val);
+    },
+    insertMetadataA() {
+      var artist = playerA.current.metaData.artist.toString();
+      var title = playerA.current.metaData.title.toString();
+      this.currentArtistA = artist;
+      this.currentTitleA = title;
+    },
+    insertMetadataB() {
+      var artist = playerB.current.metaData.artist.toString();
+      var title = playerB.current.metaData.title.toString();
+      this.currentArtistB = artist;
+      this.currentTitleB = title;
+    },
+    refreshA() {
+      //this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
+      console.log('test print' + playerA.current.metaData.artist.toString());
     }
   },
   mounted() {
   },
-  computed(){
+  computed() {
 
-   /* currentArtist: function (){
-      return playerA.current.metaData.artist;
-    },
-    currentTitle: function (){
-      return playerA.current.metaData.title;
-    }*/
+    /* currentArtist: function (){
+       return playerA.current.metaData.artist;
+     },
+     currentTitle: function (){
+       return playerA.current.metaData.title;
+     }*/
   },
   beforeUpdate() {
-    this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
+    //this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
 
   },
+  props: {
+    initialize: Boolean,
+  }
 
 };
 </script>

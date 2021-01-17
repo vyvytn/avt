@@ -1,19 +1,19 @@
 <template>
-  <djtool></djtool>
+      <dj-tool ></dj-tool>
+
 </template>
 
 <script>
-import djtool from './components/djTool';
 
+import djTool from './components/djTool';
 export default {
   name: 'App',
 
   components: {
-    djtool,
+    djTool
   },
 
   data: () => ({
-    //
   }),
 };
 </script>

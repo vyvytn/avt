@@ -5,8 +5,8 @@
     >
       <b-card-text>
         <b-avatar></b-avatar>
-        <p id="songTitle" class="font-weight-bold">{{currentTitle}}</p>
-        <p id="interpretName" class="font-weight-medium">{{currentArtist}}</p>
+        <p id="songTitle" class="font-weight-bold">{{ currentTitle }}</p>
+        <p id="interpretName" class="font-weight-medium">{{ currentArtist }}</p>
         <p id="albumName" class="font-weight-medium">Album Name</p>
         <p id="timeToLeft" class="font-weight-bold">-6:23</p>
       </b-card-text>
@@ -16,7 +16,7 @@
       <b-button
         variant="success"
         @click="buttonClickedPlay"
-      :pressed.sync="isPlaying">
+        :pressed.sync="isPlaying">
         <b-icon font-scale="2" icon="play-fill"></b-icon>
       </b-button>
       <b-button
@@ -32,11 +32,11 @@
       </b-button>
       <b-button
         variant="outline-secondary">
-        <b-icon font-scale="2" icon="skip-start-fill"></b-icon>
+        <b-icon font-scale="2" icon="skip-start-fill" @click="buttonClickedPrev"></b-icon>
       </b-button>
       <b-button
         variant="outline-secondary">
-        <b-icon font-scale="2" icon="skip-end-fill"></b-icon>
+        <b-icon font-scale="2" icon="skip-end-fill" @click="buttonClickedNext"></b-icon>
       </b-button>
     </div>
     <b-tabs pills fill card>
@@ -51,25 +51,25 @@
             </b-button>
           </div>
 
-         <!-- MENU FOR PLAYLIST EDITING BEGIN
-          <b-modal ref="playlistModal" title="Playlist bearbeiten">
-            <b-tabs pills card fill>
-              <b-tab title="Bibliothek" active>
-                <b-card-text>
-                  <edit-play-list></edit-play-list>
-                </b-card-text>
-              </b-tab>
-              <b-tab title="Musik importieren">
-                <b-card-text>
-                  <FileExplorer></FileExplorer>
-                </b-card-text>
-              </b-tab>
-              <b-tab title="Freesound">
-                  <FreeSoundList></FreeSoundList>
-              </b-tab>
-            </b-tabs>
-          </b-modal>
-          MENU FOR PLAYLIST EDITING END-->
+          <!-- MENU FOR PLAYLIST EDITING BEGIN
+           <b-modal ref="playlistModal" title="Playlist bearbeiten">
+             <b-tabs pills card fill>
+               <b-tab title="Bibliothek" active>
+                 <b-card-text>
+                   <edit-play-list></edit-play-list>
+                 </b-card-text>
+               </b-tab>
+               <b-tab title="Musik importieren">
+                 <b-card-text>
+                   <FileExplorer></FileExplorer>
+                 </b-card-text>
+               </b-tab>
+               <b-tab title="Freesound">
+                   <FreeSoundList></FreeSoundList>
+               </b-tab>
+             </b-tabs>
+           </b-modal>
+           MENU FOR PLAYLIST EDITING END-->
 
         </b-card-text>
       </b-tab>
@@ -79,7 +79,8 @@
             <b-row>
               <b-checkbox
                 v-model="eqStatus"
-              >Ein</b-checkbox>
+              >Ein
+              </b-checkbox>
               <eq-slider
                 v-for="el in equalizerList"
                 :key="el.name"
@@ -145,7 +146,7 @@ export default {
       ],
       isReady: false,
       isPlaying: false,
-      isPausing:false,
+      isPausing: false,
       playListA: this.arrayPlaylist,
     };
   },
@@ -154,8 +155,8 @@ export default {
     title: {
       type: String,
     },
-    artist:{
-      type:String,
+    artist: {
+      type: String,
     }
     // currentImg:
   },
@@ -183,38 +184,41 @@ export default {
     },
     togglePlaylistModal() {
       //this.$refs.playlistModal.show();
-      this.$emit('openLibraryClicked')
+      this.$emit('openLibraryClicked');
     },
-    buttonClickedPlay(){
+    buttonClickedPlay() {
       this.$emit('play');
-      this.isPlaying=true;
-      this.isPausing=false;
+      this.isPlaying = true;
+      this.isPausing = false;
     }
     ,
-    buttonClickedPause(){
+    buttonClickedPause() {
       this.$emit('pause');
-      this.isPlaying=false;
-      this.isPausing=true;
+      this.isPlaying = false;
+      this.isPausing = true;
     },
-    buttonClickedStop(){
+    buttonClickedStop() {
       this.$emit('stop');
-      this.isPlaying=false;
-      this.isPausing=false;
+      this.isPlaying = false;
+      this.isPausing = false;
     },
-    playAudio() {
-      if (!this.isReady) return;
-      //this.bufferSource.start();
+    buttonClickedNext() {
+      this.$emit('next');
+      this.isPlaying = true;
+      this.isPausing = false;
     },
-    stopAudio() {
-      //this.bufferSource.stop();
-    },
+    buttonClickedPrev() {
+      this.$emit('prev');
+      this.isPlaying = true;
+      this.isPausing = false;
+    }
   },
   computed: {
-    currentArtist: function (){
-      return this.artist
+    currentArtist: function () {
+      return this.artist;
     },
-    currentTitle: function(){
-      return this.title
+    currentTitle: function () {
+      return this.title;
     }
   }
 };
