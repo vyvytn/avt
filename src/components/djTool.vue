@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="!isClicked">
-      <b-button @click="initialize()" variant="danger">start the dj tool</b-button>
+      <b-button :disabled="!initReady" @click="initialize()" variant="danger">start the dj tool</b-button>
     </div>
     <div v-if="isClicked">
       <b-container fluid="">
@@ -164,7 +164,7 @@ export default {
   data() {
     return {
       isClicked: false,
-      initializeReady: false,
+      initReady:false,
       value: 0,
       playlistUIA: Array,
       listA: [
@@ -188,8 +188,14 @@ export default {
       playlistA.musicLibrary.list.forEach(el => console.log(el.metaData.artist + ' '));
       this.insertMetadataA();
       this.insertMetadataB();
+      this.isClicked=true;
       //playlistA.list.forEach(el=>  this.playlistUIA.prototype.push(el));
-      this.isClicked = true;
+    },
+    handleInitButton(){
+      setTimeout(this.disableButton, 4000);
+    },
+    disableButton(){
+      this.initReady=true;
     },
     togglePlaylistModal() {
       this.$refs.playlistModal.show();
@@ -289,10 +295,22 @@ export default {
   },
   mounted() {
     //this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
+    this.handleInitButton();
   },
   props: {
     initialize: Boolean,
-  }
+  },
+  /*computed:{
+    playlistUIA: function (){
+   /!*   this.playlistUIA.prototype.forEach(el =>el.artist===playlistA.musicLibrary.list[el.songId].metaData.artist.toString()
+        && el.title ===playlistA.musicLibrary.list[el.songId].metaData.title
+      && el.songId ===playlistA.musicLibrary.list[el.songId].metaData.title
+      )*!/
+
+      this.playlistUIA.prototype.forEach(el =>el.artist===playlistA.musicLibrary.list[playlistA.list[el.index].metaData.artist]);
+
+    }
+  }*/
 
 };
 </script>
