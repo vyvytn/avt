@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="!isClicked">
-      <b-button @click="initialize()" variant="danger">Click me</b-button>
+      <b-button @click="initialize()" variant="danger">start the dj tool</b-button>
     </div>
     <div v-if="isClicked">
       <b-container fluid="">
@@ -9,7 +9,7 @@
           <b-col col>
             <deck @openLibraryClicked="togglePlaylistModal"
                   id="deckA" :array-playlist="listA"
-                  @play="playA()"
+                  @play="playA"
                   @pause="pauseA"
                   @stop="stopA"
                   @next="nextA"
@@ -56,13 +56,14 @@
             <deck @openLibraryClicked="togglePlaylistModal"
                   id="deckB"
                   :array-playlist="listB"
-                  @play="playB()"
+                  @play="playB"
                   @pause="pauseB"
                   @stop="stopB"
                   @next="nextB"
                   @prev="prevB"
                   :artist.sync="currentArtistB"
-                  :title.sync="currentTitleB"></deck>
+                  :title.sync="currentTitleB">
+            </deck>
           </b-col>
         </b-row>
 
@@ -141,8 +142,6 @@ axios.get(songUrl, { responseType: 'arraybuffer' })
     await bm.prepareForPlayback(ctx);
     playlistA.add(lib.insert(bm));
     playlistB.add(lib.insert(bm));
-
-
   })
   .then(() => axios.get('http://localhost:8080/static/Bosshafte Beats - Sunglass Evo.mp3', { responseType: 'arraybuffer' }))
   .then(async res => {
@@ -165,25 +164,16 @@ export default {
   data() {
     return {
       isClicked: false,
+      initializeReady: false,
       value: 0,
-      playlistA: playlistA.list,
+      playlistUIA: Array,
       listA: [
-        { name: 'John', id: 0 },
-        { name: 'Joao', id: 1 },
-        { name: 'Jean', id: 2 },
-        { name: 'Gerard', id: 3 },
       ],
       listB: [
-        { name: 'John', id: 0 },
-        { name: 'Joao', id: 1 },
-        { name: 'Jean', id: 2 },
-        { name: 'Gerard', id: 3 },
       ],
       songLibrary: [
-        { name: 'John', id: 0 },
-        { name: 'Joao', id: 1 },
-        { name: 'Jean', id: 2 },
-        { name: 'Gerard', id: 3 },
+        {artist: "Kevin MacLeod", title: "Impact Moderato", songId: 0}
+        ,
       ],
       duplicateFreesound: false,
       currentArtistA: String,
@@ -194,9 +184,11 @@ export default {
   },
   methods: {
     initialize() {
+      this.createPlaylistUI();
       playlistA.musicLibrary.list.forEach(el => console.log(el.metaData.artist + ' '));
       this.insertMetadataA();
       this.insertMetadataB();
+      //playlistA.list.forEach(el=>  this.playlistUIA.prototype.push(el));
       this.isClicked = true;
     },
     togglePlaylistModal() {
@@ -278,25 +270,25 @@ export default {
       this.currentArtistB = artist;
       this.currentTitleB = title;
     },
-    refreshA() {
-      //this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
-      console.log('test print' + playerA.current.metaData.artist.toString());
+    createPlaylistUI() {
+      //playlistA.list.forEach(el=>console.log(playlistA.musicLibrary.list[el].metaData.artist));
+      playlistA.list.forEach(el=>this.listA.push(
+        {artist: playlistA.musicLibrary.list[el].metaData.artist.toString(),
+        title:playlistA.musicLibrary.list[el].metaData.title,
+        songId: el})
+        &&
+        this.listB.push(
+          {artist: playlistB.musicLibrary.list[el].metaData.artist.toString(),
+            title:playlistB.musicLibrary.list[el].metaData.title,
+            songId: el}),
+
+      );
+      this.playlistUIA.prototype.forEach(el=> console.log(el))
     }
+
   },
   mounted() {
-  },
-  computed() {
-
-    /* currentArtist: function (){
-       return playerA.current.metaData.artist;
-     },
-     currentTitle: function (){
-       return playerA.current.metaData.title;
-     }*/
-  },
-  beforeUpdate() {
     //this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
-
   },
   props: {
     initialize: Boolean,

@@ -7,9 +7,9 @@
     </i>
     <div class="">
       <b-avatar badge=""></b-avatar>
-      <p class="text-gray-700 font-weight-bold font-sans">{{ s.name }}</p>
-      <p class="font-weight-medium font-sans">{{s.interpret}}</p>
-      <p class="font-weight-medium font-sans">{{ s.album }}</p>
+      <p class="text-gray-700 font-weight-bold font-sans">{{ s.artist }}</p>
+      <p class="font-weight-medium font-sans">{{s.title}}</p>
+
     </div>
     <i
       class="action-button p-1 focus:outline-none focus:shadow-outline text-teal-500 hover:text-teal-600"
