@@ -34,11 +34,11 @@
             <h4>Volume</h4>
             <b-row>
               <b-col cols="auto">
-                <VolumeSlider id="gainLeftDeckSlider" :horizontal="false"></VolumeSlider>
+                <VolumeSlider id="gainLeftDeckSlider" :horizontal="false" @valueChanged="setVolume"></VolumeSlider>
                 <h6>L</h6>
               </b-col>
               <b-col cols="auto">
-                <VolumeSlider id="gainMasterSlider" :horizontal="false"></VolumeSlider>
+                <VolumeSlider id="gainMasterSlider" :horizontal="false" @valueChanged="setMaster"></VolumeSlider>
                 <h6>M</h6>
               </b-col>
               <b-col cols="auto">
@@ -420,6 +420,9 @@ export default {
 
       this.canvasCtxB.lineTo(this.canvasB.width, this.canvasB.height / 2);
       this.canvasCtxB.stroke();
+    },
+    setVolume(value){
+      //player.setVolume(value)
     }
 
   },

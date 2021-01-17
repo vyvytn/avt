@@ -10,7 +10,9 @@
         :contained=true
         :drag-on-click=true
         style="display: inline-block; height: 12em"
-      ></vue-slider>
+        @change="emitValue(value)"
+      >
+      </vue-slider>
     </div>
     <div v-if="horizontal">
       <vue-slider
@@ -45,6 +47,11 @@ export default {
   },
   props: {
     horizontal: Boolean,
+  },
+  methods:{
+    emitValue(val){
+      this.$emit('valueChanged', val)
+    }
   }
 
 };
