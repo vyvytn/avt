@@ -10,6 +10,7 @@
     :scroll-sensitivity="200"
     forceFallback="true"
     style="list-style: none"
+    @change="updatePlaylist"
   >
     <song-card
       v-for="s in songlist"
@@ -40,6 +41,9 @@ export default {
   methods: {
     printStatus(){
       console.log(this.songlist);
+    },
+    updatePlaylist(){
+      this.$emit('playlistChanged');
     }
   }
 };

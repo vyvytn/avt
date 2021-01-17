@@ -43,7 +43,10 @@
       <b-tab title="Playlist" active>
         <b-card-text>
           <div style="overflow-y: auto ; max-height: 60vh">
-            <Playlist :array-playlist="playListA"></Playlist>
+            <Playlist
+              :array-playlist="playListA"
+              @playlistChanged="updatePlaylist"
+            ></Playlist>
           </div>
           <div align="center">
             <b-button variant="secondary" id="modalBtn" @click="togglePlaylistModal">Bibliothek
@@ -211,6 +214,9 @@ export default {
       this.$emit('prev');
       this.isPlaying = true;
       this.isPausing = false;
+    },
+    updatePlaylist(){
+      this.$emit("playlistChanged")
     }
   },
   computed: {

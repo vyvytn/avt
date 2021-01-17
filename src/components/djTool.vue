@@ -1,6 +1,7 @@
 <template>
   <div>
     <div v-if="!isClicked">
+      <b-spinner v-if="!initReady" type="grow" label="Loading..."></b-spinner>
       <b-button :disabled="!initReady" @click="initialize()" variant="danger">start the dj tool</b-button>
     </div>
     <div v-if="isClicked">
@@ -16,6 +17,7 @@
                   @prev="prevA"
                   :artist.sync="currentArtistA"
                   :title.sync="currentTitleA"
+                  @playlistChanged="changePlaylistOrder"
             ></deck>
           </b-col>
           <b-col cols="12" md="auto">
@@ -62,7 +64,9 @@
                   @next="nextB"
                   @prev="prevB"
                   :artist.sync="currentArtistB"
-                  :title.sync="currentTitleB">
+                  :title.sync="currentTitleB"
+                  @playlistChanged="changePlaylistOrder"
+            >
             </deck>
           </b-col>
         </b-row>
@@ -164,15 +168,12 @@ export default {
   data() {
     return {
       isClicked: false,
-      initReady:false,
+      initReady: false,
       value: 0,
-      playlistUIA: Array,
-      listA: [
-      ],
-      listB: [
-      ],
+      listA: [],
+      listB: [],
       songLibrary: [
-        {artist: "Kevin MacLeod", title: "Impact Moderato", songId: 0}
+        { artist: 'Kevin MacLeod', title: 'Impact Moderato', songId: 0 }
         ,
       ],
       duplicateFreesound: false,
@@ -185,17 +186,16 @@ export default {
   methods: {
     initialize() {
       this.createPlaylistUI();
-      playlistA.musicLibrary.list.forEach(el => console.log(el.metaData.artist + ' '));
       this.insertMetadataA();
       this.insertMetadataB();
-      this.isClicked=true;
+      this.isClicked = true;
       //playlistA.list.forEach(el=>  this.playlistUIA.prototype.push(el));
     },
-    handleInitButton(){
+    handleInitButton() {
       setTimeout(this.disableButton, 4000);
     },
-    disableButton(){
-      this.initReady=true;
+    disableButton() {
+      this.initReady = true;
     },
     togglePlaylistModal() {
       this.$refs.playlistModal.show();
@@ -278,18 +278,32 @@ export default {
     },
     createPlaylistUI() {
       //playlistA.list.forEach(el=>console.log(playlistA.musicLibrary.list[el].metaData.artist));
-      playlistA.list.forEach(el=>this.listA.push(
-        {artist: playlistA.musicLibrary.list[el].metaData.artist.toString(),
-        title:playlistA.musicLibrary.list[el].metaData.title,
-        songId: el})
-        &&
-        this.listB.push(
-          {artist: playlistB.musicLibrary.list[el].metaData.artist.toString(),
-            title:playlistB.musicLibrary.list[el].metaData.title,
-            songId: el}),
-
+      playlistA.list.forEach(el => this.listA.push(
+        {
+          artist: playlistA.musicLibrary.list[el].metaData.artist.toString(),
+          title: playlistA.musicLibrary.list[el].metaData.title,
+          songId: el
+        }));
+      playlistB.list.forEach(el =>this.listB.push(
+          {
+            artist: playlistB.musicLibrary.list[el].metaData.artist.toString(),
+            title: playlistB.musicLibrary.list[el].metaData.title,
+            songId: el
+          }),
       );
-      this.playlistUIA.prototype.forEach(el=> console.log(el))
+    },
+    changePlaylistOrder(){
+      //deckA
+      this.listA.forEach(el=>console.log(el.songId));
+      playlistA.list.forEach((el, index) => playlistA.list[index] =this.listA[index].songId );
+      this.insertMetadataA();
+      playlistA.list.forEach(el=> console.log(el));
+
+      //deck b
+      this.listB.forEach(el=>console.log(el.songId));
+      playlistB.list.forEach((el, index) => playlistB.list[index] =this.listB[index].songId );
+      this.insertMetadataB();
+      playlistB.list.forEach(el=> console.log(el))
     }
 
   },
@@ -300,19 +314,12 @@ export default {
   props: {
     initialize: Boolean,
   },
-  /*computed:{
-    playlistUIA: function (){
-   /!*   this.playlistUIA.prototype.forEach(el =>el.artist===playlistA.musicLibrary.list[el.songId].metaData.artist.toString()
-        && el.title ===playlistA.musicLibrary.list[el.songId].metaData.title
-      && el.songId ===playlistA.musicLibrary.list[el.songId].metaData.title
-      )*!/
-
-      this.playlistUIA.prototype.forEach(el =>el.artist===playlistA.musicLibrary.list[playlistA.list[el.index].metaData.artist]);
-
-    }
+  /*computed: {
+    listA: function () {
+      this.listA.prototype.forEach(el => el.artist === playlistA.musicLibrary.list[playlistA.list[el.index]].metaData.artist);
+    },
   }*/
-
-};
+}
 </script>
 
 <style scoped>
