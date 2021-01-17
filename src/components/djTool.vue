@@ -76,8 +76,12 @@
           <b-tabs pills card fill>
             <b-tab title="Bibliothek" active>
               <b-card-text>
-                <edit-play-list :play-list-array-a="listA" :play-list-array-b="listB"
-                                :song-library="songLibrary"></edit-play-list>
+                <edit-play-list
+                  :play-list-array-a="listA"
+                  :play-list-array-b="listB"
+                  :song-library="songLibrary"
+                  @playlistChanged="changePlaylistOrder"
+                ></edit-play-list>
               </b-card-text>
             </b-tab>
             <b-tab title="Musik importieren">
@@ -173,8 +177,6 @@ export default {
       listA: [],
       listB: [],
       songLibrary: [
-        { artist: 'Kevin MacLeod', title: 'Impact Moderato', songId: 0 }
-        ,
       ],
       duplicateFreesound: false,
       currentArtistA: String,
@@ -291,6 +293,12 @@ export default {
             songId: el
           }),
       );
+      lib.list.forEach(el=> this.songLibrary.push(
+        {
+          artist: lib.list[lib.list.indexOf(el)].metaData.artist.toString(),
+          title:  lib.list[lib.list.indexOf(el)].metaData.title,
+          songId: lib.list.indexOf(el)
+        }))
     },
     changePlaylistOrder(){
       //deckA

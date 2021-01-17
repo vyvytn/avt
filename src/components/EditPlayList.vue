@@ -8,17 +8,17 @@
             class="dragArea list-group"
             :list="library"
             :group="{name:'song', pull:'clone', put:false}"
-            @change="log"
             :scroll-sensitivity="200"
             forceFallback="true"
             style="list-style: none"
+            @change="updatePlaylist"
           >
             <div
               class="list-group-item"
               v-for="(element, index) in library"
             >
-              {{ element.name }} {{ index }}
-              <b-button variant="outline-danger" @click="deleteSong(element.name, index)">
+              {{ element.artist }} {{ element.title  }}
+              <b-button variant="outline-danger" @click="deleteSong(element.artist, index)">
                 <b-icon icon="trash-fill"></b-icon>
               </b-button>
             </div>
@@ -35,15 +35,16 @@
             class="dragArea list-group"
             :list="songListA"
             group="song"
-            @change="log"
             :scroll-sensitivity="200"
             forceFallback="true"
-            style="list-style: none">
+            style="list-style: none"
+            @change="updatePlaylist"
+          >
             <div
               class="list-group-item"
               v-for="(element, index) in songListA"
             >
-              {{ element.name }} {{ index }}
+              {{ element.artist }} {{ element.title  }}
               <b-button @click="songListA.splice(index, 1)" variant="outline-danger">
                 <b-icon icon="x-circle-fill"></b-icon>
               </b-button>
@@ -57,16 +58,17 @@
           <draggable
             class="list-group"
             :list="songListB"
-            @change="log"
             :scroll-sensitivity="200"
             forceFallback="true"
             group="song"
-            style="list-style: none">
+            style="list-style: none"
+            @change="updatePlaylist"
+          >
             <div
               class="list-group-item"
               v-for="(element, index) in songListB"
             >
-              {{ element.name }} {{ index }}
+              {{ element.artist }} {{ element.title  }}
               <b-button @click="songListB.splice(index, 1)" variant="outline-danger">
                 <b-icon icon="x-circle-fill"></b-icon>
               </b-button>
@@ -113,6 +115,9 @@
             this.songListB.splice(i, 1);
           }
         }
+      },
+      updatePlaylist(){
+        this.$emit("playlistChanged")
       }
     },
     props: {
