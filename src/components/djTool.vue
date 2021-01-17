@@ -4,7 +4,17 @@
       <b-spinner v-if="!initReady" type="grow" label="Loading..."></b-spinner>
       <b-button :disabled="!initReady" @click="initialize()" variant="danger">start the dj tool</b-button>
     </div>
-    <div v-if="isClicked">
+    <b-container>
+      <b-row>
+        <b-col>
+          <canvas ref="canvasA"  width="200" height="50"></canvas>
+        </b-col>
+        <b-col>
+          <canvas ref="canvasB"  width="200" height="50"></canvas>
+        </b-col>
+      </b-row>
+    </b-container>
+    <div v-if="isClicked" >
       <b-container fluid="">
         <b-row>
           <b-col col>
@@ -122,8 +132,25 @@ import axios from 'axios';
  */
 const ctx = new AudioContext(); // shared context
 const masterGain = ctx.createGain(); // gain shared accross players
+
 masterGain.connect(ctx.destination);
 masterGain.value = 1.0;
+
+/**create analyzer for player A
+ */
+const analyzerA= ctx.createAnalyser();
+analyzerA.fftSize = 2048;
+let bufferLengthA = analyzerA.frequencyBinCount;
+let dataArrayA = new Uint8Array(bufferLengthA);
+analyzerA.getByteTimeDomainData(dataArrayA);
+
+/**create analyzer for player B
+ */
+const analyzerB= ctx.createAnalyser();
+analyzerB.fftSize = 2048;
+let bufferLengthB = analyzerB.frequencyBinCount;
+let dataArrayB = new Uint8Array(bufferLengthB);
+analyzerB.getByteTimeDomainData(dataArrayB);
 
 /**
  * creating player and playlists for deck a and b
@@ -133,6 +160,9 @@ const playlistA = new Playlist(lib);
 const playerA = new AudioPlayer(ctx, masterGain, playlistA);
 const playlistB = new Playlist(lib);
 const playerB = new AudioPlayer(ctx, masterGain, playlistB);
+playerA.addNode(analyzerA);
+playerB.addNode(analyzerB);
+
 /**
  * get song and connect to mastergain
  */
@@ -159,6 +189,7 @@ axios.get(songUrl, { responseType: 'arraybuffer' })
     playlistB.add(lib.insert(m));
   });
 
+
 export default {
   name: 'djtool',
   components: {
@@ -176,13 +207,16 @@ export default {
       value: 0,
       listA: [],
       listB: [],
-      songLibrary: [
-      ],
+      songLibrary: [],
       duplicateFreesound: false,
       currentArtistA: String,
       currentTitleA: String,
       currentArtistB: String,
       currentTitleB: String,
+      canvasA: {},
+      canvasCtxA: {},
+      canvasB: {},
+      canvasCtxB: {},
     };
   },
   methods: {
@@ -192,6 +226,11 @@ export default {
       this.insertMetadataB();
       this.isClicked = true;
       //playlistA.list.forEach(el=>  this.playlistUIA.prototype.push(el));
+
+      this.frameLooperA();
+      this.frameLooperB();
+
+      console.log("Hallo");
     },
     handleInitButton() {
       setTimeout(this.disableButton, 4000);
@@ -226,6 +265,7 @@ export default {
     playA() {
       playerA.play();
       console.log('Deck A sollte spielen.');
+      console.log(analyzerA);
     },
     pauseA() {
       playerA.pause();
@@ -237,10 +277,12 @@ export default {
     },
     nextA() {
       playerA.next();
+      playerA.addNode(analyzerA);
       this.insertMetadataA();
     },
     prevA() {
       playerA.prev();
+      playerA.addNode(analyzerA);
       this.insertMetadataA();
     },
     playB() {
@@ -257,10 +299,12 @@ export default {
     },
     nextB() {
       playerB.next();
+      playerB.addNode(analyzerB);
       this.insertMetadataB();
     },
     prevB() {
       playerB.prev();
+      playerA.addNode(analyzerB);
       this.insertMetadataB();
     },
     printTest(val) {
@@ -286,38 +330,106 @@ export default {
           title: playlistA.musicLibrary.list[el].metaData.title,
           songId: el
         }));
-      playlistB.list.forEach(el =>this.listB.push(
-          {
-            artist: playlistB.musicLibrary.list[el].metaData.artist.toString(),
-            title: playlistB.musicLibrary.list[el].metaData.title,
-            songId: el
-          }),
+      playlistB.list.forEach(el => this.listB.push(
+        {
+          artist: playlistB.musicLibrary.list[el].metaData.artist.toString(),
+          title: playlistB.musicLibrary.list[el].metaData.title,
+          songId: el
+        }),
       );
-      lib.list.forEach(el=> this.songLibrary.push(
+      lib.list.forEach(el => this.songLibrary.push(
         {
           artist: lib.list[lib.list.indexOf(el)].metaData.artist.toString(),
-          title:  lib.list[lib.list.indexOf(el)].metaData.title,
+          title: lib.list[lib.list.indexOf(el)].metaData.title,
           songId: lib.list.indexOf(el)
-        }))
+        }));
     },
-    changePlaylistOrder(){
+    changePlaylistOrder() {
       //deckA
-      this.listA.forEach(el=>console.log(el.songId));
-      playlistA.list.forEach((el, index) => playlistA.list[index] =this.listA[index].songId );
+      this.listA.forEach(el => console.log(el.songId));
+      playlistA.list.forEach((el, index) => playlistA.list[index] = this.listA[index].songId);
       this.insertMetadataA();
-      playlistA.list.forEach(el=> console.log(el));
+      playlistA.list.forEach(el => console.log(el));
 
       //deck b
-      this.listB.forEach(el=>console.log(el.songId));
-      playlistB.list.forEach((el, index) => playlistB.list[index] =this.listB[index].songId );
+      this.listB.forEach(el => console.log(el.songId));
+      playlistB.list.forEach((el, index) => playlistB.list[index] = this.listB[index].songId);
       this.insertMetadataB();
-      playlistB.list.forEach(el=> console.log(el))
+      playlistB.list.forEach(el => console.log(el));
+    },
+    frameLooperA() {
+      window.RequestAnimationFrame =
+        window.requestAnimationFrame(this.frameLooperA) ||
+        window.webkitRequestAnimationFrame(this.frameLooperA);
+      analyzerA.getByteTimeDomainData(dataArrayA);
+
+      this.canvasCtxA.fillStyle = "rgb(200, 200, 200)";
+      this.canvasCtxA.fillRect(0,0,this.canvasA.width, this.canvasA.height);
+
+      this.canvasCtxA.lineWidth = 2;
+      this.canvasCtxA.strokeStyle = "rgb(0, 0, 0)";
+      this.canvasCtxA.beginPath();
+
+      let sliceWidth = this.canvasA.width * 1.0 / bufferLengthA;
+      let x = 0;
+
+      for (let i = 0; i < bufferLengthA; i++){
+        let v = dataArrayA[i] / 128.0;
+        let y = v * this.canvasA.height / 2;
+
+        if (i == 0){
+          this.canvasCtxA.moveTo(x, y);
+        } else {
+          this.canvasCtxA.lineTo(x, y);
+        }
+
+        x+= sliceWidth;
+      }
+
+      this.canvasCtxA.lineTo(this.canvasA.width, this.canvasA.height / 2);
+      this.canvasCtxA.stroke();
+    },
+    frameLooperB() {
+      window.RequestAnimationFrame =
+        window.requestAnimationFrame(this.frameLooperB) ||
+        window.webkitRequestAnimationFrame(this.frameLooperB);
+      analyzerB.getByteTimeDomainData(dataArrayB);
+
+      this.canvasCtxB.fillStyle = "rgb(200, 200, 200)";
+      this.canvasCtxB.fillRect(0,0,this.canvasB.width, this.canvasB.height);
+
+      this.canvasCtxB.lineWidth = 2;
+      this.canvasCtxB.strokeStyle = "rgb(0, 0, 0)";
+      this.canvasCtxB.beginPath();
+
+      let sliceWidth = this.canvasB.width * 1.0 / bufferLengthB;
+      let x = 0;
+
+      for (let i = 0; i < bufferLengthB; i++){
+        let v = dataArrayB[i] / 128.0;
+        let y = v * this.canvasB.height / 2;
+
+        if (i == 0){
+          this.canvasCtxB.moveTo(x, y);
+        } else {
+          this.canvasCtxB.lineTo(x, y);
+        }
+
+        x+= sliceWidth;
+      }
+
+      this.canvasCtxB.lineTo(this.canvasB.width, this.canvasB.height / 2);
+      this.canvasCtxB.stroke();
     }
 
   },
   mounted() {
     //this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
     this.handleInitButton();
+    this.canvasA = this.$refs['canvasA'];
+    this.canvasCtxA = this.$refs['canvasA'].getContext('2d');
+    this.canvasB = this.$refs['canvasB'];
+    this.canvasCtxB = this.$refs['canvasB'].getContext('2d');
   },
   props: {
     initialize: Boolean,
@@ -327,7 +439,7 @@ export default {
       this.listA.prototype.forEach(el => el.artist === playlistA.musicLibrary.list[playlistA.list[el.index]].metaData.artist);
     },
   }*/
-}
+};
 </script>
 
 <style scoped>

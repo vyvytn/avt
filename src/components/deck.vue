@@ -10,7 +10,6 @@
         <p id="albumName" class="font-weight-medium">Album Name</p>
         <p id="timeToLeft" class="font-weight-bold">-6:23</p>
       </b-card-text>
-      <canvas id="songVisualizer" width="200" height="50"></canvas>
     </b-card>
     <div style="padding: 1em" align="center">
       <b-button
