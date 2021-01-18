@@ -11,7 +11,7 @@
             :scroll-sensitivity="200"
             forceFallback="true"
             style="list-style: none"
-            @change="updatePlaylist"
+            @change="updatePlaylist('both')"
           >
             <div
               class="list-group-item"
@@ -39,7 +39,7 @@
             :scroll-sensitivity="200"
             forceFallback="true"
             style="list-style: none"
-            @change="updatePlaylist"
+            @change="updatePlaylist('A')"
 
           >
             <div
@@ -65,7 +65,7 @@
             forceFallback="true"
             group="song"
             style="list-style: none"
-            @change="updatePlaylist"
+            @change="updatePlaylist('B')"
           >
             <div
               class="list-group-item"
@@ -103,9 +103,9 @@ export default {
       window.console.log(evt);
     },
     deleteSong(sId, idx) {
+      this.library.splice(idx, 1);
       this.deleteFromPlaylistA(sId);
       this.deleteFromPlaylistB(sId);
-      this.library.splice(idx, 1);
       // this.$emit('deleteSong', sId);
     },
     deleteFromPlaylistA(sId) {
@@ -113,8 +113,8 @@ export default {
         if (item.songId === sId) {
           object.splice(index, 1);
         }
-      });
-      this.$emit('deleteFromPlaylistA', 'A', sId);
+      })
+      this.$emit('deleteFromPlaylistA', sId);
     },
     deleteFromPlaylistB(sId) {
       this.songListB.forEach(function(item, index, object) {
@@ -122,10 +122,10 @@ export default {
           object.splice(index, 1);
         }
       });
-      this.$emit('deleteFromPlaylistB', 'B', sId);
+      this.$emit('deleteFromPlaylistB', sId);
     },
-    updatePlaylist() {
-      this.$emit('playlistChanged');
+    updatePlaylist(deck) {
+      this.$emit('playlistChanged', deck);
     },
   },
   props: {

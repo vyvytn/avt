@@ -13,9 +13,10 @@
     @change="updatePlaylist"
   >
     <song-card
-      v-for="(s, index) in songlist"
-      :s="s"
-      :index="index"
+    v-for="(s,index) in songlist"
+    :s="s"
+    :sId.sync="songId"
+    :idx.sync="index"
     ></song-card>
   </draggable>
 </template>
@@ -34,10 +35,12 @@ export default {
   data: function (){
     return{
       songlist: this.arrayPlaylist,
+      currentSongId:this.songId
     }
   },
   props:{
     arrayPlaylist: Array,
+    songId:Number
   },
   methods: {
     updatePlaylist(){

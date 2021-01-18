@@ -27,6 +27,7 @@
                   @prev="prevA"
                   :artist.sync="currentArtistA"
                   :title.sync="currentTitleA"
+                  :songId.sync="currentIdA"
                   @playlistChanged="changePlaylistOrder('A')"
             ></deck>
           </b-col>
@@ -75,6 +76,7 @@
                   @prev="prevB"
                   :artist.sync="currentArtistB"
                   :title.sync="currentTitleB"
+                  :songId.sync="currentIdB"
                   @playlistChanged="changePlaylistOrder('B')"
             >
             </deck>
@@ -91,8 +93,8 @@
                   :play-list-array-b="listB"
                   :song-library="songLibrary"
                   @playlistChanged="changePlaylistOrder"
-                  @deleteFromPlaylistA="deleteSongFromDeckById"
-                  @deleteFromPlaylistB="deleteSongFromDeckById"
+                  @deleteFromPlaylistA="deleteSongFromDeckById ('A', value)"
+                  @deleteFromPlaylistB="deleteSongFromDeckById('B', value)"
                 ></edit-play-list>
               </b-card-text>
             </b-tab>
@@ -162,10 +164,6 @@ const playlistA = new Playlist(lib);
 const playerA = new AudioPlayer(ctx, masterGain, playlistA);
 const playlistB = new Playlist(lib);
 const playerB = new AudioPlayer(ctx, masterGain, playlistB);
-/*
-playerA.addNode(analyzerA);
-playerB.addNode(analyzerB);
-*/
 
 /**
  * get song and connect to mastergain
@@ -220,10 +218,14 @@ export default {
       currentTitleA: String,
       currentArtistB: String,
       currentTitleB: String,
+      currentIdA: Number,
+      currentIdB: Number,
       canvasA: {},
       canvasCtxA: {},
       canvasB: {},
       canvasCtxB: {},
+      playingA: Boolean,
+      playingB: Boolean
     };
   },
   methods: {
@@ -274,68 +276,90 @@ export default {
      * play pause stop previous next song functions for player A and B
      **/
     playA() {
+      this.playingA = true;
       playerA.addNode(analyzerA);
       playerA.play();
-      console.log('Deck A sollte spielen.');
       this.insertMetadataA();
+      console.log('Deck A sollte spielen.');
     },
     pauseA() {
+      this.playingA = false;
       playerA.pause();
       console.log('Deck A sollte pausieren.');
     },
     stopA() {
       this.pauseA();
       playerA.stop();
+      this.insertMetadataA();
       this.playA();
       console.log('Deck A sollte stoppen.');
-      this.insertMetadataA();
     },
     nextA() {
       playerA.stop();
       playerA.next();
-      this.playA();
       this.insertMetadataA();
+      if (this.playingA) {
+        this.playA();
+      }
     },
     prevA() {
       playerA.stop();
       playerA.prev();
-      this.playA();
       this.insertMetadataA();
+      if (this.playingA) {
+        this.playA();
+      }
     },
     playB() {
+      this.playingB = true;
       playerB.addNode(analyzerB);
       playerB.play();
-      console.log('Deck B sollte spielen.');
       this.insertMetadataB();
+      console.log('Deck B sollte spielen.');
     },
     pauseB() {
+      this.playingB = false;
       playerB.pause();
       console.log('Deck B sollte pausieren.');
     },
     stopB() {
       this.pauseB();
       playerB.stop();
-      this.playB();
-      console.log('Deck B sollte stoppen.');
       this.insertMetadataB();
+      if (this.playingB) {
+        this.playB();
+      }
+      console.log('Deck B sollte stoppen.');
     },
     nextB() {
       playerB.stop();
       playerB.next();
-      this.playB();
       this.insertMetadataB();
+      if (this.playingB) {
+        this.playB();
+      }
     },
     prevB() {
-      playerB.stop()
+      playerB.stop();
       playerB.prev();
-      this.playB();
       this.insertMetadataB();
+      if (this.playingB) {
+        this.playB();
+      }
     },
 
     printTest(val) {
       console.log('test print ' + val);
     },
 
+    getCurrentIdA() {
+      this.currentIdA = playerA.currentSongId;
+      this.printTest('aktuelle id Deck A: ' + this.currentIdA);
+    },
+    getCurrentIdB() {
+      this.currentIdB = playerB.currentSongId;
+      this.printTest('aktuelle id Deck A: ' + this.currentIdB);
+    },
     /**
      * refreshes shown metadata of a song
      */
@@ -344,12 +368,14 @@ export default {
       var title = playerA.current.metaData.title.toString();
       this.currentArtistA = artist;
       this.currentTitleA = title;
+      this.getCurrentIdA();
     },
     insertMetadataB() {
       var artist = playerB.current.metaData.artist.toString();
       var title = playerB.current.metaData.title.toString();
       this.currentArtistB = artist;
       this.currentTitleB = title;
+      this.getCurrentIdB();
     },
     createPlaylistUI() {
       playlistA.list.forEach(el => this.listA.push(
@@ -372,21 +398,34 @@ export default {
           songId: lib.list.indexOf(el)
         }));
     },
+    refreshPlaylistA(){
+      if (this.playingA) {
+        playerA.stop();
+      }
+      this.listA.forEach((el, index) => playlistA.list[index]= this.listA[index].songId)
+      if (this.playingA) {
+        playerA.play();
+      }
+    },
+    refreshPlaylistB(){
+      //deck b
+      if (this.playingB) {
+        playerB.stop();
+      }
+      this.listB.forEach((el, index) => playlistB.list[index]= this.listB[index].songId)
+      if (this.playingB) {
+        playerB.play();
+      }
+    },
     changePlaylistOrder(deck) {
       if (deck === 'A') {
-        //deckA
-        this.pauseA();
-        playlistA.list.forEach((el, index) => playlistA.list[index] = this.listA[index].songId);
-        playerA.stop();
-        this.playA();
-      } else {
-        //deck b
-        this.pauseB();
-        playlistB.list.forEach((el, index) => playlistB.list[index] = this.listB[index].songId);
-        playerB.stop();
-        this.playB();
+       this.refreshPlaylistA()
+      } else if(deck==='B'){
+        this.refreshPlaylistB()
+      }else{
+        this.refreshPlaylistA();
+        this.refreshPlaylistB()
       }
-
     },
     /**
      * for visualizing the sound in player A and B
@@ -469,26 +508,52 @@ export default {
     deleteSongFromDeckById(deck, sId) {
       if (deck === 'A') {
         if (this.checkSongIsPlayingA(sId)) {
-          this.nextA();
-        }
-        playlistA.list.forEach(function (item, index, object) {
-          if (item === sId) {
-            object.splice(index, 1);
+          playerA.stop();
+          this.printTest('delete song' + sId);
+          playlistA.delete(sId);
+          playlistA.list.forEach(el=>el.metaData.title)
+          this.insertMetadataA();
+          if (this.playingA) {
+            this.playA();
           }
-        });
+          return 0;
+        } else {
+          // if (this.playingA) {
+          //   playerA.stop();
+          // }
+          playlistA.delete(sId);
+          playlistA.list.forEach(el=>el.metaData.title)
+          this.insertMetadataA();
+          // if (this.playingA) {
+          //   this.playA();
+          // }
+          return 0;
+        }
       } else {
         if (this.checkSongIsPlayingB(sId)) {
-          this.nextB();
-        }
-        playlistB.list.forEach(function (item, index, object) {
-          if (item === sId) {
-            object.splice(index, 1);
+          playerB.stop();
+          this.printTest('delete song' + sId);
+          playlistB.delete(sId);
+          playlistB.list.forEach(el=>el.metaData.title)
+          this.insertMetadataB();
+          if (this.playingB) {
+            this.playB();
           }
-        });
+          return 0;
+        } else {
+          // if (this.playingB) {
+          //   playerB.stop();
+          // }
+          playlistB.delete(sId);
+          playlistB.list.forEach(el=>el.metaData.title)
+          this.insertMetadataB();
+          // if (this.playingB) {
+          //   this.playB();
+          // }
+          return 0;
+        }
       }
     },
-
-
   },
   mounted() {
     //this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
@@ -497,23 +562,17 @@ export default {
     this.canvasCtxA = this.$refs['canvasA'].getContext('2d');
     this.canvasB = this.$refs['canvasB'];
     this.canvasCtxB = this.$refs['canvasB'].getContext('2d');
+    this.playingA = false;
+    this.playingB = false;
   },
-  props: {},
+  /* computed:{
+    currentIdA:function (){
+      return playerA.currentSongId;
+    },
+     currentId: function (){
+      return playerB.currentSongId;
+    }*/
 
-  computed: {
-    /*  currentArtistA: function () {
-        return playerA.current.metaData.artist.toString();
-      },
-      currentTitleA: function () {
-        playerA.current.metaData.title.toString();
-      },
-      currentArtistB: function () {
-        return playerB.current.metaData.artist.toString();
-      },
-      currentTitleB: function () {
-        playerB.current.metaData.title.toString();
-      }*/
-  }
 };
 </script>
 

@@ -45,6 +45,7 @@
             <Playlist
               :array-playlist="playListA"
               @playlistChanged="updatePlaylist"
+              :songId.sync="currentSongId"
             ></Playlist>
           </div>
           <div align="center">
@@ -52,26 +53,6 @@
               <b-icon icon="Box-arrow-up-right"></b-icon>
             </b-button>
           </div>
-
-          <!-- MENU FOR PLAYLIST EDITING BEGIN
-           <b-modal ref="playlistModal" title="Playlist bearbeiten">
-             <b-tabs pills card fill>
-               <b-tab title="Bibliothek" active>
-                 <b-card-text>
-                   <edit-play-list></edit-play-list>
-                 </b-card-text>
-               </b-tab>
-               <b-tab title="Musik importieren">
-                 <b-card-text>
-                   <FileExplorer></FileExplorer>
-                 </b-card-text>
-               </b-tab>
-               <b-tab title="Freesound">
-                   <FreeSoundList></FreeSoundList>
-               </b-tab>
-             </b-tabs>
-           </b-modal>
-           MENU FOR PLAYLIST EDITING END-->
 
         </b-card-text>
       </b-tab>
@@ -159,8 +140,8 @@ export default {
     },
     artist: {
       type: String,
-    }
-    // currentImg:
+    },
+    songId: Number
   },
   methods: {
 
@@ -224,7 +205,11 @@ export default {
     },
     currentTitle: function () {
       return this.title;
+    },
+    currentSongId:function (){
+      return this.songId;
     }
+
   }
 };
 </script>
