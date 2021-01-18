@@ -1,6 +1,9 @@
 import { Promise as mp3Tags } from 'node-id3';
 
 export default class MP3 {
+  /**
+   * @param arraybuff - has to be arraybuffer, only type decodeAudioData accepts
+   */
   constructor( arraybuff ) {
     this.buffer = arraybuff;
   }

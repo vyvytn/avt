@@ -8,16 +8,23 @@ import MusicLibrary from "./MusicLibrary";
 import Song from "./Song";
 import MP3 from "./MP3";
 import { search } from "./Freesound";
+import Crossfader from "./Crossfader";
 
 const ctx = new AudioContext(); // shared context
 
-const masterGain = ctx.createGain();
+const masterGain = ctx.createGain(); // gain shared accross players
 masterGain.connect( ctx.destination );
 masterGain.value = 1.0;
 
+const crossfader = new Crossfader( ctx );
+const [ leftOutNode, rightOutNode ] = crossfader.generateOutputNodes( masterGain );
+
 const lib = new MusicLibrary();
 const playlist = new Playlist( lib );
-const player = new AudioPlayer( ctx, masterGain, playlist );
+const player = new AudioPlayer( ctx, leftOutNode, playlist );
+
+const rightPlaylist = new Playlist( lib );
+const rightPlayer = new AudioPlayer( ctx, rightOutNode, rightPlaylist );
 
 (async () => {
   axios.get( "http://localhost:8090/static/Bosshafte Beats - Sunglass Evo.mp3", { responseType: "arraybuffer" } )
@@ -48,13 +55,18 @@ const player = new AudioPlayer( ctx, masterGain, playlist );
         player.play();
       }, 12000 );
       window.setTimeout( () => {
+        console.log( "1x + bass boosted" )
+        player.setEq( 64, 25 );
         player.setTempo( 1 );
       }, 14000 );
-      window.setTimeout( () => {
-        player.next();
-      }, 18000 );
+      // window.setTimeout( () => {
+      //   console.log( "next" )
+      //   player.next();
+      //   console.log( "playing: " + player.current.metaData.artist + " - " + player.current.metaData.title );
+      // }, 15000 );
       window.setTimeout( () => {
         player.pause();
+        rightPlayer.pause();
       }, 23000 );
 
     } )
@@ -64,6 +76,23 @@ const player = new AudioPlayer( ctx, masterGain, playlist );
       await bm.prepareForPlayback( ctx );
 
       playlist.add( lib.insert( bm ) );
+      rightPlaylist.add( lib.insert( bm ) );
       console.log( "inserted 2nd song" )
+
+      rightPlayer.play();
+      console.log( "play 2nd" )
+
+      window.setTimeout( () => {
+        console.log( "cross 1" )
+        crossfader.setBalance( 1 );
+      }, 2000 );
+      window.setTimeout( () => {
+        console.log( "cross 0" )
+        crossfader.setBalance( 0 );
+      }, 4000 );
+      window.setTimeout( () => {
+        console.log( "cross .25" )
+        crossfader.setBalance( .25 );
+      }, 6000 );
     })
 })();
