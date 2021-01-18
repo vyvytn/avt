@@ -46,6 +46,9 @@ export default class AudioPlayer {
   tempoTimeBonus = 0;
 
   play() {
+    if ( this.current === undefined )
+      throw new Error( "can't play an empty playlist" );
+
     if ( this.bufferSrc ) {
       this.bufferSrc.manuallyStopped = true;
       this.bufferSrc.stop();

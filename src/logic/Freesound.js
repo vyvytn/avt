@@ -1,20 +1,27 @@
+import axios from "axios";
+import MetaData from "./MetaData";
+import Song from "./Song";
+
+const serverConnection = "http://localhost:8090"
+
 export default class Freesound {
-  constructor( freesoundId ) {
-    this.id = freesoundId;
-    // create incomplete metaData obj based on return data
+  constructor( data ) {
+    this.id = data.id;
+    this.metaData = new MetaData( data );
   }
-  getMetaData() {
-    // complete metaData obj
-  }
-  getBuffer() {
-    // stream buffer
-    // this.buffer = arraybuff;
+  async downloadBuffer() {
+    this.buffer = await axios.get( `${serverConnection}/download/${this.id}`, { responseType: "arraybuffer" } )
+      .then( res => res.data )
+      .catch( err => console.log( "server error:" + err ) );
   }
 }
 
-export function search( query ) {
-  // get results
+export async function search( query ) {
+  query = encodeURIComponent( query );
 
-  // res.map( r => new Freesound( r.id ) );
-  // return res;
+  const results = await axios.get( `${serverConnection}/search/${query}` )
+    .then( res => res.data )
+    .catch( err => console.log( "server error:" + err ) );
+
+  return results.map( x => new Song( new Freesound( x ) ) );
 }

@@ -1,6 +1,10 @@
 import MetaData from "./MetaData";
 
 export default class Song {
+  metaData = null;
+  get rawBuffer() { return this.obj.buffer; }
+  audioBuffer = null;
+
   constructor( obj ) {
     this.obj = obj;
     this.type = obj.constructor.name;
@@ -8,51 +12,32 @@ export default class Song {
     const acceptedTypes = [ "MP3", "Freesound" ];
     if ( !~acceptedTypes.indexOf( this.type ) )
       throw new Error( "passed invalid class instance to constructor. needs one of: " + acceptedTypes );
-  }
 
-  get rawBuffer() {
-    return this.obj.buffer;
+    if ( this.type === "Freesound" )
+      this.metaData = obj.metaData;
   }
-  audioBuffer = null;
-  metaData = null;
 
   async prepareForPlayback( ctx ) { // needs to be run together w/ counstructor, otherwise obj not usable
 
-    if ( this.type === "MP3" ) {
-      const [ tags, audioBuffer ] = await Promise.all( [
-        this.getRawTags(),
-        this.decodeAudioData( ctx ),
-      ] );
-
-      tags.duration = audioBuffer.duration;
-      this.metaData = new MetaData( tags );
-    }
-    if ( this.type === "Freesound" ) {
-      // const [ tags, audioBuffer ] = await Promise.all( [
-      //   this.getRawTags(),
-      //   this.decodeAudioData( ctx ),
-      // ] );
-    }
-}
-
-  async getRawTags() {
-    let tags;
     switch( this.type ) {
       case "MP3":
-        tags = await this.obj.extractMetaData();
+        const [ tags, audioBuffer ] = await Promise.all( [
+          this.obj.extractMetaData(),
+          this.decodeAudioData( ctx ),
+        ] );
+
+        tags.duration = audioBuffer.duration;
+        this.metaData = new MetaData( tags );
         break;
       case "Freesound":
-        // search
+        await this.obj.downloadBuffer();
+        await this.decodeAudioData( ctx );
         break;
     }
-
-    return tags;
   }
 
   async decodeAudioData( ctx ) {
     this.audioBuffer = await ctx.decodeAudioData( this.rawBuffer );
     return this.audioBuffer;
   }
-
-  // ? audio encoding props: { bitrate, encoding, etc. }
 }
