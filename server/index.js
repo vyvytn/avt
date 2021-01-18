@@ -1,9 +1,6 @@
 const express = require( "express" );
 const bodyParser = require( "body-parser" );
 const cors = require( "cors" );
-const fs = require( "./fs" );
-
-const data = fs.readData();
 
 const server = express();
 
