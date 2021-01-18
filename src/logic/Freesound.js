@@ -2,7 +2,7 @@ import axios from "axios";
 import MetaData from "./MetaData";
 import Song from "./Song";
 
-const serverConnection = "http://localhost:8090"
+const serverConnection = "https://dj.jneidel.com"
 
 export default class Freesound {
   constructor( data ) {

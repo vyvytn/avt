@@ -10,6 +10,8 @@ import MP3 from "./MP3";
 import { search } from "./Freesound";
 import Crossfader from "./Crossfader";
 
+const serverConnection = "https://dj.jneidel.com";
+
 const ctx = new AudioContext(); // shared context
 
 const masterGain = ctx.createGain(); // gain shared accross players
@@ -27,7 +29,7 @@ const rightPlaylist = new Playlist( lib );
 const rightPlayer = new AudioPlayer( ctx, rightOutNode, rightPlaylist );
 
 (async () => {
-  axios.get( "http://localhost:8090/static/Bosshafte Beats - Sunglass Evo.mp3", { responseType: "arraybuffer" } )
+  axios.get( serverConnection + "/static/Bosshafte Beats - Sunglass Evo.mp3", { responseType: "arraybuffer" } )
     .then( async res => {
       const results = await search( "bruh moment" )
       const bruh = results[0];
@@ -70,7 +72,7 @@ const rightPlayer = new AudioPlayer( ctx, rightOutNode, rightPlaylist );
       }, 23000 );
 
     } )
-    .then( () => axios.get( "http://localhost:8090/static/Black Muffin - Die and Retry.mp3", { responseType: "arraybuffer" } ) )
+    .then( () => axios.get( serverConnection + "/static/Black Muffin - Die and Retry.mp3", { responseType: "arraybuffer" } ) )
     .then( async res => {
       const bm = new Song( new MP3( res.data ) );
       await bm.prepareForPlayback( ctx );
