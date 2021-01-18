@@ -13,14 +13,6 @@ server.use( bodyParser.urlencoded( { extended: true } ) );
 server.use( cors() ); // allow for access from vue router
 server.use( "/static", express.static( `${__dirname}/../static` ) );
 
-/* Todo:
- * - cleanup refresh routes
- * - convert expires_in into comparable date object
- * - automatic refresh if expired
- *
- * - heroku deployment with data.json possible?
- */
-
 server.use( "/", require( "./routes" ) );
 
 // error handler (fallback)

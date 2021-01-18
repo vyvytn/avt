@@ -1,40 +1,5 @@
-const fs = require( "./fs" );
 const router = require( "express" ).Router();
 const freesound = require( "./freesound" );
-const freesoundProps = fs.loadConfig();
-
-router.get( "/refresh_token", ( req, res ) => {
-  console.log( "/refresh_token" )
-  freesound.getAccessToken( freesoundProps , data.refresh_token )
-    .then( d => {
-      console.log( d )
-      if ( d ) {
-        try {
-          fs.writeData( d );
-        } catch(e) {
-          console.error( e );
-        }
-      }
-
-      res.json( d.data );
-    } )
-} );
-router.get( "/refresh_auth", ( req, res ) => {
-  console.log( "/refresh_auth" )
-  freesound.getAccessToken( freesoundProps )
-    .then( d => {
-      console.log( d )
-      if ( d ) {
-        try {
-          fs.writeData( d );
-        } catch(e) {
-          console.error( e );
-        }
-      }
-
-      res.json( d.data );
-    } )
-} );
 
 // freesound api routes
 // reference: https://freesound.org/docs/api/resources_apiv2.html#sound-resources
