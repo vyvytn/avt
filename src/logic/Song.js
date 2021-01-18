@@ -24,11 +24,6 @@ export default class Song {
    * initialize the song, required to be usable
    */
   async prepareForPlayback( ctx ) {
-    const [ tags, audioBuffer ] = await Promise.all( [
-      this.getRawTags(),
-      this.decodeAudioData( ctx ),
-    ] );
-
     switch( this.type ) {
       case "MP3":
         const [ tags, audioBuffer ] = await Promise.all( [
