@@ -2,7 +2,7 @@ const fs = require( "fs" );
 const path = require( "path" );
 
 const paths = {
-  config: path.resolve( __dirname, "config.json" )
+  config: path.resolve( __dirname, "config.json" ),
   data: path.resolve( __dirname, "data.json" )
 };
 

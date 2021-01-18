@@ -47,6 +47,7 @@ async function getAPI( route, options = {} ) {
     baseURL: "https://freesound.org/apiv2/",
     headers: {"Authorization": `${data.token_type} ${data.access_token}`},
   } ) );
+  console.log( "/" + route );
   return req.get( `${route}` )
     .then( res => res.data )
     .catch( err => err.response );
