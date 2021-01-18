@@ -8,8 +8,7 @@
     <div class="">
       <b-avatar badge=""></b-avatar>
       <p class="text-gray-700 font-weight-bold font-sans">{{ s.artist }}</p>
-      <p class="font-weight-medium font-sans">{{s.title}}</p>
-
+      <p class="font-weight-medium font-sans">{{s.title}} {{index}}</p>
     </div>
     <i
       class="action-button p-1 focus:outline-none focus:shadow-outline text-teal-500 hover:text-teal-600"
@@ -26,7 +25,8 @@ export default {
     s: {
       type: Object,
       default: () => ({})
-    }
+    },
+    index:Number
   }
 };
 </script>

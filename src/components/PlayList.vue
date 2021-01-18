@@ -13,9 +13,10 @@
     @change="updatePlaylist"
   >
     <song-card
-      v-for="s in songlist"
+      v-for="(s, index) in songlist"
       :s="s"
-    >{{printStatus}}</song-card>
+      :index="index"
+    ></song-card>
   </draggable>
 </template>
 
@@ -39,9 +40,6 @@ export default {
     arrayPlaylist: Array,
   },
   methods: {
-    printStatus(){
-      console.log(this.songlist);
-    },
     updatePlaylist(){
       this.$emit('playlistChanged');
     }

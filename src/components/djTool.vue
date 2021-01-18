@@ -7,14 +7,14 @@
     <b-container>
       <b-row>
         <b-col>
-          <canvas ref="canvasA"  width="200" height="50"></canvas>
+          <canvas ref="canvasA" width="200" height="50"></canvas>
         </b-col>
         <b-col>
-          <canvas ref="canvasB"  width="200" height="50"></canvas>
+          <canvas ref="canvasB" width="200" height="50"></canvas>
         </b-col>
       </b-row>
     </b-container>
-    <div v-if="isClicked" >
+    <div v-if="isClicked">
       <b-container fluid="">
         <b-row>
           <b-col col>
@@ -27,7 +27,7 @@
                   @prev="prevA"
                   :artist.sync="currentArtistA"
                   :title.sync="currentTitleA"
-                  @playlistChanged="changePlaylistOrder"
+                  @playlistChanged="changePlaylistOrder('A')"
             ></deck>
           </b-col>
           <b-col cols="12" md="auto">
@@ -75,7 +75,7 @@
                   @prev="prevB"
                   :artist.sync="currentArtistB"
                   :title.sync="currentTitleB"
-                  @playlistChanged="changePlaylistOrder"
+                  @playlistChanged="changePlaylistOrder('B')"
             >
             </deck>
           </b-col>
@@ -91,6 +91,8 @@
                   :play-list-array-b="listB"
                   :song-library="songLibrary"
                   @playlistChanged="changePlaylistOrder"
+                  @deleteFromPlaylistA="deleteSongFromDeckById"
+                  @deleteFromPlaylistB="deleteSongFromDeckById"
                 ></edit-play-list>
               </b-card-text>
             </b-tab>
@@ -138,7 +140,7 @@ masterGain.value = 1.0;
 
 /**create analyzer for player A
  */
-const analyzerA= ctx.createAnalyser();
+const analyzerA = ctx.createAnalyser();
 analyzerA.fftSize = 2048;
 let bufferLengthA = analyzerA.frequencyBinCount;
 let dataArrayA = new Uint8Array(bufferLengthA);
@@ -146,7 +148,7 @@ analyzerA.getByteTimeDomainData(dataArrayA);
 
 /**create analyzer for player B
  */
-const analyzerB= ctx.createAnalyser();
+const analyzerB = ctx.createAnalyser();
 analyzerB.fftSize = 2048;
 let bufferLengthB = analyzerB.frequencyBinCount;
 let dataArrayB = new Uint8Array(bufferLengthB);
@@ -160,8 +162,10 @@ const playlistA = new Playlist(lib);
 const playerA = new AudioPlayer(ctx, masterGain, playlistA);
 const playlistB = new Playlist(lib);
 const playerB = new AudioPlayer(ctx, masterGain, playlistB);
+/*
 playerA.addNode(analyzerA);
 playerB.addNode(analyzerB);
+*/
 
 /**
  * get song and connect to mastergain
@@ -171,22 +175,25 @@ axios.get(songUrl, { responseType: 'arraybuffer' })
   .then(async res => {
     const bb = new Song(new MP3(res.data));
     await bb.prepareForPlayback(ctx);
-    playlistA.add(lib.insert(bb));
-    playlistB.add(lib.insert(bb));
+    let index = lib.insert(bb);
+    playlistA.add(index);
+    playlistB.add(index);
   })
   .then(() => axios.get('http://localhost:8080/static/Black Muffin - Die and Retry.mp3', { responseType: 'arraybuffer' }))
   .then(async res => {
     const bm = new Song(new MP3(res.data));
     await bm.prepareForPlayback(ctx);
-    playlistA.add(lib.insert(bm));
-    playlistB.add(lib.insert(bm));
+    let index = lib.insert(bm);
+    playlistA.add(index);
+    playlistB.add(index);
   })
   .then(() => axios.get('http://localhost:8080/static/Bosshafte Beats - Sunglass Evo.mp3', { responseType: 'arraybuffer' }))
   .then(async res => {
     const m = new Song(new MP3(res.data));
     await m.prepareForPlayback(ctx);
-    playlistA.add(lib.insert(m));
-    playlistB.add(lib.insert(m));
+    let index = lib.insert(m);
+    playlistA.add(index);
+    playlistB.add(index);
   });
 
 
@@ -230,7 +237,7 @@ export default {
       this.frameLooperA();
       this.frameLooperB();
 
-      console.log("Hallo");
+      console.log('Hallo');
     },
     handleInitButton() {
       setTimeout(this.disableButton, 4000);
@@ -262,54 +269,76 @@ export default {
       this.songLibrary.push(value);
       console.log('kein Duplikat');
     },
+
+    /**
+     * play pause stop previous next song functions for player A and B
+     **/
     playA() {
+      playerA.addNode(analyzerA);
       playerA.play();
       console.log('Deck A sollte spielen.');
-      console.log(analyzerA);
+      this.insertMetadataA();
     },
     pauseA() {
       playerA.pause();
       console.log('Deck A sollte pausieren.');
     },
     stopA() {
+      this.pauseA();
       playerA.stop();
+      this.playA();
       console.log('Deck A sollte stoppen.');
+      this.insertMetadataA();
     },
     nextA() {
+      playerA.stop();
       playerA.next();
-      playerA.addNode(analyzerA);
+      this.playA();
       this.insertMetadataA();
     },
     prevA() {
+      playerA.stop();
       playerA.prev();
-      playerA.addNode(analyzerA);
+      this.playA();
       this.insertMetadataA();
     },
     playB() {
+      playerB.addNode(analyzerB);
       playerB.play();
       console.log('Deck B sollte spielen.');
+      this.insertMetadataB();
     },
     pauseB() {
       playerB.pause();
       console.log('Deck B sollte pausieren.');
     },
     stopB() {
+      this.pauseB();
       playerB.stop();
+      this.playB();
       console.log('Deck B sollte stoppen.');
+      this.insertMetadataB();
     },
     nextB() {
+      playerB.stop();
       playerB.next();
-      playerB.addNode(analyzerB);
+      this.playB();
       this.insertMetadataB();
     },
     prevB() {
+      playerB.stop()
       playerB.prev();
-      playerA.addNode(analyzerB);
+      this.playB();
       this.insertMetadataB();
     },
+
     printTest(val) {
       console.log('test print ' + val);
     },
+
+    /**
+     * refreshes shown metadata of a song
+     */
     insertMetadataA() {
       var artist = playerA.current.metaData.artist.toString();
       var title = playerA.current.metaData.title.toString();
@@ -323,7 +352,6 @@ export default {
       this.currentTitleB = title;
     },
     createPlaylistUI() {
-      //playlistA.list.forEach(el=>console.log(playlistA.musicLibrary.list[el].metaData.artist));
       playlistA.list.forEach(el => this.listA.push(
         {
           artist: playlistA.musicLibrary.list[el].metaData.artist.toString(),
@@ -344,46 +372,52 @@ export default {
           songId: lib.list.indexOf(el)
         }));
     },
-    changePlaylistOrder() {
-      //deckA
-      this.listA.forEach(el => console.log(el.songId));
-      playlistA.list.forEach((el, index) => playlistA.list[index] = this.listA[index].songId);
-      this.insertMetadataA();
-      playlistA.list.forEach(el => console.log(el));
+    changePlaylistOrder(deck) {
+      if (deck === 'A') {
+        //deckA
+        this.pauseA();
+        playlistA.list.forEach((el, index) => playlistA.list[index] = this.listA[index].songId);
+        playerA.stop();
+        this.playA();
+      } else {
+        //deck b
+        this.pauseB();
+        playlistB.list.forEach((el, index) => playlistB.list[index] = this.listB[index].songId);
+        playerB.stop();
+        this.playB();
+      }
 
-      //deck b
-      this.listB.forEach(el => console.log(el.songId));
-      playlistB.list.forEach((el, index) => playlistB.list[index] = this.listB[index].songId);
-      this.insertMetadataB();
-      playlistB.list.forEach(el => console.log(el));
     },
+    /**
+     * for visualizing the sound in player A and B
+     */
     frameLooperA() {
       window.RequestAnimationFrame =
         window.requestAnimationFrame(this.frameLooperA) ||
         window.webkitRequestAnimationFrame(this.frameLooperA);
       analyzerA.getByteTimeDomainData(dataArrayA);
 
-      this.canvasCtxA.fillStyle = "rgb(200, 200, 200)";
-      this.canvasCtxA.fillRect(0,0,this.canvasA.width, this.canvasA.height);
+      this.canvasCtxA.fillStyle = 'rgb(200, 200, 200)';
+      this.canvasCtxA.fillRect(0, 0, this.canvasA.width, this.canvasA.height);
 
       this.canvasCtxA.lineWidth = 2;
-      this.canvasCtxA.strokeStyle = "rgb(0, 0, 0)";
+      this.canvasCtxA.strokeStyle = 'rgb(0, 0, 0)';
       this.canvasCtxA.beginPath();
 
       let sliceWidth = this.canvasA.width * 1.0 / bufferLengthA;
       let x = 0;
 
-      for (let i = 0; i < bufferLengthA; i++){
+      for (let i = 0; i < bufferLengthA; i++) {
         let v = dataArrayA[i] / 128.0;
         let y = v * this.canvasA.height / 2;
 
-        if (i == 0){
+        if (i == 0) {
           this.canvasCtxA.moveTo(x, y);
         } else {
           this.canvasCtxA.lineTo(x, y);
         }
 
-        x+= sliceWidth;
+        x += sliceWidth;
       }
 
       this.canvasCtxA.lineTo(this.canvasA.width, this.canvasA.height / 2);
@@ -395,32 +429,65 @@ export default {
         window.webkitRequestAnimationFrame(this.frameLooperB);
       analyzerB.getByteTimeDomainData(dataArrayB);
 
-      this.canvasCtxB.fillStyle = "rgb(200, 200, 200)";
-      this.canvasCtxB.fillRect(0,0,this.canvasB.width, this.canvasB.height);
+      this.canvasCtxB.fillStyle = 'rgb(200, 200, 200)';
+      this.canvasCtxB.fillRect(0, 0, this.canvasB.width, this.canvasB.height);
 
       this.canvasCtxB.lineWidth = 2;
-      this.canvasCtxB.strokeStyle = "rgb(0, 0, 0)";
+      this.canvasCtxB.strokeStyle = 'rgb(0, 0, 0)';
       this.canvasCtxB.beginPath();
 
       let sliceWidth = this.canvasB.width * 1.0 / bufferLengthB;
       let x = 0;
 
-      for (let i = 0; i < bufferLengthB; i++){
+      for (let i = 0; i < bufferLengthB; i++) {
         let v = dataArrayB[i] / 128.0;
         let y = v * this.canvasB.height / 2;
 
-        if (i == 0){
+        if (i == 0) {
           this.canvasCtxB.moveTo(x, y);
         } else {
           this.canvasCtxB.lineTo(x, y);
         }
 
-        x+= sliceWidth;
+        x += sliceWidth;
       }
 
       this.canvasCtxB.lineTo(this.canvasB.width, this.canvasB.height / 2);
       this.canvasCtxB.stroke();
-    }
+    },
+
+
+    checkSongIsPlayingA(id) {
+      return id === playerA.currentSongId;
+    },
+    checkSongIsPlayingB(id) {
+      return id === playerB.currentSongId;
+    },
+    /**
+     * delete song from certain playlist
+     */
+    deleteSongFromDeckById(deck, sId) {
+      if (deck === 'A') {
+        if (this.checkSongIsPlayingA(sId)) {
+          this.nextA();
+        }
+        playlistA.list.forEach(function (item, index, object) {
+          if (item === sId) {
+            object.splice(index, 1);
+          }
+        });
+      } else {
+        if (this.checkSongIsPlayingB(sId)) {
+          this.nextB();
+        }
+        playlistB.list.forEach(function (item, index, object) {
+          if (item === sId) {
+            object.splice(index, 1);
+          }
+        });
+      }
+    },
+
 
   },
   mounted() {
@@ -431,14 +498,22 @@ export default {
     this.canvasB = this.$refs['canvasB'];
     this.canvasCtxB = this.$refs['canvasB'].getContext('2d');
   },
-  props: {
-    initialize: Boolean,
-  },
-  /*computed: {
-    listA: function () {
-      this.listA.prototype.forEach(el => el.artist === playlistA.musicLibrary.list[playlistA.list[el.index]].metaData.artist);
-    },
-  }*/
+  props: {},
+
+  computed: {
+    /*  currentArtistA: function () {
+        return playerA.current.metaData.artist.toString();
+      },
+      currentTitleA: function () {
+        playerA.current.metaData.title.toString();
+      },
+      currentArtistB: function () {
+        return playerB.current.metaData.artist.toString();
+      },
+      currentTitleB: function () {
+        playerB.current.metaData.title.toString();
+      }*/
+  }
 };
 </script>
 

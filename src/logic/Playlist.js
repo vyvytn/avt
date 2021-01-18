@@ -37,7 +37,6 @@ export default class Playlist {
    */
   delete( at ) {
     this.list.splice( at, 1 );
-
     if ( at < this.active )
       this.active = this.active-1;
     else if ( at === this.active ) { // explicitly go to the next track
@@ -68,6 +67,11 @@ export default class Playlist {
   active = 0;
   get activeSong() {
     return this.content[this.active];
+  }
+
+  get activeSongId(){
+    return this.active
+
   }
 
   next() { // loop around if on last song

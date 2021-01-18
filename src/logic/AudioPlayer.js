@@ -68,6 +68,9 @@ export default class AudioPlayer {
   get current() {
     return this.playlist.activeSong;
   }
+  get currentSongId() {
+    return this.playlist.activeSongId;
+  }
 
   /**
    * start playback on active song in the playlist

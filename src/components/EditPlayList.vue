@@ -17,8 +17,9 @@
               class="list-group-item"
               v-for="(element, index) in library"
             >
-              {{ element.artist }} {{ element.title  }}
-              <b-button variant="outline-danger" @click="deleteSong(element.artist, index)">
+              <p>{{ element.artist }}</p>
+              <p>{{ element.title }}</p>
+              <b-button variant="outline-danger" @click="deleteSong(element.songId, index)">
                 <b-icon icon="trash-fill"></b-icon>
               </b-button>
             </div>
@@ -39,13 +40,15 @@
             forceFallback="true"
             style="list-style: none"
             @change="updatePlaylist"
+
           >
             <div
               class="list-group-item"
               v-for="(element, index) in songListA"
             >
-              {{ element.artist }} {{ element.title  }}
-              <b-button @click="songListA.splice(index, 1)" variant="outline-danger">
+              <p>{{ element.artist }}</p>
+              <p>{{ element.title }}</p>
+              <b-button @click="deleteFromPlaylistA('A',element.songId,index)" variant="outline-danger">
                 <b-icon icon="x-circle-fill"></b-icon>
               </b-button>
             </div>
@@ -68,8 +71,9 @@
               class="list-group-item"
               v-for="(element, index) in songListB"
             >
-              {{ element.artist }} {{ element.title  }}
-              <b-button @click="songListB.splice(index, 1)" variant="outline-danger">
+              <p>{{ element.artist }}</p>
+              <p>{{ element.title }}</p>
+              <b-button @click="deleteFromPlaylistB('B',element.songId, index)" variant="outline-danger">
                 <b-icon icon="x-circle-fill"></b-icon>
               </b-button>
             </div>
@@ -81,53 +85,68 @@
 </template>
 
 <script>
-  import draggable from 'vuedraggable';
+import draggable from 'vuedraggable';
 
-  export default {
-    name: 'EditPlayList',
-    components: {
-      draggable,
+export default {
+  name: 'EditPlayList',
+  components: {
+    draggable,
+  },
+  data() {
+    return {
+
+      songName: 0
+    };
+  },
+  methods: {
+    log(evt) {
+      window.console.log(evt);
     },
-    data() {
-      return {
-        songListA: this.playListArrayA,
-        songListB: this.playListArrayB,
-        library: this.songLibrary,
-        songName: 0
-      };
+    deleteSong(sId, idx) {
+      this.deleteFromPlaylistA(sId);
+      this.deleteFromPlaylistB(sId);
+      this.library.splice(idx, 1);
+      // this.$emit('deleteSong', sId);
     },
-    methods: {
-      log(evt) {
-        window.console.log(evt);
-      },
-      deleteSong(name, idx){
-        console.log(idx);
-        this.library.splice(idx, 1);
-        for(let i=0; i < this.songListA.length; i++){
-          if(this.songListA[i].name===name){
-            console.log(this.songListA[i]);
-            this.songListA.splice(i, 1);
-          }
+    deleteFromPlaylistA(sId) {
+      this.songListA.forEach(function(item, index, object) {
+        if (item.songId === sId) {
+          object.splice(index, 1);
         }
-        for(let i=0; i < this.songListB.length; i++){
-          if(this.songListB[i].name===name){
-            console.log(this.songListB[i]);
-            this.songListB.splice(i, 1);
-          }
+      });
+      this.$emit('deleteFromPlaylistA', 'A', sId);
+    },
+    deleteFromPlaylistB(sId) {
+      this.songListB.forEach(function(item, index, object) {
+        if (item.songId === sId) {
+          object.splice(index, 1);
         }
-      },
-      updatePlaylist(){
-        this.$emit("playlistChanged")
-      }
+      });
+      this.$emit('deleteFromPlaylistB', 'B', sId);
     },
-    props: {
-      playListArrayA: Array,
-      playListArrayB: Array,
-      songLibrary: Array,
+    updatePlaylist() {
+      this.$emit('playlistChanged');
     },
-  };
+  },
+  props: {
+    playListArrayA: Array,
+    playListArrayB: Array,
+    songLibrary: Array,
+  },
+  computed:{
+    songListA:function(){
+      return this.playListArrayA
+    },
+    songListB: function (){
+      return this.playListArrayB
+    },
+    library: function (){
+      return this.songLibrary
+    }
+  }
+
+};
 </script>
 
 <style scoped>
-
 </style>
