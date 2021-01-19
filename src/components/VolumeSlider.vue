@@ -1,9 +1,10 @@
 <template>
   <div>
-    <div v-if="!horizontal">
+    <div v-if="!horizontal && !tempo">
       <vue-slider
+        :max="1"
         v-model="value"
-        :interval="25"
+        :interval="0.10"
         :marks=true
         :hide-label=true
         direction="btt"
@@ -14,17 +15,33 @@
       >
       </vue-slider>
     </div>
-    <div v-if="horizontal">
+    <div v-if="!horizontal && tempo">
       <vue-slider
+        :max="2"
+        :min="0.1"
+        :interval="0.1"
+        v-model="value3"
+        :hide-label=true
+        direction="btt"
+        :contained=true
+        :drag-on-click=true
+        style="display: inline-block; height: 12em"
+        @change="emitValue(value3)"
+      >
+      </vue-slider>
+    </div>
+    <div v-if="horizontal && !tempo">
+      <vue-slider
+        :max="1"
         v-model="value2"
-        :interval="10"
-        :marks=true
+        :interval="0.05"
         :hide-label=true
         :tooltip=" 'none' "
         direction="ltr"
         :contained=true
         :drag-on-click=true
         style="display: block; width: 18em;"
+        @change="emitValue(value2)"
       ></vue-slider>
     </div>
   </div>
@@ -39,18 +56,18 @@ export default {
   components: { VueSlider },
   data() {
     return {
-      marks: {
-      },
-      value: 100,
-      value2: 50,
+      value: 1,
+      value2: 0.5,
+      value3: 1,
     };
   },
   props: {
     horizontal: Boolean,
+    tempo: Boolean,
   },
-  methods:{
-    emitValue(val){
-      this.$emit('valueChanged', val)
+  methods: {
+    emitValue(val) {
+      this.$emit('valueChanged', val);
     }
   }
 
