@@ -74,7 +74,7 @@ export default class AudioPlayer {
    */
   play() {
     if ( this.current === undefined )
-      return;
+      throw new Error( "can't play an empty playlist" );
 
     if ( this.bufferSrc ) {
       this.bufferSrc.manuallyStopped = true;
