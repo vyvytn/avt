@@ -18,7 +18,6 @@ export default class AudioPlayer {
     this.globalOutputNode = outputNode;
     this.gain.value = 1.0;
     this.outputNode = this.gain;
-    this.songEnded=false;
   }
 
   /**
@@ -109,7 +108,6 @@ export default class AudioPlayer {
     this.isPlaying = true;
   }
   handleSongEnd = event => {
-    this.songEnded=true;
     /* triggered on
        1) the natural end of a song
        2) bufferSrc.stop()
