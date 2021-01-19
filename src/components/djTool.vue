@@ -78,6 +78,8 @@
                   :title.sync="currentTitleB"
                   :songId.sync="currentIdB"
                   @playlistChanged="changePlaylistOrder('B')"
+                  :playing="this.playingA"
+                  :pausing.sync="this.pausingA"
             >
             </deck>
           </b-col>
@@ -228,6 +230,7 @@ export default {
       canvasB: {},
       canvasCtxB: {},
       playingA: Boolean,
+      pausingA: Boolean,
       playingB: Boolean
     };
   },
@@ -241,8 +244,8 @@ export default {
 
       this.frameLooperA();
       this.frameLooperB();
-
-      console.log('Hallo');
+      this.playingA = false;
+      this.pausingA = false;
     },
     handleInitButton() {
       setTimeout(this.disableButton, 4000);
@@ -280,21 +283,24 @@ export default {
      **/
     playA() {
       this.playingA = true;
-      playerA.addNode(analyzerA)
-      // playerA.addNode(analyzerA);
+      this.pausingA = false;
+      playerA.addNode(analyzerA);
       playerA.play();
       this.insertMetadataA();
       console.log('Deck A sollte spielen.');
     },
     pauseA() {
       this.playingA = false;
+      this.pausingA = true;
       playerA.pause();
-      playerA.resetAllNodes()
+      playerA.resetAllNodes();
       console.log('Deck A sollte pausieren.');
     },
     stopA() {
+      this.playingA = false;
+      this.pausingA = false;
       playerA.stop();
-      playerA.resetAllNodes()
+      playerA.resetAllNodes();
       this.insertMetadataA();
       console.log('Deck A sollte stoppen.');
     },
@@ -406,13 +412,18 @@ export default {
     },
     refreshPlaylistA() {
       this.listA.forEach((el, index) => playlistA.list[index] = this.listA[index].songId);
+      console.log('ausgabe lie list' + playlistA.musicLibrary.list[playlistA.list[playerA.currentIndex]].metaData.artist);
+      console.log(this.listA[this.currentIdA].artist);
       if (this.playingA) {
-        if (lib.list[playlistA.active] !== this.listA[this.currentIdA].title) {
-          playerA.stop();
+        if (playlistA.musicLibrary.list[playerA.currentIndex].metaData.artist !== this.listA[this.currentIdA].artist) {
           playerA.resetAllNodes();
+          playerA.stop();
           playerA.addNode(analyzerA);
           playerA.play();
         }
+      } else {
+        playerA.resetAllNodes();
+        playerA.stop();
       }
     },
     refreshPlaylistB() {
@@ -444,45 +455,20 @@ export default {
      */
     deleteSongFromDeckById(deck, sId) {
       if (deck === 'A') {
-        if (this.checkSongIsPlayingA(sId)) {
-          // playerA.stop();
+        if (playlistA.list.length < 2) {
           playlistA.delete(sId);
-          this.insertMetadataA();
-          // if (this.playingA) {
-          //   this.playA();
-          // }
-          return 0;
+          this.currentArtistA = 'no artist';
+          this.currentTitleA = 'no title';
+          this.pauseA();
+          this.stopA();
         } else {
-          // if (this.playingA) {
-          //   playerA.stop();
-          // }
           playlistA.delete(sId);
+          this.refreshPlaylistA();
           this.insertMetadataA();
-          // if (this.playingA) {
-          //   this.playA();
-          // }
-          return 0;
         }
       } else {
-        if (this.checkSongIsPlayingB(sId)) {
-          // playerB.stop();
-          playlistB.delete(sId);
-          this.insertMetadataB();
-          // if (this.playingB) {
-          //   this.playB();
-          // }
-          return 0;
-        } else {
-          // if (this.playingB) {
-          //   playerB.stop();
-          // }
-          playlistB.delete(sId);
-          this.insertMetadataB();
-          // if (this.playingB) {
-          //   this.playB();
-          // }
-          return 0;
-        }
+        playlistB.delete(sId);
+        this.insertMetadataB();
       }
     },
     /**
@@ -564,7 +550,8 @@ export default {
     this.canvasCtxB = this.$refs['canvasB'].getContext('2d');
     this.playingA = false;
     this.playingB = false;
-  },
+
+  }
 
 };
 </script>

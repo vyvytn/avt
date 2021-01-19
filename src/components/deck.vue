@@ -15,14 +15,12 @@
       <b-button
         variant="success"
         @click="buttonClickedPlay"
-        :pressed.sync="isPlaying"
       :disabled.sync="isPlaying">
         <b-icon font-scale="2" icon="play-fill"></b-icon>
       </b-button>
       <b-button
         variant="success"
         @click="buttonClickedPause"
-        :pressed.sync="isPausing"
         :disabled.sync="isPausing">
         <b-icon font-scale="2" icon="pause-fill"></b-icon>
       </b-button>
@@ -130,8 +128,8 @@ export default {
         { name: 'Delay' },
       ],
       isReady: false,
-      isPlaying: false,
-      isPausing: false,
+      isPlaying: this.playing,
+      isPausing: this.pausing,
       playListA: this.arrayPlaylist,
     };
   },
@@ -143,7 +141,9 @@ export default {
     artist: {
       type: String,
     },
-    songId: Number
+    songId: Number,
+    playing:Boolean,
+    pausing:Boolean,
   },
   methods: {
 

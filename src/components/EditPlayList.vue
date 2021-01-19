@@ -40,7 +40,6 @@
             forceFallback="true"
             style="list-style: none"
             @change="updatePlaylist('A')"
-
           >
             <div
               class="list-group-item"
@@ -48,7 +47,7 @@
             >
               <p>{{ element.artist }}</p>
               <p>{{ element.title }}</p>
-              <b-button @click="deleteFromPlaylistA('A',element.songId,index)" variant="outline-danger">
+              <b-button @click="deleteFromPlaylistA(element.songId,index)" variant="outline-danger">
                 <b-icon icon="x-circle-fill"></b-icon>
               </b-button>
             </div>
@@ -106,20 +105,17 @@ export default {
       this.library.splice(idx, 1);
       this.deleteFromPlaylistA(sId);
       this.deleteFromPlaylistB(sId);
-      // this.$emit('deleteSong', sId);
     },
     deleteFromPlaylistA(sId) {
-      this.songListA.forEach(el=> console.log(el.title))
-      this.songListA.forEach(function(item, index, object) {
+      this.songListA.forEach(function (item, index, object) {
         if (item.songId === sId) {
           object.splice(index, 1);
         }
-      })
-      this.songListA.forEach(el=> console.log(el.title))
+      });
       this.$emit('deleteFromPlaylistA', sId);
     },
     deleteFromPlaylistB(sId) {
-      this.songListB.forEach(function(item, index, object) {
+      this.songListB.forEach(function (item, index, object) {
         if (item.songId === sId) {
           object.splice(index, 1);
         }
@@ -135,15 +131,15 @@ export default {
     playListArrayB: Array,
     songLibrary: Array,
   },
-  computed:{
-    songListA:function(){
-      return this.playListArrayA
+  computed: {
+    songListA: function () {
+      return this.playListArrayA;
     },
-    songListB: function (){
-      return this.playListArrayB
+    songListB: function () {
+      return this.playListArrayB;
     },
-    library: function (){
-      return this.songLibrary
+    library: function () {
+      return this.songLibrary;
     }
   }
 
