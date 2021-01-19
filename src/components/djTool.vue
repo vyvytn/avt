@@ -4,13 +4,15 @@
       <b-spinner v-if="!initReady" type="grow" label="Loading..."></b-spinner>
       <b-button :disabled="!initReady" @click="initialize()" variant="danger">start the dj tool</b-button>
     </div>
-    <b-container>
+    <b-container fluid="">
       <b-row>
-        <b-col>
-          <canvas ref="canvasA" width="200" height="50"></canvas>
+        <b-col col>
+          <canvas ref="canvasA"  width="346" height="50" style="border-radius: 5px"></canvas>
         </b-col>
-        <b-col>
-          <canvas ref="canvasB" width="200" height="50"></canvas>
+        <b-col cols="12" md="auto" width="343 px">
+        </b-col>
+        <b-col col>
+          <canvas ref="canvasB"  width="346" height="50" style="border-radius: 5px"></canvas>
         </b-col>
       </b-row>
     </b-container>
@@ -35,33 +37,33 @@
             <h4>Volume</h4>
             <b-row>
               <b-col cols="auto">
-                <VolumeSlider id="gainLeftDeckSlider" :horizontal="false"></VolumeSlider>
+                <VolumeSlider id="gainLeftDeckSlider" :horizontal="false" :tempo="false" @valueChanged="setVolumeA"></VolumeSlider>
                 <h6>L</h6>
               </b-col>
               <b-col cols="auto">
-                <VolumeSlider id="gainMasterSlider" :horizontal="false"></VolumeSlider>
+                <VolumeSlider id="gainMasterSlider" :horizontal="false" :tempo="false" @valueChanged="setMaster"></VolumeSlider>
                 <h6>M</h6>
               </b-col>
               <b-col cols="auto">
-                <VolumeSlider id="gainRightDeckSlider" :horizontal="false"></VolumeSlider>
+                <VolumeSlider id="gainRightDeckSlider" :horizontal="false" :tempo="false" @valueChanged="setVolumeB"></VolumeSlider>
                 <h6>R</h6>
               </b-col>
             </b-row>
             <h4>Tempo</h4>
             <b-row>
               <b-col cols="auto">
-                <VolumeSlider id="tempoLeftDeckSlider" :horizontal="false"></VolumeSlider>
+                <VolumeSlider id="tempoLeftDeckSlider" :horizontal="false" :tempo="true" @valueChanged="setTempoA"></VolumeSlider>
                 <h6>L</h6>
               </b-col>
               <b-col cols="auto">
-                <VolumeSlider id="tempoRightDeckSlider" :horizontal="false"></VolumeSlider>
+                <VolumeSlider id="tempoRightDeckSlider" :horizontal="false" :tempo="true" @valueChanged="setTempoB"></VolumeSlider>
                 <h6>R</h6>
               </b-col>
             </b-row>
             <b-row>
               <b-col cols="auto">
                 <h4>Fading</h4>
-                <VolumeSlider id="crossfadeSlider" :horizontal="true"></VolumeSlider>
+                <VolumeSlider id="crossfadeSlider" :horizontal="true" :tempo="false" @valueChanged="setCrossfader"></VolumeSlider>
               </b-col>
             </b-row>
           </b-col>
@@ -131,6 +133,7 @@ import MusicLibrary from '../logic/MusicLibrary';
 import MP3 from '../logic/MP3';
 import Song from '../logic/Song';
 import axios from 'axios';
+import Crossfader from '../logic/Crossfader';
 
 /**
  * Web Audio Api
@@ -138,9 +141,11 @@ import axios from 'axios';
  */
 const ctx = new AudioContext(); // shared context
 const masterGain = ctx.createGain(); // gain shared accross players
-
 masterGain.connect(ctx.destination);
-masterGain.value = 1.0;
+//masterGain.value = 1;
+
+const crossfader = new Crossfader( ctx );
+const [ leftOutNode, rightOutNode ] = crossfader.generateOutputNodes( masterGain );
 
 /**create analyzer for player A
  */
@@ -163,9 +168,9 @@ analyzerB.getByteTimeDomainData(dataArrayB);
  */
 const lib = new MusicLibrary();
 const playlistA = new Playlist(lib);
-const playerA = new AudioPlayer(ctx, masterGain, playlistA);
+const playerA = new AudioPlayer(ctx, leftOutNode, playlistA);
 const playlistB = new Playlist(lib);
-const playerB = new AudioPlayer(ctx, masterGain, playlistB);
+const playerB = new AudioPlayer(ctx, rightOutNode, playlistB);
 
 /**
  * get song and connect to mastergain
@@ -540,6 +545,32 @@ export default {
       this.canvasCtxB.lineTo(this.canvasB.width, this.canvasB.height / 2);
       this.canvasCtxB.stroke();
     },
+    setVolumeA(value){
+      playerA.setVolume(value);
+      console.log('Player A Gain: '+ playerA.gain.gain.value)
+    },
+    setVolumeB(value){
+      playerB.setVolume(value)
+      console.log('Player B Gain: '+ playerB.gain.gain.value)
+    },
+    setMaster(value){
+      //masterGain.value;
+      console.log('Master Gain: '+ masterGain.value)
+    },
+    setCrossfader(value){
+      crossfader.setBalance(value);
+      console.log('Crossfader Balance: '+value);
+    },
+    setTempoA(value){
+      playerA.setTempo(value);
+      console.log('Player A Tempo: '+ playerA.playingSpeed)
+
+    },
+    setTempoB(value){
+      playerB.setTempo(value);
+      console.log('Player B Tempo: '+ playerB.playingSpeed)
+    },
+
   },
   mounted() {
     //this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
