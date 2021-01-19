@@ -8,7 +8,6 @@
         <p id="songTitle" class="font-weight-bold">{{ currentTitle }}</p>
         <p id="interpretName" class="font-weight-medium">{{ currentArtist }}</p>
         <p id="albumName" class="font-weight-medium">Album Name</p>
-        <p id="timeToLeft" class="font-weight-bold">-6:23</p>
       </b-card-text>
     </b-card>
     <div style="padding: 1em" align="center">
@@ -131,6 +130,8 @@ export default {
       isPlaying: this.playing,
       isPausing: this.pausing,
       playListA: this.arrayPlaylist,
+      timeLeftMin: this.min,
+      timeLeftSec:this.sec
     };
   },
   props: {
@@ -200,6 +201,7 @@ export default {
     updatePlaylist(){
       this.$emit("playlistChanged")
     }
+
   },
   computed: {
     currentArtist: function () {

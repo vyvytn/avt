@@ -7,12 +7,12 @@
     <b-container fluid="">
       <b-row>
         <b-col col>
-          <canvas ref="canvasA"  width="346" height="50" style="border-radius: 5px"></canvas>
+          <canvas ref="canvasA" width="346" height="50" style="border-radius: 5px"></canvas>
         </b-col>
         <b-col cols="12" md="auto" width="343 px">
         </b-col>
         <b-col col>
-          <canvas ref="canvasB"  width="346" height="50" style="border-radius: 5px"></canvas>
+          <canvas ref="canvasB" width="346" height="50" style="border-radius: 5px"></canvas>
         </b-col>
       </b-row>
     </b-container>
@@ -20,6 +20,13 @@
       <b-container fluid="">
         <b-row>
           <b-col col>
+            <b-form-checkbox
+              v-model="mutedA"
+              name="check-button"
+              switch
+            >{{ mutedStringA }}
+            </b-form-checkbox>
+            <p>{{ minA }}:{{ secA }}</p>
             <deck @openLibraryClicked="togglePlaylistModal"
                   id="deckA" :array-playlist="listA"
                   @play="playA"
@@ -31,43 +38,57 @@
                   :title.sync="currentTitleA"
                   :songId.sync="currentIdA"
                   @playlistChanged="changePlaylistOrder('A')"
+
             ></deck>
           </b-col>
           <b-col cols="12" md="auto">
             <h4>Volume</h4>
             <b-row>
               <b-col cols="auto">
-                <VolumeSlider id="gainLeftDeckSlider" :horizontal="false" :tempo="false" @valueChanged="setVolumeA"></VolumeSlider>
+                <VolumeSlider id="gainLeftDeckSlider" :horizontal="false" :tempo="false"
+                              @valueChanged="setVolumeA"></VolumeSlider>
                 <h6>L</h6>
               </b-col>
               <b-col cols="auto">
-                <VolumeSlider id="gainMasterSlider" :horizontal="false" :tempo="false" @valueChanged="setMaster"></VolumeSlider>
+                <VolumeSlider id="gainMasterSlider" :horizontal="false" :tempo="false"
+                              @valueChanged="setMaster"></VolumeSlider>
                 <h6>M</h6>
               </b-col>
               <b-col cols="auto">
-                <VolumeSlider id="gainRightDeckSlider" :horizontal="false" :tempo="false" @valueChanged="setVolumeB"></VolumeSlider>
+                <VolumeSlider id="gainRightDeckSlider" :horizontal="false" :tempo="false"
+                              @valueChanged="setVolumeB"></VolumeSlider>
                 <h6>R</h6>
               </b-col>
             </b-row>
             <h4>Tempo</h4>
             <b-row>
               <b-col cols="auto">
-                <VolumeSlider id="tempoLeftDeckSlider" :horizontal="false" :tempo="true" @valueChanged="setTempoA"></VolumeSlider>
+                <VolumeSlider id="tempoLeftDeckSlider" :horizontal="false" :tempo="true"
+                              @valueChanged="setTempoA"></VolumeSlider>
                 <h6>L</h6>
               </b-col>
               <b-col cols="auto">
-                <VolumeSlider id="tempoRightDeckSlider" :horizontal="false" :tempo="true" @valueChanged="setTempoB"></VolumeSlider>
+                <VolumeSlider id="tempoRightDeckSlider" :horizontal="false" :tempo="true"
+                              @valueChanged="setTempoB"></VolumeSlider>
                 <h6>R</h6>
               </b-col>
             </b-row>
             <b-row>
               <b-col cols="auto">
                 <h4>Fading</h4>
-                <VolumeSlider id="crossfadeSlider" :horizontal="true" :tempo="false" @valueChanged="setCrossfader"></VolumeSlider>
+                <VolumeSlider id="crossfadeSlider" :horizontal="true" :tempo="false"
+                              @valueChanged="setCrossfader"></VolumeSlider>
               </b-col>
             </b-row>
           </b-col>
           <b-col col>
+            <b-form-checkbox
+              v-model="mutedB"
+              name="check-button"
+              switch
+            >{{ mutedStringB }}
+            </b-form-checkbox>
+            <p>{{ minB }}:{{ secB }}</p>
             <deck @openLibraryClicked="togglePlaylistModal"
                   id="deckB"
                   :array-playlist="listB"
@@ -80,15 +101,15 @@
                   :title.sync="currentTitleB"
                   :songId.sync="currentIdB"
                   @playlistChanged="changePlaylistOrder('B')"
-                  :playing="this.playingA"
-                  :pausing.sync="this.pausingA"
+                  :playing="this.playingB"
+                  :pausing.sync="this.pausingB"
             >
             </deck>
           </b-col>
         </b-row>
 
         <!--MENU FOR PLAYLIST EDITING BEGIN-->
-        <b-modal ref="playlistModal" title="Playlist bearbeiten">
+        <b-modal ref="playlistModal" title="Playlist bearbeiten" size="lg">
           <b-tabs pills card fill>
             <b-tab title="Bibliothek" active>
               <b-card-text>
@@ -144,8 +165,8 @@ const masterGain = ctx.createGain(); // gain shared accross players
 masterGain.connect(ctx.destination);
 //masterGain.value = 1;
 
-const crossfader = new Crossfader( ctx );
-const [ leftOutNode, rightOutNode ] = crossfader.generateOutputNodes( masterGain );
+const crossfader = new Crossfader(ctx);
+const [leftOutNode, rightOutNode] = crossfader.generateOutputNodes(masterGain);
 
 /**create analyzer for player A
  */
@@ -204,7 +225,6 @@ axios.get(songUrl, { responseType: 'arraybuffer' })
     playlistB.add(index);
   });
 
-
 export default {
   name: 'djtool',
   components: {
@@ -236,7 +256,17 @@ export default {
       canvasCtxB: {},
       playingA: Boolean,
       pausingA: Boolean,
-      playingB: Boolean
+      playingB: Boolean,
+      pausingB: Boolean,
+      mutedA: false,
+      mutedStringA: String,
+      mutedB: false,
+      mutedStringB: String,
+      currentVolumeA: Number,
+      minA: 0,
+      secA: 0,
+      minB: 0,
+      secB: 0,
     };
   },
   methods: {
@@ -246,11 +276,12 @@ export default {
       this.insertMetadataB();
       this.isClicked = true;
       //playlistA.list.forEach(el=>  this.playlistUIA.prototype.push(el));
-
       this.frameLooperA();
       this.frameLooperB();
       this.playingA = false;
       this.pausingA = false;
+      this.playingB = false;
+      this.pausingB = false;
     },
     handleInitButton() {
       setTimeout(this.disableButton, 4000);
@@ -291,6 +322,8 @@ export default {
       this.pausingA = false;
       playerA.addNode(analyzerA);
       playerA.play();
+      this.minA = lib.list[this.listA[this.currentIdA].songId].metaData.length.minutes;
+      this.secA = lib.list[this.listA[this.currentIdA].songId].metaData.length.seconds;
       this.insertMetadataA();
       console.log('Deck A sollte spielen.');
     },
@@ -329,27 +362,32 @@ export default {
     },
     playB() {
       this.playingB = true;
+      this.pausingB = false;
       playerB.addNode(analyzerB);
       playerB.play();
+      this.minB = lib.list[this.listB[this.currentIdB].songId].metaData.length.minutes;
+      this.secB = lib.list[this.listB[this.currentIdB].songId].metaData.length.seconds;
       this.insertMetadataB();
       console.log('Deck B sollte spielen.');
     },
     pauseB() {
       this.playingB = false;
+      this.pausingB = true;
       playerB.pause();
+      playerB.resetAllNodes();
       console.log('Deck B sollte pausieren.');
     },
     stopB() {
-      this.pauseB();
+      this.playingB = false;
+      this.pausingB = false;
       playerB.stop();
+      playerB.resetAllNodes();
       this.insertMetadataB();
-      if (this.playingB) {
-        this.playB();
-      }
       console.log('Deck B sollte stoppen.');
     },
     nextB() {
       playerB.stop();
+      playerB.resetAllNodes();
       playerB.next();
       this.insertMetadataB();
       if (this.playingB) {
@@ -358,6 +396,7 @@ export default {
     },
     prevB() {
       playerB.stop();
+      playerB.resetAllNodes();
       playerB.prev();
       this.insertMetadataB();
       if (this.playingB) {
@@ -432,11 +471,18 @@ export default {
       }
     },
     refreshPlaylistB() {
-      //deck b
+      this.listB.forEach((el, index) => playlistB.list[index] = this.listB[index].songId);
       if (this.playingB) {
+        if (playlistB.musicLibrary.list[playerB.currentIndex].metaData.artist !== this.listB[this.currentIdB].artist) {
+          playerB.resetAllNodes();
+          playerB.stop();
+          playerB.addNode(analyzerB);
+          playerB.play();
+        }
+      } else {
+        playerB.resetAllNodes();
         playerB.stop();
       }
-      this.listB.forEach((el, index) => playlistB.list[index] = this.listB[index].songId);
     },
     changePlaylistOrder(deck) {
       if (deck === 'A') {
@@ -448,12 +494,6 @@ export default {
         this.refreshPlaylistA();
         this.refreshPlaylistB();
       }
-    },
-    checkSongIsPlayingA(id) {
-      return id === playerA.currentIndex;
-    },
-    checkSongIsPlayingB(id) {
-      return id === playerB.currentIndex;
     },
     /**
      * delete song from certain playlist
@@ -472,8 +512,17 @@ export default {
           this.insertMetadataA();
         }
       } else {
-        playlistB.delete(sId);
-        this.insertMetadataB();
+        if (playlistB.list.length < 2) {
+          playlistB.delete(sId);
+          this.currentArtistB = 'no artist';
+          this.currentTitleB = 'no title';
+          this.pauseB();
+          this.stopB();
+        } else {
+          playlistB.delete(sId);
+          this.refreshPlaylistB();
+          this.insertMetadataB();
+        }
       }
     },
     /**
@@ -510,8 +559,11 @@ export default {
 
       this.canvasCtxA.lineTo(this.canvasA.width, this.canvasA.height / 2);
       this.canvasCtxA.stroke();
-    },
-
+    }
+    ,
+    /**
+     * visualizing sound for deck a & b
+     */
 
     frameLooperB() {
       window.RequestAnimationFrame =
@@ -544,33 +596,39 @@ export default {
 
       this.canvasCtxB.lineTo(this.canvasB.width, this.canvasB.height / 2);
       this.canvasCtxB.stroke();
-    },
-    setVolumeA(value){
+    }
+    ,
+    setVolumeA(value) {
       playerA.setVolume(value);
-      console.log('Player A Gain: '+ playerA.gain.gain.value)
-    },
-    setVolumeB(value){
-      playerB.setVolume(value)
-      console.log('Player B Gain: '+ playerB.gain.gain.value)
-    },
-    setMaster(value){
+      console.log('Player A Gain: ' + playerA.gain.gain.value);
+    }
+    ,
+    setVolumeB(value) {
+      playerB.setVolume(value);
+      console.log('Player B Gain: ' + playerB.gain.gain.value);
+    }
+    ,
+    setMaster(value) {
       //masterGain.value;
-      console.log('Master Gain: '+ masterGain.value)
-    },
-    setCrossfader(value){
+      console.log('Master Gain: ' + masterGain.value);
+    }
+    ,
+    setCrossfader(value) {
       crossfader.setBalance(value);
-      console.log('Crossfader Balance: '+value);
-    },
-    setTempoA(value){
+      console.log('Crossfader Balance: ' + value);
+    }
+    ,
+    setTempoA(value) {
       playerA.setTempo(value);
-      console.log('Player A Tempo: '+ playerA.playingSpeed)
+      console.log('Player A Tempo: ' + playerA.playingSpeed);
 
-    },
-    setTempoB(value){
+    }
+    ,
+    setTempoB(value) {
       playerB.setTempo(value);
-      console.log('Player B Tempo: '+ playerB.playingSpeed)
-    },
-
+      console.log('Player B Tempo: ' + playerB.playingSpeed);
+    }
+    ,
   },
   mounted() {
     //this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
@@ -581,10 +639,43 @@ export default {
     this.canvasCtxB = this.$refs['canvasB'].getContext('2d');
     this.playingA = false;
     this.playingB = false;
+    this.mutedStringA = 'not muted';
+    this.mutedStringB = 'not muted';
+
 
   }
-
-};
+  ,
+  computed: {}
+  ,
+  watch: {
+    // whenever question changes, this function will run
+    currentIdA: function () {
+      this.insertMetadataA();
+    },
+    currentIdB: function () {
+      this.insertMetadataB();
+    }
+    ,
+    mutedA: function () {
+      if (this.mutedA) {
+        this.mutedStringA = 'muted';
+        this.setVolumeA(0);
+      } else {
+        this.mutedStringA = 'not muted';
+      }
+    }
+    ,
+    mutedB: function () {
+      if (this.mutedB) {
+        this.mutedStringB = 'muted';
+        this.setVolumeB(0);
+      } else {
+        this.mutedStringB = 'not muted';
+      }
+    }
+  }
+}
+;
 </script>
 
 <style scoped>
