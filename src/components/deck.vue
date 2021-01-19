@@ -15,13 +15,15 @@
       <b-button
         variant="success"
         @click="buttonClickedPlay"
-        :pressed.sync="isPlaying">
+        :pressed.sync="isPlaying"
+      :disabled.sync="isPlaying">
         <b-icon font-scale="2" icon="play-fill"></b-icon>
       </b-button>
       <b-button
         variant="success"
         @click="buttonClickedPause"
-        :pressed.sync="isPausing">
+        :pressed.sync="isPausing"
+        :disabled.sync="isPausing">
         <b-icon font-scale="2" icon="pause-fill"></b-icon>
       </b-button>
       <b-button

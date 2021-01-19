@@ -69,9 +69,9 @@ export default class Playlist {
     return this.content[this.active];
   }
 
-  get activeSongId(){
-    return this.active
 
+  get currentIndex(){
+    return this.active
   }
 
   next() { // loop around if on last song

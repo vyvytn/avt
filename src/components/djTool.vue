@@ -175,6 +175,8 @@ axios.get(songUrl, { responseType: 'arraybuffer' })
     await bb.prepareForPlayback(ctx);
     let index = lib.insert(bb);
     playlistA.add(index);
+    playlistA.add(index);
+    playlistA.add(index);
     playlistB.add(index);
   })
   .then(() => axios.get('http://localhost:8080/static/Black Muffin - Die and Retry.mp3', { responseType: 'arraybuffer' }))
@@ -182,6 +184,7 @@ axios.get(songUrl, { responseType: 'arraybuffer' })
     const bm = new Song(new MP3(res.data));
     await bm.prepareForPlayback(ctx);
     let index = lib.insert(bm);
+    playlistA.add(index);
     playlistA.add(index);
     playlistB.add(index);
   })
@@ -277,7 +280,8 @@ export default {
      **/
     playA() {
       this.playingA = true;
-      playerA.addNode(analyzerA);
+      playerA.addNode(analyzerA)
+      // playerA.addNode(analyzerA);
       playerA.play();
       this.insertMetadataA();
       console.log('Deck A sollte spielen.');
@@ -285,17 +289,18 @@ export default {
     pauseA() {
       this.playingA = false;
       playerA.pause();
+      playerA.resetAllNodes()
       console.log('Deck A sollte pausieren.');
     },
     stopA() {
-      this.pauseA();
       playerA.stop();
+      playerA.resetAllNodes()
       this.insertMetadataA();
-      this.playA();
       console.log('Deck A sollte stoppen.');
     },
     nextA() {
       playerA.stop();
+      playerA.resetAllNodes();
       playerA.next();
       this.insertMetadataA();
       if (this.playingA) {
@@ -304,6 +309,7 @@ export default {
     },
     prevA() {
       playerA.stop();
+      playerA.resetAllNodes();
       playerA.prev();
       this.insertMetadataA();
       if (this.playingA) {
@@ -353,11 +359,11 @@ export default {
     },
 
     getCurrentIdA() {
-      this.currentIdA = playerA.currentSongId;
+      this.currentIdA = playerA.currentIndex;
       this.printTest('aktuelle id Deck A: ' + this.currentIdA);
     },
     getCurrentIdB() {
-      this.currentIdB = playerB.currentSongId;
+      this.currentIdB = playerB.currentIndex;
       this.printTest('aktuelle id Deck A: ' + this.currentIdB);
     },
     /**
@@ -398,33 +404,85 @@ export default {
           songId: lib.list.indexOf(el)
         }));
     },
-    refreshPlaylistA(){
+    refreshPlaylistA() {
+      this.listA.forEach((el, index) => playlistA.list[index] = this.listA[index].songId);
       if (this.playingA) {
-        playerA.stop();
-      }
-      this.listA.forEach((el, index) => playlistA.list[index]= this.listA[index].songId)
-      if (this.playingA) {
-        playerA.play();
+        if (lib.list[playlistA.active] !== this.listA[this.currentIdA].title) {
+          playerA.stop();
+          playerA.resetAllNodes();
+          playerA.addNode(analyzerA);
+          playerA.play();
+        }
       }
     },
-    refreshPlaylistB(){
+    refreshPlaylistB() {
       //deck b
       if (this.playingB) {
         playerB.stop();
       }
-      this.listB.forEach((el, index) => playlistB.list[index]= this.listB[index].songId)
-      if (this.playingB) {
-        playerB.play();
-      }
+      this.listB.forEach((el, index) => playlistB.list[index] = this.listB[index].songId);
     },
     changePlaylistOrder(deck) {
       if (deck === 'A') {
-       this.refreshPlaylistA()
-      } else if(deck==='B'){
-        this.refreshPlaylistB()
-      }else{
         this.refreshPlaylistA();
-        this.refreshPlaylistB()
+        // console.log(playerA.currentIndex)
+      } else if (deck === 'B') {
+        this.refreshPlaylistB();
+      } else {
+        this.refreshPlaylistA();
+        this.refreshPlaylistB();
+      }
+    },
+    checkSongIsPlayingA(id) {
+      return id === playerA.currentIndex;
+    },
+    checkSongIsPlayingB(id) {
+      return id === playerB.currentIndex;
+    },
+    /**
+     * delete song from certain playlist
+     */
+    deleteSongFromDeckById(deck, sId) {
+      if (deck === 'A') {
+        if (this.checkSongIsPlayingA(sId)) {
+          // playerA.stop();
+          playlistA.delete(sId);
+          this.insertMetadataA();
+          // if (this.playingA) {
+          //   this.playA();
+          // }
+          return 0;
+        } else {
+          // if (this.playingA) {
+          //   playerA.stop();
+          // }
+          playlistA.delete(sId);
+          this.insertMetadataA();
+          // if (this.playingA) {
+          //   this.playA();
+          // }
+          return 0;
+        }
+      } else {
+        if (this.checkSongIsPlayingB(sId)) {
+          // playerB.stop();
+          playlistB.delete(sId);
+          this.insertMetadataB();
+          // if (this.playingB) {
+          //   this.playB();
+          // }
+          return 0;
+        } else {
+          // if (this.playingB) {
+          //   playerB.stop();
+          // }
+          playlistB.delete(sId);
+          this.insertMetadataB();
+          // if (this.playingB) {
+          //   this.playB();
+          // }
+          return 0;
+        }
       }
     },
     /**
@@ -462,6 +520,8 @@ export default {
       this.canvasCtxA.lineTo(this.canvasA.width, this.canvasA.height / 2);
       this.canvasCtxA.stroke();
     },
+
+
     frameLooperB() {
       window.RequestAnimationFrame =
         window.requestAnimationFrame(this.frameLooperB) ||
@@ -494,66 +554,6 @@ export default {
       this.canvasCtxB.lineTo(this.canvasB.width, this.canvasB.height / 2);
       this.canvasCtxB.stroke();
     },
-
-
-    checkSongIsPlayingA(id) {
-      return id === playerA.currentSongId;
-    },
-    checkSongIsPlayingB(id) {
-      return id === playerB.currentSongId;
-    },
-    /**
-     * delete song from certain playlist
-     */
-    deleteSongFromDeckById(deck, sId) {
-      if (deck === 'A') {
-        if (this.checkSongIsPlayingA(sId)) {
-          playerA.stop();
-          this.printTest('delete song' + sId);
-          playlistA.delete(sId);
-          playlistA.list.forEach(el=>el.metaData.title)
-          this.insertMetadataA();
-          if (this.playingA) {
-            this.playA();
-          }
-          return 0;
-        } else {
-          // if (this.playingA) {
-          //   playerA.stop();
-          // }
-          playlistA.delete(sId);
-          playlistA.list.forEach(el=>el.metaData.title)
-          this.insertMetadataA();
-          // if (this.playingA) {
-          //   this.playA();
-          // }
-          return 0;
-        }
-      } else {
-        if (this.checkSongIsPlayingB(sId)) {
-          playerB.stop();
-          this.printTest('delete song' + sId);
-          playlistB.delete(sId);
-          playlistB.list.forEach(el=>el.metaData.title)
-          this.insertMetadataB();
-          if (this.playingB) {
-            this.playB();
-          }
-          return 0;
-        } else {
-          // if (this.playingB) {
-          //   playerB.stop();
-          // }
-          playlistB.delete(sId);
-          playlistB.list.forEach(el=>el.metaData.title)
-          this.insertMetadataB();
-          // if (this.playingB) {
-          //   this.playB();
-          // }
-          return 0;
-        }
-      }
-    },
   },
   mounted() {
     //this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
@@ -565,13 +565,6 @@ export default {
     this.playingA = false;
     this.playingB = false;
   },
-  /* computed:{
-    currentIdA:function (){
-      return playerA.currentSongId;
-    },
-     currentId: function (){
-      return playerB.currentSongId;
-    }*/
 
 };
 </script>

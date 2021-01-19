@@ -109,11 +109,13 @@ export default {
       // this.$emit('deleteSong', sId);
     },
     deleteFromPlaylistA(sId) {
+      this.songListA.forEach(el=> console.log(el.title))
       this.songListA.forEach(function(item, index, object) {
         if (item.songId === sId) {
           object.splice(index, 1);
         }
       })
+      this.songListA.forEach(el=> console.log(el.title))
       this.$emit('deleteFromPlaylistA', sId);
     },
     deleteFromPlaylistB(sId) {

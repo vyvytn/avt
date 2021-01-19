@@ -68,8 +68,12 @@ export default class AudioPlayer {
   get current() {
     return this.playlist.activeSong;
   }
-  get currentSongId() {
-    return this.playlist.activeSongId;
+  get currentIndex() {
+    return this.playlist.currentIndex;
+  }
+
+  get currentSongId(){
+    return this.playlist.list[this.playlist.currentIndex];
   }
 
   /**
