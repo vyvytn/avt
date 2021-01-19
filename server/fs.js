@@ -1,8 +1,18 @@
 const fs = require( "fs" );
 const path = require( "path" );
 
-const configFd = fs.openSync( path.resolve( __dirname, "config.json" ), "r" );
-const dataFd = fs.openSync( path.resolve( __dirname, "data.json" ), "r+" );
+const paths = {
+  config: path.resolve( __dirname, "config.json" ),
+  data: path.resolve( __dirname, "data.json" )
+};
+
+if ( !fs.existsSync( paths.config ) || !fs.existsSync( paths.data ) ) {
+  console.log( "config.json or data.json don't exist." );
+  process.exit( 1 );
+}
+
+const configFd = fs.openSync( paths.config, "r" );
+const dataFd = fs.openSync( paths.data, "r+" );
 
 function loadConfig() {
   const raw = fs.readFileSync( configFd, { encoding: "utf8" } );
@@ -21,7 +31,7 @@ function writeData( raw ) {
   const json = JSON.stringify( raw, null, 2 );
   // file needs to be emptied before the write, otherwise there might be leftover data
   fs.ftruncateSync( dataFd );
-  fs.writeFileSync( dataFd, json, 0, "utf8" );
+  fs.writeSync( dataFd, json, 0, "utf8" );
 }
 
 module.exports = {

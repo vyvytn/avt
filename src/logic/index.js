@@ -7,7 +7,10 @@ import Playlist from "./Playlist";
 import MusicLibrary from "./MusicLibrary";
 import Song from "./Song";
 import MP3 from "./MP3";
+import { search } from "./Freesound";
 import Crossfader from "./Crossfader";
+
+const serverConnection = "https://dj.jneidel.com";
 
 const ctx = new AudioContext(); // shared context
 
@@ -26,50 +29,50 @@ const rightPlaylist = new Playlist( lib );
 const rightPlayer = new AudioPlayer( ctx, rightOutNode, rightPlaylist );
 
 (async () => {
-  axios.get( "http://localhost:8090/static/Bosshafte Beats - Sunglass Evo.mp3", { responseType: "arraybuffer" } )
+  axios.get( serverConnection + "/static/Bosshafte Beats - Sunglass Evo.mp3", { responseType: "arraybuffer" } )
     .then( async res => {
+      const results = await search( "bruh moment" )
+      const bruh = results[0];
+      await bruh.prepareForPlayback( ctx );
+      playlist.add( lib.insert( bruh ) );
+
       const bb = new Song( new MP3( res.data ) );
       await bb.prepareForPlayback( ctx );
       playlist.add( lib.insert( bb ) );
 
       player.play();
-      console.log( "playing: " + bb.metaData.artist + " - " + bb.metaData.title );
 
       window.setTimeout( () => {
-        console.log( "seek + 1.5x" )
         player.seek( 20 );
         player.setTempo( 1.5 );
-      }, 2000 );
+        player.next();
+      }, 4000 );
       window.setTimeout( () => {
-        console.log( "2x" )
         player.setTempo( 2 );
-      }, 6000 );
-      window.setTimeout( () => {
-        console.log( "pause" )
-        player.pause();
       }, 8000 );
       window.setTimeout( () => {
-        console.log( "play" )
-        player.play();
+        player.pause();
       }, 10000 );
+      window.setTimeout( () => {
+        player.play();
+      }, 12000 );
       window.setTimeout( () => {
         console.log( "1x + bass boosted" )
         player.setEq( 64, 25 );
         player.setTempo( 1 );
-      }, 12000 );
+      }, 14000 );
       // window.setTimeout( () => {
       //   console.log( "next" )
       //   player.next();
       //   console.log( "playing: " + player.current.metaData.artist + " - " + player.current.metaData.title );
       // }, 15000 );
       window.setTimeout( () => {
-        console.log( "pause" )
         player.pause();
         rightPlayer.pause();
-      }, 19000 );
+      }, 23000 );
 
     } )
-    .then( () => axios.get( "http://localhost:8090/static/Black Muffin - Die and Retry.mp3", { responseType: "arraybuffer" } ) )
+    .then( () => axios.get( serverConnection + "/static/Black Muffin - Die and Retry.mp3", { responseType: "arraybuffer" } ) )
     .then( async res => {
       const bm = new Song( new MP3( res.data ) );
       await bm.prepareForPlayback( ctx );

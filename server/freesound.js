@@ -1,35 +1,43 @@
 const axios = require( "axios" );
 const fs = require( "./fs" );
 
-async function getAccessToken( env, refreshToken = null ) {
+const config = fs.loadConfig();
+
+async function getAccessToken( prevData ) {
   // docs: https://freesound.org/docs/api/authentication.html
 
   const reqParams = {
-    client_id: env.client_id,
-    client_secret: env.client_secret,
+    client_id: config.client_id,
+    client_secret: config.client_secret,
   };
 
-  if ( refreshToken == null ) {
-    reqParams.grant_type = "authorization_code";
-    reqParams.code = env.auth_code;
-  } else {
+  if ( prevData.refresh_token ) {
     reqParams.grant_type = "refresh_token";
-    reqParams.refresh_token = refreshToken;
+    reqParams.refresh_token = prevData.refresh_token;
+  } else {
+    reqParams.grant_type = "authorization_code";
+    reqParams.code = prevData.auth_code;
   }
 
-  let res = await axios.post( "https://freesound.org/apiv2/oauth2/access_token", {}, { params: reqParams } )
+  let data = await axios.post( "https://freesound.org/apiv2/oauth2/access_token", {}, { params: reqParams } )
+    .then( res => { console.log(res); return res; } )
     .then( res => res.data )
-    .catch( err => err.response )//.data )
+    .catch( err => { console.log(err); return {}; } )
 
-  // if ( res.error == "invalid_grant" && refreshToken ) { // re-used refresh token
-  //   res = await getAccessToken(); // try to get new one with auth_code
-  // }
+  data.expires_at = Date.now() + (data.expires_in * 1000);
+  delete data.expires_in;
+  delete data.scope;
 
-  return res;
+  fs.writeData( data );
+  return data;
 }
 
 async function getAPI( route, options = {} ) {
-  const env = fs.readData();
+  let data = fs.readData();
+
+  if ( data.expires_at <= Date.now() ) {
+    data = await getAccessToken( data );
+  }
 
   const base = {}
   if ( options.stream )
@@ -37,8 +45,9 @@ async function getAPI( route, options = {} ) {
 
   const req = axios.create( Object.assign( base, {
     baseURL: "https://freesound.org/apiv2/",
-    headers: {"Authorization": `${env.token_type} ${env.access_token}`},
+    headers: {"Authorization": `${data.token_type} ${data.access_token}`},
   } ) );
+  console.log( "/" + route );
   return req.get( `${route}` )
     .then( res => res.data )
     .catch( err => err.response );
