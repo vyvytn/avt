@@ -13,7 +13,6 @@
     <b-list-group v-for="element in fileList">
       <b-list-group-item>
         {{ element }}
-        <!--        <b-button @click="addToLibrary(file)">Add to library</b-button>-->
       </b-list-group-item>
     </b-list-group>
   </div>
@@ -37,10 +36,7 @@ export default {
       // this.$emit('songFile', file
       this.$emit('upload', file);
     },
-    // addToLibrary(file) {
-    //   /*song hochladen und als buffer im emit übergeben*/
-    //   (this.$emit('songFile', file));
-    // }
+
   }
 };
 </script>

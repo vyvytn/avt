@@ -132,7 +132,7 @@
         </b-row>
 
         <!--MENU FOR PLAYLIST EDITING BEGIN-->
-        <b-modal scrollable ref="playlistModal" title="Playlist bearbeiten" size="lg">
+        <b-modal  ok-only 	scrollable ref="playlistModal" title="Playlist bearbeiten" size="lg">
           <b-tabs pills card fill>
             <b-tab title="Bibliothek" active>
               <b-card-text>
@@ -152,7 +152,7 @@
               </b-card-text>
             </b-tab>
             <b-tab title="Freesound">
-              <FreeSoundList @update="updateLibraryFree" :duplicate="duplicateFreesound"></FreeSoundList>
+              <FreeSoundList @update="updateLibraryFree" :upload="handleFreesound" :duplicate="duplicateFreesound"></FreeSoundList>
             </b-tab>
           </b-tabs>
         </b-modal>
@@ -375,6 +375,9 @@ export default {
       this.duplicateFreesound = false;
       this.songLibrary.push(value);
       console.log('kein Duplikat');
+    },
+    handleFreesound(value){
+      console.log(value)
     },
     startTimer() {
       this.durationA = Math.round(lib.list[this.listA[this.currentIdA].songId].metaData.length.total);

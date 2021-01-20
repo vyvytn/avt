@@ -3,15 +3,14 @@
     <b-col>
       <b-row>
         <b-col class="col-10">
-          <b-form-input placeholder="Search for free Sounds" v-model="searchword">{{ searchword }}
+          <b-form-input placeholder="Search for free Sounds" :state="state" v-model="searchword">{{ searchword }}
           </b-form-input>
         </b-col>
         <b-col>
+          <b-button @click="getSoundList">
+            <b-icon icon="search"></b-icon>
+          </b-button>
         </b-col>
-        <b-button @click="getSoundList">
-          <b-icon icon="search"></b-icon>
-        </b-button>
-
       </b-row>
     </b-col>
     <div class="overflow-auto">
@@ -23,6 +22,7 @@
                            :artist="element.artist"
                            :duration="element.duration"
                            :idx="index"
+                           @freeSound="downloadSong"
                            @addSong="updateLibrary(element)"></free-sound-item>
         </b-list-group-item>
       </b-list-group>
@@ -63,6 +63,7 @@ export default {
       dismissSecs: 1,
       dismissCountDown: 0,
       searchword: '',
+      state: null
     };
   },
   methods: {
@@ -77,6 +78,7 @@ export default {
       this.dismissCountDown = this.dismissSecs;
     },
     getSoundList() {
+      this.state = true;
       let songUrl = 'https://dj.jneidel.com/search/' + this.searchword;
       axios.get(songUrl)
         .then(res => {
@@ -91,6 +93,10 @@ export default {
           this.freeSoundList = res.data;
         });
 
+    },
+    downloadSong(value){
+      let song=this.freeSoundList[value]
+      this.$emit('upload', song);
     }
   },
   props: {

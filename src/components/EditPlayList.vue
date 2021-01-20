@@ -17,9 +17,10 @@
               class="list-group-item"
               v-for="(element, index) in library"
             >
-              <b-avatar badge=""></b-avatar>
-              <p>{{ element.artist }}</p>
-              <p>{{ element.title }}</p>
+              <b-icon icon="music-note-list"></b-icon>
+              <p><b>Künstler: </b>{{ element.artist }}</p>
+              <p><b>Titel: </b>{{ element.title }}</p>
+<!--              <p><b>Länge: </b>{{ element.duration }}</p>-->
               <b-button variant="outline-danger" @click="deleteSong(element.songId, index)">
                 <b-icon icon="trash-fill"></b-icon>
               </b-button>
@@ -46,9 +47,9 @@
               class="list-group-item"
               v-for="(element, index) in songListA"
             >
-              <b-avatar badge=""></b-avatar>
-              <p>{{ element.artist }}</p>
-              <p>{{ element.title }}</p>
+              <b-icon icon="music-note-list"></b-icon>
+              <p><b>Künstler: </b>{{ element.artist }}</p>
+              <p><b>Titel: </b>{{ element.title }}</p>
               <b-button @click="deleteFromPlaylistA(element.songId,index)" variant="outline-danger">
                 <b-icon icon="x-circle-fill"></b-icon>
               </b-button>
@@ -72,9 +73,9 @@
               class="list-group-item"
               v-for="(element, index) in songListB"
             >
-              <b-avatar badge=""></b-avatar>
-              <p>{{ element.artist }}</p>
-              <p>{{ element.title }}</p>
+              <b-icon icon="music-note-list"></b-icon>
+              <p><b>Künstler: </b>{{ element.artist }}</p>
+              <p><b>Titel: </b>{{ element.title }}</p>
               <b-button @click="deleteFromPlaylistB('B',element.songId, index)" variant="outline-danger">
                 <b-icon icon="x-circle-fill"></b-icon>
               </b-button>

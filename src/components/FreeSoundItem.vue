@@ -8,7 +8,7 @@
           <p><b>Dauer: </b>{{duration}} sec</p>
         </b-col><b-col>          <img :src=imgurl>
       </b-col>
-        <b-button @click="downloadSong">Add</b-button>
+        <b-button @click="downloadSong(idx)">Add</b-button>
       </b-row>
     </b-col>
 
@@ -27,8 +27,8 @@
       idx:null
     },
     methods:{
-      downloadSong(){
-        this.$emit()
+      downloadSong(i){
+        this.$emit('freeSound', i)
       }
 
     }
