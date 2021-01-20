@@ -77,12 +77,12 @@
             <b-row>
               <b-col cols="auto">
                 <VolumeSlider id="tempoLeftDeckSlider" :horizontal="false" :tempo="true"
-                              @valueChanged="setTempoA"></VolumeSlider>
+                              @valueChanged="setTempoA" :value3="defaultTempoA"></VolumeSlider>
                 <h6>L</h6>
               </b-col>
               <b-col cols="auto">
                 <VolumeSlider id="tempoRightDeckSlider" :horizontal="false" :tempo="true"
-                              @valueChanged="setTempoB"></VolumeSlider>
+                              @valueChanged="setTempoB" :value="defaultTempoB"></VolumeSlider>
                 <h6>R</h6>
               </b-col>
             </b-row>
@@ -90,7 +90,7 @@
               <b-col cols="auto">
                 <h4>Fading</h4>
                 <VolumeSlider id="crossfadeSlider" :horizontal="true" :tempo="false"
-                              @valueChanged="setCrossfader"></VolumeSlider>
+                              @valueChanged="setCrossfader" ></VolumeSlider>
               </b-col>
             </b-row>
           </b-col>
@@ -299,6 +299,10 @@ export default {
       timerA: null,
       durationA: 0,
       pausedTimerA: true,
+      speed:1000,
+      defaultTempoA:1,
+      defaultTempoB:1
+
     };
   },
   methods: {
@@ -347,17 +351,25 @@ export default {
     },
     startTimer() {
       this.durationA = lib.list[this.listA[this.currentIdA].songId].metaData.length.total;
-      this.timerA = setInterval(this.timer, 1000);
+      this.timerA = setInterval(this.timer, this.speed);
     },
     resumeTimer() {
       clearInterval(this.timerA);
-      this.timerA = setInterval(this.timer, 1000);
+      this.timerA = setInterval(this.timer, this.speed);
     },
     timer() {
       var minutes = Math.floor(this.durationA / 60);
       var seconds = this.durationA - minutes * 60;
       if (!this.pausedTimerA) {
         this.durationA--;
+        if(this.durationA<0.5){
+          this.stopTimer();
+          this.stopA();
+          this.speed=1000;
+          this.defaultTempoA=1;
+          this.startTimer();
+          this.playA();
+        }
       }
       document.getElementById('timer').innerHTML = minutes+":"+seconds;
     },
@@ -394,6 +406,7 @@ export default {
       this.pausingA = false;
       playerA.stop();
       this.stopTimer();
+      this.speed=1000;
       playerA.resetAllNodes();
       this.insertMetadataA();
       console.log('Deck A sollte stoppen.');
@@ -402,6 +415,8 @@ export default {
       playerA.stop();
       playerA.resetAllNodes();
       playerA.next();
+      this.speed=1000;
+      this.stopTimer();
       this.insertMetadataA();
       if (this.playingA) {
         this.playA();
@@ -411,6 +426,8 @@ export default {
       playerA.stop();
       playerA.resetAllNodes();
       playerA.prev();
+      this.stopTimer();
+      this.speed=1000;
       this.insertMetadataA();
       if (this.playingA) {
         this.playA();
@@ -665,6 +682,7 @@ export default {
       console.log('Crossfader Balance: ' + value);
     },
     setTempoA(value) {
+      this.speed=-500*value+1500;
       playerA.setTempo(value);
       console.log('Player A Tempo: ' + playerA.playingSpeed);
 
@@ -707,12 +725,15 @@ export default {
     // whenever question changes, this function will run
     currentIdA: function () {
       this.insertMetadataA();
-        this.startTimer();
     },
     currentIdB: function () {
       this.insertMetadataB();
+      this.defaultTempoB=1;
     }
     ,
+    speed:function (){
+      this.resumeTimer()
+    },
     mutedA: function () {
       if (this.mutedA) {
         this.mutedStringA = 'muted';
