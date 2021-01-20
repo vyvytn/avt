@@ -22,7 +22,7 @@
           <b-col col>
             <vue-slider
               :max="100"
-              v-model="time"
+              v-model="timeA"
               :interval="10"
               :hide-label=true
               :tooltip=" 'none' "
@@ -30,7 +30,7 @@
               :contained=true
               :drag-on-click=true
               style="display: block; width: 18em;"
-              @change="setSeekA(time)"></vue-slider>
+              @change="setSeekA(timeA)"></vue-slider>
             <b-form-checkbox
               v-model="mutedA"
               name="check-button"
@@ -94,6 +94,17 @@
             </b-row>
           </b-col>
           <b-col col>
+            <vue-slider
+              :max="100"
+              v-model="timeB"
+              :interval="10"
+              :hide-label=true
+              :tooltip=" 'none' "
+              direction="ltr"
+              :contained=true
+              :drag-on-click=true
+              style="display: block; width: 18em;"
+              @change="setSeekB(timeB)"></vue-slider>
             <b-form-checkbox
               v-model="mutedB"
               name="check-button"
@@ -115,6 +126,7 @@
                   @playlistChanged="changePlaylistOrder('B')"
                   :playing="this.playingB"
                   :pausing.sync="this.pausingB"
+                  @changeEqDeck="setEqB"
             >
             </deck>
           </b-col>
@@ -281,7 +293,8 @@ export default {
       secA: 0,
       minB: 0,
       secB: 0,
-      time: playerA.currentPosition(),
+      timeA: playerA.currentPosition(),
+      timeB: playerA.currentPosition(),
     };
   },
   methods: {
@@ -359,7 +372,7 @@ export default {
     },
     nextA() {
       playerA.stop();
-      playerA.resetAllNodes();
+      //playerA.resetAllNodes();
       playerA.next();
       this.insertMetadataA();
       if (this.playingA) {
@@ -549,11 +562,11 @@ export default {
         window.webkitRequestAnimationFrame(this.frameLooperA);
       analyzerA.getByteTimeDomainData(dataArrayA);
 
-      this.canvasCtxA.fillStyle = 'rgb(200, 200, 200)';
+      this.canvasCtxA.fillStyle = 'rgb(196,154,239)';
       this.canvasCtxA.fillRect(0, 0, this.canvasA.width, this.canvasA.height);
 
       this.canvasCtxA.lineWidth = 2;
-      this.canvasCtxA.strokeStyle = 'rgb(0, 0, 0)';
+      this.canvasCtxA.strokeStyle = 'rgb(80,60,96)';
       this.canvasCtxA.beginPath();
 
       let sliceWidth = this.canvasA.width * 1.0 / bufferLengthA;
@@ -584,11 +597,11 @@ export default {
         window.webkitRequestAnimationFrame(this.frameLooperB);
       analyzerB.getByteTimeDomainData(dataArrayB);
 
-      this.canvasCtxB.fillStyle = 'rgb(200, 200, 200)';
+      this.canvasCtxB.fillStyle = 'rgb(196,154,239)';
       this.canvasCtxB.fillRect(0, 0, this.canvasB.width, this.canvasB.height);
 
       this.canvasCtxB.lineWidth = 2;
-      this.canvasCtxB.strokeStyle = 'rgb(0, 0, 0)';
+      this.canvasCtxB.strokeStyle = 'rgb(80,60,96)';
       this.canvasCtxB.beginPath();
 
       let sliceWidth = this.canvasB.width * 1.0 / bufferLengthB;
@@ -643,8 +656,15 @@ export default {
       playerA.seek(time);
       console.log(time);
     },
+    setSeekB(time){
+      playerB.seek(time);
+      console.log(time);
+    },
     setEqA(index, value){
       playerA.setEq(index,value);
+    },
+    setEqB(index, value){
+      playerB.setEq(index,value);
     },
   },
   mounted() {

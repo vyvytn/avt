@@ -132,7 +132,7 @@ export default {
       isPausing: this.pausing,
       playListA: this.arrayPlaylist,
       timeLeftMin: this.min,
-      timeLeftSec:this.sec
+      timeLeftSec:this.sec,
     };
   },
   props: {
