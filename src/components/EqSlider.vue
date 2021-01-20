@@ -3,10 +3,10 @@
     <div v-if=on>
 
       <vue-slider
-        :min="-40"
-        :max="40"
+        :min="-20"
+        :max="20"
         v-model="value2"
-        :interval="10"
+        :interval="1"
         :marks=true
         :hide-label=true
         :tooltip=" 'none' "
@@ -23,11 +23,6 @@
     </div>
     <div v-if=!on>
       <vue-slider
-        :min="-40"
-        :max="40"
-        v-model="value2"
-        :interval="10"
-        :marks=true
         :hide-label=true
         :tooltip=" 'none' "
         direction="btt"
@@ -35,11 +30,7 @@
         :disabled=true
         :drag-on-click=true
         style="display: inline-block; margin: 5em 1em; height: 15em;"
-        @change="emitValue(value, value2)"
       >
-        <div style="justify-content: center; text-align: center">
-          <label>{{ value }}</label>
-        </div>
       </vue-slider>
     </div>
   </div>
