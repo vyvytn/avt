@@ -31,14 +31,14 @@
               :drag-on-click=true
               style="display: block; width: 18em;"
               @change="setSeekA(timeA)"></vue-slider>
-            <b-form-checkbox
-              v-model="mutedA"
-              name="check-button"
-              switch
-            >{{ mutedStringA }}
-            </b-form-checkbox>
-            <p>{{ minA }}:{{ secA }}</p>
-            <P id="timer">0</P>
+            <!--            <b-form-checkbox-->
+            <!--              v-model="mutedA"-->
+            <!--              name="check-button"-->
+            <!--              switch-->
+            <!--            >{{ mutedStringA }}-->
+            <!--            </b-form-checkbox>-->
+            <!--            <p>{{ minA }}:{{ secA }}</p>-->
+            <P id="timeLeftA"></P>
             <deck @openLibraryClicked="togglePlaylistModal"
                   id="deckA" :array-playlist="listA"
                   @play="playA"
@@ -90,7 +90,7 @@
               <b-col cols="auto">
                 <h4>Fading</h4>
                 <VolumeSlider id="crossfadeSlider" :horizontal="true" :tempo="false"
-                              @valueChanged="setCrossfader" ></VolumeSlider>
+                              @valueChanged="setCrossfader"></VolumeSlider>
               </b-col>
             </b-row>
           </b-col>
@@ -106,13 +106,13 @@
               :drag-on-click=true
               style="display: block; width: 18em;"
               @change="setSeekB(timeB)"></vue-slider>
-            <b-form-checkbox
-              v-model="mutedB"
-              name="check-button"
-              switch
-            >{{ mutedStringB }}
-            </b-form-checkbox>
-            <p>{{ minB }}:{{ secB }}</p>
+            <!--            <b-form-checkbox-->
+            <!--              v-model="mutedB"-->
+            <!--              name="check-button"-->
+            <!--              switch-->
+            <!--            >{{ mutedStringB }}-->
+            <!--            </b-form-checkbox>-->
+            <!--            <p>{{ minB }}:{{ secB }}</p>-->
             <deck @openLibraryClicked="togglePlaylistModal"
                   id="deckB"
                   :array-playlist="listB"
@@ -150,7 +150,7 @@
             </b-tab>
             <b-tab title="Musik importieren">
               <b-card-text>
-                <FileExplorer @update="updateLibraryFile"></FileExplorer>
+                <FileExplorer @upload="updateLibraryFile"></FileExplorer>
               </b-card-text>
             </b-tab>
             <b-tab title="Freesound">
@@ -299,9 +299,9 @@ export default {
       timerA: null,
       durationA: 0,
       pausedTimerA: true,
-      speed:1000,
-      defaultTempoA:1,
-      defaultTempoB:1
+      speed: 1000,
+      defaultTempoA: 1,
+      defaultTempoB: 1
 
     };
   },
@@ -318,6 +318,10 @@ export default {
       this.pausingA = false;
       this.playingB = false;
       this.pausingB = false;
+      this.$nextTick(function () {
+        document.getElementById('timeLeftA').innerHTML = Math.round(lib.list[this.listA[this.currentIdA].songId].metaData.length.total)
+          .toString();
+      });
     },
     handleInitButton() {
       setTimeout(this.disableButton, 4000);
@@ -329,13 +333,37 @@ export default {
       this.$refs.playlistModal.show();
     },
     updateLibraryFile(value) {
-      for (let i = 0; i < this.songLibrary.length; i++) {
-        if (this.songLibrary[i].name === value.name) {
-          console.log('Duplikat ' + this.songLibrary[i].name);
-          return;
+      // for (let i = 0; i < this.songLibrary.length; i++) {
+      //   if (this.songLibrary[i].name === value.name) {
+      //     console.log('Duplikat ' + this.songLibrary[i].name);
+      //     return;
+      //   }
+      //
+
+      let newSong=null;
+      value.arrayBuffer()
+        .then( res =>  {
+          newSong = new Song(new MP3(res));
+          newSong.prepareForPlayback(ctx);
+          let newSongIndex = lib.insert(newSong);
+          if (lib.list[newSongIndex].metaData !== null) {
+            this.songLibrary.push(
+              {
+                artist: lib.list[newSongIndex].metaData.artist.toString(),
+                title: lib.list[newSongIndex].metaData.title,
+                songId: newSongIndex
+              });
+          } else {
+            this.songLibrary.push(
+              {
+                artist: 'unknown',
+                title: value.name,
+                songId: newSongIndex
+              });
+          }
+          console.log(lib.list[newSongIndex]);
         }
-      }
-      this.songLibrary.push(value);
+    )
     },
     updateLibraryFree(value) {
       for (let i = 0; i < this.songLibrary.length; i++) {
@@ -344,13 +372,14 @@ export default {
           this.duplicateFreesound = true;
           return;
         }
+        ;
       }
       this.duplicateFreesound = false;
       this.songLibrary.push(value);
       console.log('kein Duplikat');
     },
     startTimer() {
-      this.durationA = lib.list[this.listA[this.currentIdA].songId].metaData.length.total;
+      this.durationA = Math.round(lib.list[this.listA[this.currentIdA].songId].metaData.length.total);
       this.timerA = setInterval(this.timer, this.speed);
     },
     resumeTimer() {
@@ -362,16 +391,16 @@ export default {
       var seconds = this.durationA - minutes * 60;
       if (!this.pausedTimerA) {
         this.durationA--;
-        if(this.durationA<0.5){
+        if (this.durationA < 0.5) {
           this.stopTimer();
           this.stopA();
-          this.speed=1000;
-          this.defaultTempoA=1;
-          this.startTimer();
+          this.currentIdA = this.getCurrentIdA();
+          this.speed = 1000;
+          this.defaultTempoA = 1;
           this.playA();
         }
       }
-      document.getElementById('timer').innerHTML = minutes+":"+seconds;
+      document.getElementById('timeLeftA').innerHTML = minutes + ':' + seconds;
     },
     stopTimer() {
       clearInterval(this.timerA);
@@ -406,7 +435,7 @@ export default {
       this.pausingA = false;
       playerA.stop();
       this.stopTimer();
-      this.speed=1000;
+      this.speed = 1000;
       playerA.resetAllNodes();
       this.insertMetadataA();
       console.log('Deck A sollte stoppen.');
@@ -415,7 +444,6 @@ export default {
       playerA.stop();
       playerA.resetAllNodes();
       playerA.next();
-      this.speed=1000;
       this.stopTimer();
       this.insertMetadataA();
       if (this.playingA) {
@@ -427,7 +455,7 @@ export default {
       playerA.resetAllNodes();
       playerA.prev();
       this.stopTimer();
-      this.speed=1000;
+      this.speed = 1000;
       this.insertMetadataA();
       if (this.playingA) {
         this.playA();
@@ -493,8 +521,8 @@ export default {
      * refreshes shown metadata of a song
      */
     insertMetadataA() {
-      var artist = playerA.current.metaData.artist.toString();
-      var title = playerA.current.metaData.title.toString();
+      var artist = playerA.current.metaData.artist;
+      var title = playerA.current.metaData.title;
       this.currentArtistA = artist;
       this.currentTitleA = title;
       this.getCurrentIdA();
@@ -529,7 +557,7 @@ export default {
     },
     refreshPlaylistA() {
       this.listA.forEach((el, index) => playlistA.list[index] = this.listA[index].songId);
-      this.getCurrentIdA()
+      this.getCurrentIdA();
       if (this.playingA) {
         if (playlistA.musicLibrary.list[playerA.currentIndex].metaData.artist !== this.listA[this.currentIdA].artist) {
           playerA.resetAllNodes();
@@ -643,15 +671,15 @@ export default {
       this.canvasCtxB.fillRect(0, 0, this.canvasB.width, this.canvasB.height);
 
 
-      let barWidth = (this.canvasB.width/ bufferLengthB) * 2.5;
+      let barWidth = (this.canvasB.width / bufferLengthB) * 2.5;
       let barHeight;
       let x = 0;
 
       for (let i = 0; i < bufferLengthB; i++) {
         barHeight = dataArrayB[i] / 2;
 
-        this.canvasCtxB.fillStyle = 'rbg(' + (barHeight+100) + ',50,50)';
-        this.canvasCtxB.fillRect(x, this.canvasB.height - barHeight/2, barWidth, barHeight);
+        this.canvasCtxB.fillStyle = 'rbg(' + (barHeight + 100) + ',50,50)';
+        this.canvasCtxB.fillRect(x, this.canvasB.height - barHeight / 2, barWidth, barHeight);
 
         x += barWidth + 1;
       }
@@ -680,7 +708,7 @@ export default {
       console.log('Crossfader Balance: ' + value);
     },
     setTempoA(value) {
-      this.speed=-500*value+1500;
+      this.speed = -500 * value + 1500;
       playerA.setTempo(value);
       console.log('Player A Tempo: ' + playerA.playingSpeed);
 
@@ -698,10 +726,10 @@ export default {
       console.log(time);
     },
     setEqA(index, value) {
-      playerA.setEq(index,value);
+      playerA.setEq(index, value);
     },
     setEqB(index, value) {
-      playerB.setEq(index,value);
+      playerB.setEq(index, value);
     },
   },
   mounted() {
@@ -722,15 +750,18 @@ export default {
   watch: {
     // whenever question changes, this function will run
     currentIdA: function () {
+      this.speed = 1000;
+      this.startTimer();
       this.insertMetadataA();
     },
     currentIdB: function () {
       this.insertMetadataB();
-      this.defaultTempoB=1;
+      this.defaultTempoB = 1;
     }
     ,
-    speed:function (){
-      this.resumeTimer()
+    speed: function () {
+      this.resumeTimer();
+      console.log('speed ist: ' + this.speed);
     },
     mutedA: function () {
       if (this.mutedA) {
