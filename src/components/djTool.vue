@@ -625,10 +625,8 @@ export default {
         } else {
           this.canvasCtxA.lineTo(x, y);
         }
-
         x += sliceWidth;
       }
-
       this.canvasCtxA.lineTo(this.canvasA.width, this.canvasA.height / 2);
       this.canvasCtxA.stroke();
     },
