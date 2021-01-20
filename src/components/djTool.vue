@@ -38,6 +38,7 @@
             >{{ mutedStringA }}
             </b-form-checkbox>
             <p>{{ minA }}:{{ secA }}</p>
+            <P id="timer">0</P>
             <deck @openLibraryClicked="togglePlaylistModal"
                   id="deckA" :array-playlist="listA"
                   @play="playA"
@@ -282,6 +283,9 @@ export default {
       minB: 0,
       secB: 0,
       time: playerA.currentPosition(),
+      timerA: null,
+      durationA: 0,
+      pausedTimerA: true,
     };
   },
   methods: {
@@ -328,6 +332,25 @@ export default {
       this.songLibrary.push(value);
       console.log('kein Duplikat');
     },
+    startTimer() {
+      this.durationA = lib.list[this.listA[this.currentIdA].songId].metaData.length.total;
+      this.timerA = setInterval(this.timer, 1000);
+    },
+    resumeTimer() {
+      clearInterval(this.timerA);
+      this.timerA = setInterval(this.timer, 1000);
+    },
+    timer() {
+      var minutes = Math.floor(this.durationA / 60);
+      var seconds = this.durationA - minutes * 60;
+      if (!this.pausedTimerA) {
+        this.durationA--;
+      }
+      document.getElementById('timer').innerHTML = minutes+":"+seconds;
+    },
+    stopTimer() {
+      clearInterval(this.timerA);
+    },
 
     /**
      * play pause stop previous next song functions for player A and B
@@ -337,14 +360,18 @@ export default {
       this.pausingA = false;
       playerA.addNode(analyzerA);
       playerA.play();
-      this.minA = lib.list[this.listA[this.currentIdA].songId].metaData.length.minutes;
-      this.secA = lib.list[this.listA[this.currentIdA].songId].metaData.length.seconds;
+      // this.minA = lib.list[this.listA[this.currentIdA].songId].metaData.length.minutes;
+      // this.secA = lib.list[this.listA[this.currentIdA].songId].metaData.length.seconds;
+      this.pausedTimerA = false;
+      this.resumeTimer();
       this.insertMetadataA();
       console.log('Deck A sollte spielen.');
     },
     pauseA() {
       this.playingA = false;
       this.pausingA = true;
+      this.pausedTimerA = true;
+      this.stopTimer();
       playerA.pause();
       playerA.resetAllNodes();
       console.log('Deck A sollte pausieren.');
@@ -353,6 +380,7 @@ export default {
       this.playingA = false;
       this.pausingA = false;
       playerA.stop();
+      this.stopTimer();
       playerA.resetAllNodes();
       this.insertMetadataA();
       console.log('Deck A sollte stoppen.');
@@ -471,8 +499,7 @@ export default {
     },
     refreshPlaylistA() {
       this.listA.forEach((el, index) => playlistA.list[index] = this.listA[index].songId);
-      console.log('ausgabe lie list' + playlistA.musicLibrary.list[playlistA.list[playerA.currentIndex]].metaData.artist);
-      console.log(this.listA[this.currentIdA].artist);
+      this.getCurrentIdA()
       if (this.playingA) {
         if (playlistA.musicLibrary.list[playerA.currentIndex].metaData.artist !== this.listA[this.currentIdA].artist) {
           playerA.resetAllNodes();
@@ -639,12 +666,12 @@ export default {
       playerB.setTempo(value);
       console.log('Player B Tempo: ' + playerB.playingSpeed);
     },
-    setSeekA(time){
+    setSeekA(time) {
       playerA.seek(time);
       console.log(time);
     },
-    setEqA(index, value){
-      playerA.setEq(index,value);
+    setEqA(index, value) {
+      playerA.setEq(index, value);
     },
   },
   mounted() {
@@ -658,8 +685,6 @@ export default {
     this.playingB = false;
     this.mutedStringA = 'not muted';
     this.mutedStringB = 'not muted';
-
-
   }
   ,
   computed: {}
@@ -668,6 +693,7 @@ export default {
     // whenever question changes, this function will run
     currentIdA: function () {
       this.insertMetadataA();
+        this.startTimer();
     },
     currentIdB: function () {
       this.insertMetadataB();
