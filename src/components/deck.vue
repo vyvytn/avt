@@ -69,6 +69,7 @@
                 :key="el.name"
                 :value="el.label"
                 :on=eqStatus
+                @changeEq="changeEqSlider"
               ></eq-slider>
             </b-row>
           </b-col>
@@ -199,6 +200,10 @@ export default {
     },
     updatePlaylist(){
       this.$emit("playlistChanged")
+    },
+    changeEqSlider(index, value){
+      this.$emit('changeEqDeck', index, value);
+      console.log(index + ", " + value);
     }
   },
   computed: {

@@ -1,8 +1,10 @@
 <template>
   <div>
     <div v-if=on>
-      <label v-model="this.value"></label>
+
       <vue-slider
+        :min="-40"
+        :max="40"
         v-model="value2"
         :interval="10"
         :marks=true
@@ -12,11 +14,17 @@
         :contained=true
         :drag-on-click=true
         style="display: inline-block; margin: 5em 1em; height: 15em;"
-      ></vue-slider>
+        @change="emitValue(value, value2)"
+      >
+        <div style="justify-content: center">
+          <label>{{ value }}</label>
+        </div>
+      </vue-slider>
     </div>
     <div v-if=!on>
-      <label v-model="this.value"></label>
       <vue-slider
+        :min="-40"
+        :max="40"
         v-model="value2"
         :interval="10"
         :marks=true
@@ -27,7 +35,12 @@
         :disabled=true
         :drag-on-click=true
         style="display: inline-block; margin: 5em 1em; height: 15em;"
-      ></vue-slider>
+        @change="emitValue(value, value2)"
+      >
+        <div style="justify-content: center; text-align: center">
+          <label>{{ value }}</label>
+        </div>
+      </vue-slider>
     </div>
   </div>
 </template>
@@ -47,9 +60,16 @@ export default {
   name: 'EqSlider',
   data() {
     return {
-      value2: 50,
+      value2: 0,
     };
   },
+  methods: {
+    emitValue(index,value){
+      this.$emit('changeEq', index, value);
+      console.log(this.value + ", " + this.value2)
+      console.log(index + ", " + value)
+    }
+  }
 };
 </script>
 

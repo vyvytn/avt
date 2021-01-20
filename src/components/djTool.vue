@@ -20,6 +20,17 @@
       <b-container fluid="">
         <b-row>
           <b-col col>
+            <vue-slider
+              :max="100"
+              v-model="time"
+              :interval="10"
+              :hide-label=true
+              :tooltip=" 'none' "
+              direction="ltr"
+              :contained=true
+              :drag-on-click=true
+              style="display: block; width: 18em;"
+              @change="setSeekA(time)"></vue-slider>
             <deck @openLibraryClicked="togglePlaylistModal"
                   id="deckA" :array-playlist="listA"
                   @play="playA"
@@ -31,6 +42,7 @@
                   :title.sync="currentTitleA"
                   :songId.sync="currentIdA"
                   @playlistChanged="changePlaylistOrder('A')"
+                  @changeEqDeck="setEqA"
             ></deck>
           </b-col>
           <b-col cols="12" md="auto">
@@ -134,6 +146,7 @@ import MP3 from '../logic/MP3';
 import Song from '../logic/Song';
 import axios from 'axios';
 import Crossfader from '../logic/Crossfader';
+import VueSlider from 'vue-slider-component';
 
 /**
  * Web Audio Api
@@ -213,6 +226,7 @@ export default {
     FileExplorer,
     FreeSoundList,
     EditPlayList,
+    VueSlider,
     counter: 0
   },
   data() {
@@ -236,7 +250,8 @@ export default {
       canvasCtxB: {},
       playingA: Boolean,
       pausingA: Boolean,
-      playingB: Boolean
+      playingB: Boolean,
+      time: playerA.currentPosition(),
     };
   },
   methods: {
@@ -511,8 +526,6 @@ export default {
       this.canvasCtxA.lineTo(this.canvasA.width, this.canvasA.height / 2);
       this.canvasCtxA.stroke();
     },
-
-
     frameLooperB() {
       window.RequestAnimationFrame =
         window.requestAnimationFrame(this.frameLooperB) ||
@@ -545,6 +558,10 @@ export default {
       this.canvasCtxB.lineTo(this.canvasB.width, this.canvasB.height / 2);
       this.canvasCtxB.stroke();
     },
+
+    /**
+     * for manipulating Gain in player A and B
+     */
     setVolumeA(value){
       playerA.setVolume(value);
       console.log('Player A Gain: '+ playerA.gain.gain.value)
@@ -571,6 +588,13 @@ export default {
       console.log('Player B Tempo: '+ playerB.playingSpeed)
     },
 
+    setSeekA(time){
+      playerA.seek(time);
+      console.log(time);
+    },
+    setEqA(index, value){
+      playerA.setEq(index,value);
+    }
   },
   mounted() {
     //this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
