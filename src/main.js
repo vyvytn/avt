@@ -25,9 +25,9 @@ import Router from 'vue-router';
 import BootstrapVueIcons from 'bootstrap-vue';
 import './../node_modules/dropzone/dist/dropzone.css';
 import AudioVisual from 'vue-audio-visual';
-import FileUpload from 'v-file-upload'
-
-Vue.use(FileUpload);
+// import uploader from 'vue-simple-uploader'
+// import FileUpload from 'v-file-upload'
+// Vue.use(FileUpload);
 Vue.use(AudioVisual);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
@@ -35,6 +35,8 @@ Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(Router);
 Vue.use(VueWaveSurfer);
+// Vue.use(uploader);
+
 
 // import * as audioLogic from "./logic"; // uncomment to run player example
 
