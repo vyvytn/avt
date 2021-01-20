@@ -1,7 +1,7 @@
 <template>
   <div id="deckRoot">
     <b-card
-      style="padding: 1em; background-color: #c49aef"
+      style="padding: 1em; background-color: #a498ee"
     >
       <b-card-text>
         <b-avatar></b-avatar>

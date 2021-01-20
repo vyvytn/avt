@@ -589,11 +589,11 @@ export default {
         window.webkitRequestAnimationFrame(this.frameLooperA);
       analyzerA.getByteTimeDomainData(dataArrayA);
 
-      this.canvasCtxA.fillStyle = 'rgb(196,154,239)';
+      this.canvasCtxA.fillStyle = 'rgb(132,232,202)';
       this.canvasCtxA.fillRect(0, 0, this.canvasA.width, this.canvasA.height);
 
       this.canvasCtxA.lineWidth = 2;
-      this.canvasCtxA.strokeStyle = 'rgb(80,60,96)';
+      this.canvasCtxA.strokeStyle = 'rgb(32,55,47)';
       this.canvasCtxA.beginPath();
 
       let sliceWidth = this.canvasA.width * 1.0 / bufferLengthA;
@@ -624,11 +624,11 @@ export default {
         window.webkitRequestAnimationFrame(this.frameLooperB);
       analyzerB.getByteTimeDomainData(dataArrayB);
 
-      this.canvasCtxB.fillStyle = 'rgb(196,154,239)';
+      this.canvasCtxB.fillStyle = 'rgb(164,152,238)';
       this.canvasCtxB.fillRect(0, 0, this.canvasB.width, this.canvasB.height);
 
       this.canvasCtxB.lineWidth = 2;
-      this.canvasCtxB.strokeStyle = 'rgb(80,60,96)';
+      this.canvasCtxB.strokeStyle = 'rgb(60,53,83)';
       this.canvasCtxB.beginPath();
 
       let sliceWidth = this.canvasB.width * 1.0 / bufferLengthB;
