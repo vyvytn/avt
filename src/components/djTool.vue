@@ -21,9 +21,8 @@
         <b-row>
           <b-col col>
             <vue-slider
-              :max="100"
+              :max="timeA"
               v-model="timeA"
-              :interval="10"
               :hide-label=true
               :tooltip=" 'none' "
               direction="ltr"
@@ -51,7 +50,6 @@
                   :songId.sync="currentIdA"
                   @playlistChanged="changePlaylistOrder('A')"
                   @changeEqDeck="setEqA"
-
             ></deck>
           </b-col>
           <b-col cols="12" md="auto">
@@ -82,7 +80,7 @@
               </b-col>
               <b-col cols="auto">
                 <VolumeSlider id="tempoRightDeckSlider" :horizontal="false" :tempo="true"
-                              @valueChanged="setTempoB" :value="defaultTempoB"></VolumeSlider>
+                              @valueChanged="setTempoB" :value3="defaultTempoB"></VolumeSlider>
                 <h6>R</h6>
               </b-col>
             </b-row>
@@ -189,7 +187,7 @@ import VueSlider from 'vue-slider-component';
 const ctx = new AudioContext(); // shared context
 const masterGain = ctx.createGain(); // gain shared accross players
 masterGain.connect(ctx.destination);
-masterGain.gain.value = 0.5;
+masterGain.gain.value = 1;
 
 const crossfader = new Crossfader(ctx);
 const [leftOutNode, rightOutNode] = crossfader.generateOutputNodes(masterGain);
@@ -205,7 +203,7 @@ analyzerA.getByteTimeDomainData(dataArrayA);
 /**create analyzer for player B
  */
 const analyzerB = ctx.createAnalyser();
-analyzerB.fftSize = 2048;
+analyzerB.fftSize = 256;
 let bufferLengthB = analyzerB.frequencyBinCount;
 let dataArrayB = new Uint8Array(bufferLengthB);
 analyzerB.getByteTimeDomainData(dataArrayB);
@@ -218,8 +216,7 @@ const playlistA = new Playlist(lib);
 const playerA = new AudioPlayer(ctx, leftOutNode, playlistA);
 const playlistB = new Playlist(lib);
 const playerB = new AudioPlayer(ctx, rightOutNode, playlistB);
-
-/**
+  /**
  * get song and connect to mastergain
  */
 let songUrl = 'http://localhost:8080/static/example.mp3';
@@ -318,6 +315,7 @@ export default {
       this.pausingA = false;
       this.playingB = false;
       this.pausingB = false;
+      this.canvasCtxB.fillRect(0,0,this.canvasB.width,this.canvasB.height);
     },
     handleInitButton() {
       setTimeout(this.disableButton, 4000);
@@ -639,7 +637,7 @@ export default {
         window.webkitRequestAnimationFrame(this.frameLooperB);
       analyzerB.getByteTimeDomainData(dataArrayB);
 
-      this.canvasCtxB.fillStyle = 'rgb(164,152,238)';
+      this.canvasCtxB.fillStyle = 'rgb(0,0,0)';
       this.canvasCtxB.fillRect(0, 0, this.canvasB.width, this.canvasB.height);
 
 
@@ -655,9 +653,6 @@ export default {
 
         x += barWidth + 1;
       }
-
-      this.canvasCtxB.lineTo(this.canvasB.width, this.canvasB.height / 2);
-      this.canvasCtxB.stroke();
     },
 
     /**
