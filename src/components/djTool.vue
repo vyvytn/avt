@@ -189,7 +189,7 @@ import VueSlider from 'vue-slider-component';
 const ctx = new AudioContext(); // shared context
 const masterGain = ctx.createGain(); // gain shared accross players
 masterGain.connect(ctx.destination);
-//masterGain.value = 1;
+masterGain.gain.value = 0.5;
 
 const crossfader = new Crossfader(ctx);
 const [leftOutNode, rightOutNode] = crossfader.generateOutputNodes(masterGain);
@@ -627,24 +627,18 @@ export default {
       this.canvasCtxB.fillStyle = 'rgb(164,152,238)';
       this.canvasCtxB.fillRect(0, 0, this.canvasB.width, this.canvasB.height);
 
-      this.canvasCtxB.lineWidth = 2;
-      this.canvasCtxB.strokeStyle = 'rgb(60,53,83)';
-      this.canvasCtxB.beginPath();
 
-      let sliceWidth = this.canvasB.width * 1.0 / bufferLengthB;
+      let barWidth = (this.canvasB.width/ bufferLengthB) * 2.5;
+      let barHeight;
       let x = 0;
 
       for (let i = 0; i < bufferLengthB; i++) {
-        let v = dataArrayB[i] / 128.0;
-        let y = v * this.canvasB.height / 2;
+        barHeight = dataArrayB[i] / 2;
 
-        if (i == 0) {
-          this.canvasCtxB.moveTo(x, y);
-        } else {
-          this.canvasCtxB.lineTo(x, y);
-        }
+        this.canvasCtxB.fillStyle = 'rbg(' + (barHeight+100) + ',50,50)';
+        this.canvasCtxB.fillRect(x, this.canvasB.height - barHeight/2, barWidth, barHeight);
 
-        x += sliceWidth;
+        x += barWidth + 1;
       }
 
       this.canvasCtxB.lineTo(this.canvasB.width, this.canvasB.height / 2);
@@ -663,7 +657,7 @@ export default {
       console.log('Player B Gain: ' + playerB.gain.gain.value);
     },
     setMaster(value) {
-      //masterGain.value;
+      masterGain.gain.value = value;
       console.log('Master Gain: ' + masterGain.value);
     },
     setCrossfader(value) {

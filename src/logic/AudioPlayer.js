@@ -16,7 +16,7 @@ export default class AudioPlayer {
     this.eq.outputNode.connect( outputNode );
 
     this.globalOutputNode = outputNode;
-    this.gain.value = 1.0;
+    this.gain.gain.value = 1.0;
     this.outputNode = this.gain;
   }
 
