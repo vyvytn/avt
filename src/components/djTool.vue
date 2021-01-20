@@ -132,7 +132,7 @@
         </b-row>
 
         <!--MENU FOR PLAYLIST EDITING BEGIN-->
-        <b-modal ref="playlistModal" title="Playlist bearbeiten" size="lg">
+        <b-modal scrollable ref="playlistModal" title="Playlist bearbeiten" size="lg">
           <b-tabs pills card fill>
             <b-tab title="Bibliothek" active>
               <b-card-text>
