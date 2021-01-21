@@ -28,8 +28,8 @@ export default class AudioEffects {
         node: bitcrusher( ctx, { bitDepth: 4, frequency: 0.2 } ),
         active: false, input: null, output: null,
       },
-      totalActive: 0,
     };
+    totalActive = 0;
 
     // only make effects obj available after initializing all of them
     Promise.all( [ effects.Hall.node, effects.Telefon.node ] )
@@ -93,12 +93,12 @@ export default class AudioEffects {
         this.effects[name].input = null;
         this.effects[name].output = null;
 
-        this.effects.totalActive--;
+        this.totalActive--;
       } else { // toggle on
         const connectSelectedTo = ( inNode, outNode ) => {
         }
 
-        if ( this.effects.totalActive === 0 ) {
+        if ( this.totalActive === 0 ) {
           this.entryNode.disconnect( this.outputNode );
 
           this.entryNode.connect( this.effects[name].node );
@@ -121,7 +121,7 @@ export default class AudioEffects {
           this.effects[name].node.connect( this.outputNode );
           this.effects[name].output = this.outputNode;
         }
-        this.effects.totalActive++;
+        this.totalActive++;
       }
 
       this.effects[name].active = !this.effects[name].active;

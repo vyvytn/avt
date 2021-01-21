@@ -161,7 +161,7 @@ export default class AudioPlayer {
     this.setVolume();
     this.playingSpeed = 1;
 
-    if ( this.effects.effects.totalActive > 0 ) {
+    if ( this.effects.totalActive > 0 ) {
       Object.keys( this.effects.effects )
         .filter( x => this.effects.effects[x].active )
         .forEach( x => this.effects.toggle( x ) );
