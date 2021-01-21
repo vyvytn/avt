@@ -1,4 +1,5 @@
 <template>
+  <b-overlay :show="loading" rounded="sm">
   <div id="freesoundList" @keyup.enter="getSoundList">
     <b-col>
       <b-row>
@@ -14,7 +15,7 @@
       </b-row>
     </b-col>
     <div class="overflow-auto">
-      <b-list-group>
+      <b-list-group v-if="!loading">
         <b-list-group-item v-for="(element, index) in this.resultList">
           <free-sound-item :imgurl="element.metaData.imgUrl"
                            :title="element.metaData.title"
@@ -43,6 +44,7 @@
              @dismiss-count-down="countDownChanged"
     >{{showAlert}}Song was already added to library</b-alert>-->
   </div>
+  </b-overlay>
 </template>
 
 <script>
@@ -61,7 +63,8 @@ export default {
       dismissSecs: 1,
       dismissCountDown: 0,
       searchword: '',
-      state: null
+      state: null,
+      loading: false
     };
   },
   methods: {
@@ -72,19 +75,21 @@ export default {
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown;
     },
-    getSoundList() {
+    async getSoundList() {
       this.state = true;
-      search(this.searchword)
+      this.loading = true;
+      await search(this.searchword)
         .then(result =>
           this.resultList = result
         );
+      this.loading = false;
     },
     showAlert() {
       this.dismissCountDown = this.dismissSecs;
     },
     downloadSong(value) {
       let song = this.resultList[value];
-      this.$emit('upload', song)
+      this.$emit('upload', song);
     }
   }
   ,
