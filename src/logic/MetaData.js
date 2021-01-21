@@ -15,7 +15,9 @@ export default class MetaData {
   constructor( data ) {
     this.artist = data.artist ? data.artist : null;
     this.title = data.title ? data.title : "No title"; // make required?
-    this.image = data.image ? data.image : null;
+
+    this.imgBuf = data.image ? data.image : null; // mp3
+    this.imgUrl = data.imgUrl ? data.imgUrl : null; // freesound
 
     if ( data.duration )
       this.length = {
