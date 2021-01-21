@@ -82,6 +82,12 @@ export default class AudioPlayer {
     }
     this.isPlaying = true;
   }
+
+  /**
+   * function run when the song end naturally (i.e. not stopped/paused by user)
+   * assign your onend handler for the ui
+   */
+  onNaturalEnd = () => {};
   handleSongEnd = event => {
     /* triggered on
        1) the natural end of a song
@@ -92,6 +98,7 @@ export default class AudioPlayer {
     */
     if ( !event.srcElement.manuallyStopped ) {
       this.next();
+      this.onNaturalEnd( event );
     }
   }
 
