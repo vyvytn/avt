@@ -23,7 +23,8 @@
       <div class="overflow-auto">
         <b-list-group v-if="!loading">
           <b-overlay :show="!uploadSuccess">
-            <b-list-group-item v-for="(element, index) in this.resultList">
+            <b-list-group-item v-for="(element, index) in this.resultList"
+            :key="index">
               <free-sound-item :imgurl="element.metaData.imgUrl"
                                :title="element.metaData.title"
                                :artist="element.metaData.artist"

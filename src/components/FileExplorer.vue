@@ -10,7 +10,8 @@
     <div class="mt-3">Selected file: {{ file ? file.name : '' }}
       <b-button @click="uploadSong(file)">Upload</b-button>
     </div>
-    <b-list-group v-for="element in fileList">
+    <b-list-group v-for="(element, index) in fileList"
+    :key="index">
       <b-list-group-item>
         {{ element }}
       </b-list-group-item>

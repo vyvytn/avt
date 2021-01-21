@@ -15,6 +15,7 @@
     <song-card
     v-for="(s,index) in songlist"
     :s="s"
+    :key="index"
     :sId.sync="songId"
     :idx.sync="index"
     ></song-card>
