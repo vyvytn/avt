@@ -48,8 +48,8 @@
               v-for="(element, index) in songListA"
             >
               <b-icon icon="music-note-list"></b-icon>
-              <p><b>Künstler: </b>{{ element.artist }}</p>
-              <p><b>Titel: </b>{{ element.title }}</p>
+              <p>{{ element.artist }}</p>
+              <p>{{ element.title }}</p>
               <b-button @click="deleteFromPlaylistA(element.songId,index)" variant="outline-danger">
                 <b-icon icon="x-circle-fill"></b-icon>
               </b-button>
@@ -74,8 +74,8 @@
               v-for="(element, index) in songListB"
             >
               <b-icon icon="music-note-list"></b-icon>
-              <p><b>Künstler: </b>{{ element.artist }}</p>
-              <p><b>Titel: </b>{{ element.title }}</p>
+              <p>{{ element.artist }}</p>
+              <p>{{ element.title }}</p>
               <b-button @click="deleteFromPlaylistB('B',element.songId, index)" variant="outline-danger">
                 <b-icon icon="x-circle-fill"></b-icon>
               </b-button>
@@ -103,7 +103,7 @@ export default {
   },
   methods: {
     log(evt) {
-      window.console.log(evt);
+      console.log(evt);
     },
     deleteSong(sId, idx) {
       this.library.splice(idx, 1);

@@ -152,7 +152,7 @@
               </b-card-text>
             </b-tab>
             <b-tab title="Freesound">
-              <FreeSoundList @update="updateLibraryFree" @upload="handleFreesound"
+              <FreeSoundList :uploadSuccess="uploadFinished" @upload="handleFreesound"
                              :duplicate="duplicateFreesound"></FreeSoundList>
             </b-tab>
           </b-tabs>
@@ -300,7 +300,9 @@ export default {
       pausedTimerA: true,
       speed: 1000,
       defaultTempoA: 1,
-      defaultTempoB: 1
+      defaultTempoB: 1,
+      uploadFinished:true
+
 
     };
   },
@@ -376,8 +378,9 @@ export default {
       this.songLibrary.push(value);
       console.log('kein Duplikat');
     },
-    handleFreesound(value) {
-      value.prepareForPlayback(ctx);
+    async handleFreesound(value) {
+      this.uploadFinished=false
+     await value.prepareForPlayback(ctx);
       let newSongIdx = lib.insert(value);
       console.log(lib.list[newSongIdx].metaData.artist);
       if (lib.list[newSongIdx].metaData !== null) {
@@ -395,30 +398,30 @@ export default {
             songId: newSongIdx
           });
       }
-
-
+      this.uploadFinished=true
+      // this.changePlaylistOrder()
     },
     startTimer() {
       this.durationA = Math.round(lib.list[this.listA[this.currentIdA].songId].metaData.length.total);
-      this.timerA = setInterval(this.timer, this.speed);
+      this.timerA = setInterval(this.timer, 1000);
     },
     resumeTimer() {
       clearInterval(this.timerA);
-      this.timerA = setInterval(this.timer, this.speed);
+      this.timerA = setInterval(this.timer, 1000);
     },
     timer() {
       var minutes = Math.floor(this.durationA / 60);
       var seconds = this.durationA - minutes * 60;
       if (!this.pausedTimerA) {
         this.durationA--;
-        if (this.durationA < 0.5) {
-          this.stopTimer();
-          this.stopA();
-          this.currentIdA = this.getCurrentIdA();
-          this.speed = 1000;
-          this.defaultTempoA = 1;
-          this.playA();
-        }
+        // if (this.durationA < 0.5) {
+        //   this.stopTimer();
+        //   this.stopA();
+        //   this.currentIdA = this.getCurrentIdA();
+        //   // this.speed = 1000;
+        //   this.defaultTempoA = 1;
+        //   this.playA();
+        // }
       }
       document.getElementById('timeLeftA').innerHTML = minutes + ':' + seconds;
     },
@@ -455,7 +458,7 @@ export default {
       this.pausingA = false;
       playerA.stop();
       this.stopTimer();
-      this.speed = 1000;
+      // this.speed = 1000;
       playerA.resetAllNodes();
       this.insertMetadataA();
       console.log('Deck A sollte stoppen.');
@@ -475,7 +478,7 @@ export default {
       playerA.resetAllNodes();
       playerA.prev();
       this.stopTimer();
-      this.speed = 1000;
+      // this.speed = 1000;
       this.insertMetadataA();
       if (this.playingA) {
         this.playA();
@@ -581,9 +584,7 @@ export default {
       if (this.playingA) {
         if (playlistA.musicLibrary.list[playerA.currentIndex].metaData.artist !== this.listA[this.currentIdA].artist) {
           playerA.resetAllNodes();
-          playerA.stop();
-          playerA.addNode(analyzerA);
-          playerA.play();
+          this.playA()
         }
       } else {
         playerA.resetAllNodes();
@@ -767,7 +768,7 @@ export default {
   watch: {
     // whenever question changes, this function will run
     currentIdA: function () {
-      this.speed = 1000;
+      // this.speed = 1000;
       this.startTimer();
       this.insertMetadataA();
     },

@@ -1,55 +1,62 @@
 <template>
   <b-overlay :show="loading" rounded="sm">
-  <div id="freesoundList" @keyup.enter="getSoundList">
-    <b-col>
-      <b-row>
-        <b-col class="col-10">
-          <b-form-input placeholder="Search for free Sounds" :state="state" v-model="searchword">{{ searchword }}
-          </b-form-input>
-        </b-col>
-        <b-col>
-          <b-button @click="getSoundList">
-            <b-icon icon="search"></b-icon>
-          </b-button>
-        </b-col>
-      </b-row>
-    </b-col>
-    <div class="overflow-auto">
-      <b-list-group v-if="!loading">
-        <b-list-group-item v-for="(element, index) in this.resultList">
-          <free-sound-item :imgurl="element.metaData.imgUrl"
-                           :title="element.metaData.title"
-                           :artist="element.metaData.artist"
-                           :duration="element.metaData.duration"
-                           :idx="index"
-                           @freeSound="downloadSong"
-                           @addSong="updateLibrary(element)"></free-sound-item>
-        </b-list-group-item>
-      </b-list-group>
-    </div>
-    <b-alert
-      variant="success"
-      :show="dismissCountDown"
-      dismissible
-      @dismissed="dismissCountDown=0"
-      @dismiss-count-down="countDownChanged"
-    >Song has been added to library
-    </b-alert>
+    <div id="freesoundList" @keyup.enter="getSoundList">
+      <b-col>
+        <b-row>
+          <b-col class="col-10">
+            <b-form-input placeholder="Search for free Sounds" :state="state" v-model="searchword">{{ searchword }}
+            </b-form-input>
+          </b-col>
+          <b-col>
+            <b-button @click="getSoundList">
+              <b-icon icon="search"></b-icon>
+            </b-button>
+          </b-col>
+        </b-row>
+      </b-col>
+      <b-alert
+        v-model="noSearchword"
+        variant="danger"
+        dismissible>
+        Bitte ein Suchbegriff eingeben
+      </b-alert>
+      <div class="overflow-auto">
+        <b-list-group v-if="!loading">
+          <b-overlay :show="!uploadSuccess">
+            <b-list-group-item v-for="(element, index) in this.resultList">
+              <free-sound-item :imgurl="element.metaData.imgUrl"
+                               :title="element.metaData.title"
+                               :artist="element.metaData.artist"
+                               :duration="element.metaData.length.total"
+                               :idx="index"
+                               @freeSound="downloadSong"
+              ></free-sound-item>
+            </b-list-group-item>
+            <template #overlay>
+              <div class="text-center">
+                <b-icon icon="stopwatch" font-scale="3" animation="cylon"></b-icon>
+                <p id="cancel-label">Please wait...</p>
+              </div>
+            </template>
+          </b-overlay>
 
-    <!--<b-alert v-if="this.duplicate"
-             variant="danger"
-             :show="dismissCountDown"
-             dismissible
-             @dismissed="dismissCountDown=0"
-             @dismiss-count-down="countDownChanged"
-    >{{showAlert}}Song was already added to library</b-alert>-->
-  </div>
+        </b-list-group>
+
+      </div>
+
+      <!--<b-alert v-if="this.duplicate"
+               variant="danger"
+               :show="dismissCountDown"
+               dismissible
+               @dismissed="dismissCountDown=0"
+               @dismiss-count-down="countDownChanged"
+      >{{showAlert}}Song was already added to library</b-alert>-->
+    </div>
   </b-overlay>
 </template>
 
 <script>
 import FreeSoundItem from './FreeSoundItem';
-import axios from 'axios';
 import { search } from '../logic/Freesound';
 
 export default {
@@ -64,39 +71,41 @@ export default {
       dismissCountDown: 0,
       searchword: '',
       state: null,
-      loading: false
+      loading: false,
+      noSearchword: false,
+      showSuccessAlert:false
     };
+
   },
   methods: {
-    updateLibrary(e) {
-      this.$emit('update', e);
-      this.showAlert();
-    },
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown;
     },
     async getSoundList() {
-      this.state = true;
-      this.loading = true;
-      await search(this.searchword)
-        .then(result =>
-          this.resultList = result
-        );
-      this.loading = false;
-    },
-    showAlert() {
-      this.dismissCountDown = this.dismissSecs;
+      if (this.searchword !== '') {
+        this.state = true;
+        this.loading = true;
+        await search(this.searchword)
+          .then(result => this.resultList = result);
+        console.log(this.resultList);
+        this.loading = false;
+      } else {
+        this.noSearchword = true;
+      }
     },
     downloadSong(value) {
       let song = this.resultList[value];
       this.$emit('upload', song);
+      this.uploadSuccess = true;
     }
   }
   ,
   props: {
-    duplicate: Boolean
-  }
-  ,
+    duplicate: Boolean,
+    uploadSuccess: Boolean
+
+  },
+
 }
 ;
 </script>
