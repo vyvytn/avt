@@ -10,7 +10,7 @@ import MP3 from "./MP3";
 import { search } from "./Freesound";
 import Crossfader from "./Crossfader";
 
-const serverConnection = "https://dj.jneidel.com";
+const serverConnection = "https://dj-api.jneidel.com";
 
 const ctx = new AudioContext(); // shared context
 

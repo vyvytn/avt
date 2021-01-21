@@ -3,6 +3,8 @@ import createHall from "./createHall";
 import createTelefon from "./createTelefon";
 import bitcrusher from "bitcrusher";
 
+const serverConnection = "https://dj-api.jneidel.com";
+
 export default class AudioEffects {
   constructor( ctx ) {
     // provide stable interface for AudioPlayer
@@ -17,11 +19,11 @@ export default class AudioEffects {
         active: false, input: null, output: null,
       },
       "Hall": {
-        node: createHall( ctx ),
+        node: createHall( ctx, serverConnection ),
         active: false, input: null, output: null,
       },
       "Telefon": {
-        node: createTelefon( ctx ),
+        node: createTelefon( ctx, serverConnection ),
         active: false, input: null, output: null,
       },
       "Bitcrusher": {

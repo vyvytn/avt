@@ -2,6 +2,8 @@
 
 > DJ Tool, Gruppenarbeit im Rahmen von Audio- und Videotechnik an der HTW Berlin
 
+[Live](https://dj.jneidel.com)
+
 ## Install
 
 ```sh
@@ -42,7 +44,7 @@ npm run server
 
 ## API
 
-Available at: `https://dj.jneidel.com`
+Available at: `https://dj-api.jneidel.com`
 
 ### GET `/search/query`
 

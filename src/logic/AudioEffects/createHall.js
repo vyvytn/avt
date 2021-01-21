@@ -1,8 +1,6 @@
 import axios from "axios";
 
-const serverConnection = "https://dj.jneidel.com"
-
-export default async function createHall( ctx ) {
+export default async function createHall( ctx, serverConnection ) {
   const hall = ctx.createConvolver();
 
   const impulseResponseBuffer = await axios.get( serverConnection + "/static/impulse-response/spring.wav", { responseType: "arraybuffer" } )

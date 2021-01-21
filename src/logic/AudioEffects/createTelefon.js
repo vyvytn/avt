@@ -1,8 +1,6 @@
 import axios from "axios";
 
-const serverConnection = "https://dj.jneidel.com"
-
-export default async function createTelefon( ctx ) {
+export default async function createTelefon( ctx, serverConnection ) {
   const telefon = ctx.createConvolver();
 
   const impulseResponseBuffer = await axios.get( serverConnection + "/static/impulse-response/telephone.wav", { responseType: "arraybuffer" } )
