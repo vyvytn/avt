@@ -25,7 +25,6 @@ router.get( "/search/:query", ( req, res ) => {
 router.get( "/download/:id", ( req, res ) => {
   freesound.getAPI( `sounds/${req.params.id}/download`, { stream: true } )
     .then( data => {
-      res.status( 200 )
       data.pipe( res ); // stream file to client
     } )
     .catch( e => res.sendStatus( 400 ) );
