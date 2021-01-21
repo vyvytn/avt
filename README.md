@@ -72,6 +72,7 @@ curl https://dj.jneidel.com/download/183881 >wave.wav
 - `vue` - spa framework
 - `axios` - ajax/fetch library
 - `node-id3` - mp3 handling library
+- `bitcrusher` - implementation of bitcrusher effect
 
 ### backend
 - `express` - http server
