@@ -24,35 +24,6 @@ export default class AudioPlayer {
     this.outputNode = this.gain;
   }
 
-  /**
-   * Add effect node to current playback
-   */
-  addNode( node ) {
-    node.connect( this.outputNode );
-    this.outputNode = node;
-
-    if ( this.isPlaying ) {
-      this.pause(); // restart to apply to current playback
-      this.play();
-    }
-  }
-  /**
-   * Remove all effect nodes
-   */
-  resetAllNodes() {
-    const wasPlaying = this.isPlaying;
-
-    this.pause(); // seperate from bufferSrc
-    this.gain.disconnect(); // seperate from added nodes
-
-    this.gain.connect( this.globalOutputNode );
-    this.outputNode = this.gain;
-
-    if ( wasPlaying )
-      this.play();
-  }
-
-
   // helper variables for calculating the position
   lastTimestamp = 0;
   get now() {
@@ -144,6 +115,8 @@ export default class AudioPlayer {
    * pause the playing song (allows for resuming playback at the same position)
    */
   pause() {
+    if ( !this.bufferSrc ) return;
+
     const res = this.currentPosition();
     this.seekTo = res;
     this.tempoTimeBonus = 0; // reset bonus, as it is now part of seekTo
@@ -178,14 +151,23 @@ export default class AudioPlayer {
   resetPlayer() {
     this.bufferSrc.manuallyStopped = true;
     this.bufferSrc.stop();
-    this.resetAllNodes(); // disable effects
-    this.setVolume();
     this.isPause = false;
-    this.playingSpeed = 1;
 
     this.tempoTimeBonus = 0;
-    this.lastTimestamp = 0;
+    this.lastTimestamp = this.now;
     this.seekTo = null;
+  }
+  resetEffects() {
+    this.setVolume();
+    this.playingSpeed = 1;
+
+    if ( this.effects.effects.totalActive > 0 ) {
+      Object.keys( this.effects.effects )
+        .filter( x => this.effects.effects[x].active )
+        .forEach( x => this.effects.toggle( x ) );
+    }
+
+    this.eq.frequencies.forEach( f => this.setEq( f ) );
   }
   /**
    * stop the playing song (does not allow resuming playback)
@@ -193,23 +175,32 @@ export default class AudioPlayer {
    */
   stop() {
     this.resetPlayer();
+    this.resetEffects();
     this.isPlaying = false;
   }
   /**
    * skip to next song in the playlist (loops around)
    */
   next() {
+    const wasPlaying = this.isPlaying;
+
     this.resetPlayer();
     this.playlist.next();
-    this.play();
+
+    if ( wasPlaying )
+      this.play();
   }
   /**
    * skip to previous song in the playlist (loops around)
    */
   prev() {
+    const wasPlaying = this.isPlaying;
+
     this.resetPlayer();
     this.playlist.prev();
-    this.play();
+
+    if ( wasPlaying )
+      this.play();
   }
 
   /**
