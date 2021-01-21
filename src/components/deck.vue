@@ -7,7 +7,6 @@
         <b-icon icon="music-note-list"></b-icon>
         <p id="songTitle" class="font-weight-bold">{{ currentTitle }}</p>
         <p id="interpretName" class="font-weight-medium">{{ currentArtist }}</p>
-        <p id="albumName" class="font-weight-medium">Album Name</p>
       </b-card-text>
     </b-card>
     <div style="padding: 1em" align="center">

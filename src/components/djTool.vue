@@ -7,12 +7,12 @@
     <b-container fluid="">
       <b-row>
         <b-col col>
-          <canvas ref="canvasA" width="346" height="50" style="border-radius: 5px"></canvas>
+          <canvas ref="canvasA" width="450" height="50" style="border-radius: 5px"></canvas>
         </b-col>
-        <b-col cols="12" md="auto" width="343 px">
+        <b-col cols="12" md="auto">
         </b-col>
         <b-col col>
-          <canvas ref="canvasB" width="346" height="50" style="border-radius: 5px"></canvas>
+          <canvas ref="canvasB" width="450" height="50" style="border-radius: 5px"></canvas>
         </b-col>
       </b-row>
     </b-container>
@@ -20,16 +20,17 @@
       <b-container fluid="">
         <b-row>
           <b-col col>
-            <vue-slider
-              :max="timeA"
+<!--            <vue-slider
+              :max="600"
               v-model="timeA"
+              :interval="10"
               :hide-label=true
               :tooltip=" 'none' "
               direction="ltr"
               :contained=true
               :drag-on-click=true
               style="display: block; width: 18em;"
-              @change="setSeekA(timeA)"></vue-slider>
+              @change="setSeekA(timeA)"></vue-slider>-->
             <!--            <b-form-checkbox-->
             <!--              v-model="mutedA"-->
             <!--              name="check-button"-->
@@ -93,8 +94,8 @@
             </b-row>
           </b-col>
           <b-col col>
-            <vue-slider
-              :max="100"
+<!--            <vue-slider
+              :max="600"
               v-model="timeB"
               :interval="10"
               :hide-label=true
@@ -103,7 +104,7 @@
               :contained=true
               :drag-on-click=true
               style="display: block; width: 18em;"
-              @change="setSeekB(timeB)"></vue-slider>
+              @change="setSeekB(timeB)"></vue-slider>-->
             <!--            <b-form-checkbox-->
             <!--              v-model="mutedB"-->
             <!--              name="check-button"-->
@@ -189,7 +190,7 @@ import { search } from '../logic/Freesound';
 const ctx = new AudioContext(); // shared context
 const masterGain = ctx.createGain(); // gain shared accross players
 masterGain.connect(ctx.destination);
-masterGain.gain.value = 1;
+masterGain.gain.value = 0.5;
 
 const crossfader = new Crossfader(ctx);
 const [leftOutNode, rightOutNode] = crossfader.generateOutputNodes(masterGain);
@@ -205,7 +206,7 @@ analyzerA.getByteTimeDomainData(dataArrayA);
 /**create analyzer for player B
  */
 const analyzerB = ctx.createAnalyser();
-analyzerB.fftSize = 256;
+analyzerB.fftSize = 2048;
 let bufferLengthB = analyzerB.frequencyBinCount;
 let dataArrayB = new Uint8Array(bufferLengthB);
 analyzerB.getByteTimeDomainData(dataArrayB);
@@ -544,15 +545,15 @@ export default {
      * refreshes shown metadata of a song
      */
     insertMetadataA() {
-      var artist = playerA.current.metaData.artist;
-      var title = playerA.current.metaData.title;
+      let artist = playerA.current.metaData.artist;
+      let title = playerA.current.metaData.title;
       this.currentArtistA = artist;
       this.currentTitleA = title;
       this.getCurrentIdA();
     },
     insertMetadataB() {
-      var artist = playerB.current.metaData.artist.toString();
-      var title = playerB.current.metaData.title.toString();
+      let artist = playerB.current.metaData.artist.toString();
+      let title = playerB.current.metaData.title.toString();
       this.currentArtistB = artist;
       this.currentTitleB = title;
       this.getCurrentIdB();
@@ -688,22 +689,29 @@ export default {
         window.webkitRequestAnimationFrame(this.frameLooperB);
       analyzerB.getByteTimeDomainData(dataArrayB);
 
-      this.canvasCtxB.fillStyle = 'rgb(0,0,0)';
+      this.canvasCtxB.fillStyle = 'rgb(164,152,238)';
       this.canvasCtxB.fillRect(0, 0, this.canvasB.width, this.canvasB.height);
 
+      this.canvasCtxB.lineWidth = 2;
+      this.canvasCtxB.strokeStyle = 'rgb(62,57,91)';
+      this.canvasCtxB.beginPath();
 
-      let barWidth = (this.canvasB.width / bufferLengthB) * 2.5;
-      let barHeight;
+      let sliceWidth = this.canvasB.width * 1.0 / bufferLengthB;
       let x = 0;
 
       for (let i = 0; i < bufferLengthB; i++) {
-        barHeight = dataArrayB[i] / 2;
+        let v = dataArrayB[i] / 128.0;
+        let y = v * this.canvasB.height / 2;
 
-        this.canvasCtxB.fillStyle = 'rbg(' + (barHeight + 100) + ',50,50)';
-        this.canvasCtxB.fillRect(x, this.canvasB.height - barHeight / 2, barWidth, barHeight);
-
-        x += barWidth + 1;
+        if (i == 0) {
+          this.canvasCtxB.moveTo(x, y);
+        } else {
+          this.canvasCtxB.lineTo(x, y);
+        }
+        x += sliceWidth;
       }
+      this.canvasCtxB.lineTo(this.canvasB.width, this.canvasB.height / 2);
+      this.canvasCtxB.stroke();
     },
 
     /**
