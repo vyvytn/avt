@@ -1,4 +1,4 @@
-export default function createVerzerrer( ctx ) {
+export default function createVerzerrer( ctx, distortion = 400 ) {
   const verzerrer = ctx.createWaveShaper();
 
   // from MDN example: https://developer.mozilla.org/en-US/docs/Web/API/WaveShaperNode
@@ -16,7 +16,7 @@ export default function createVerzerrer( ctx ) {
     return curve;
   };
 
-  verzerrer.curve = makeDistortionCurve( 400 );
+  verzerrer.curve = makeDistortionCurve( distortion );
   verzerrer.oversample = "4x";
 
   return verzerrer;

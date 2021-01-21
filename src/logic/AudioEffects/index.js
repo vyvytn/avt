@@ -1,6 +1,7 @@
 import createVerzerrer from "./createVerzerrer";
 import createHall from "./createHall";
 import createTelefon from "./createTelefon";
+import bitcrusher from "bitcrusher";
 
 export default class AudioEffects {
   constructor( ctx ) {
@@ -21,6 +22,10 @@ export default class AudioEffects {
       },
       "Telefon": {
         node: createTelefon( ctx ),
+        active: false, input: null, output: null,
+      },
+      "Bitcrusher": {
+        node: bitcrusher( ctx, { bitDepth: 4, frequency: 0.2 } ),
         active: false, input: null, output: null,
       },
       totalActive: 0,
