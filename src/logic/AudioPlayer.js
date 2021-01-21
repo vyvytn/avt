@@ -1,4 +1,5 @@
 import Equalizer from "./Equalizer";
+import AudioEffects from "./AudioEffects";
 
 export default class AudioPlayer {
   /**
@@ -10,10 +11,13 @@ export default class AudioPlayer {
     this.ctx = audioCtx;
     this.playlist = playlist;
 
-    this.eq = new Equalizer( audioCtx );
     this.gain = audioCtx.createGain();
+    this.eq = new Equalizer( audioCtx );
+    this.effects = new AudioEffects( audioCtx );
+
     this.gain.connect( this.eq.entryNode );
-    this.eq.outputNode.connect( outputNode );
+    this.eq.outputNode.connect( this.effects.entryNode );
+    this.effects.outputNode.connect( outputNode );
 
     this.globalOutputNode = outputNode;
     this.gain.gain.value = 1.0;
