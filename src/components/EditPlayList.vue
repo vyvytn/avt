@@ -76,7 +76,7 @@
               <b-icon icon="music-note-list"></b-icon>
               <p>{{ element.artist }}</p>
               <p>{{ element.title }}</p>
-              <b-button @click="deleteFromPlaylistB('B',element.songId, index)" variant="outline-danger">
+              <b-button @click="deleteFromPlaylistB(element.songId, index)" variant="outline-danger">
                 <b-icon icon="x-circle-fill"></b-icon>
               </b-button>
             </div>
