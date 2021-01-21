@@ -132,7 +132,7 @@
         </b-row>
 
         <!--MENU FOR PLAYLIST EDITING BEGIN-->
-        <b-modal  ok-only 	scrollable ref="playlistModal" title="Playlist bearbeiten" size="lg">
+        <b-modal ok-only scrollable ref="playlistModal" title="Playlist bearbeiten" size="lg">
           <b-tabs pills card fill>
             <b-tab title="Bibliothek" active>
               <b-card-text>
@@ -152,7 +152,8 @@
               </b-card-text>
             </b-tab>
             <b-tab title="Freesound">
-              <FreeSoundList @update="updateLibraryFree" :upload="handleFreesound" :duplicate="duplicateFreesound"></FreeSoundList>
+              <FreeSoundList @update="updateLibraryFree" @upload="handleFreesound"
+                             :duplicate="duplicateFreesound"></FreeSoundList>
             </b-tab>
           </b-tabs>
         </b-modal>
@@ -179,6 +180,7 @@ import Song from '../logic/Song';
 import axios from 'axios';
 import Crossfader from '../logic/Crossfader';
 import VueSlider from 'vue-slider-component';
+import { search } from '../logic/Freesound';
 
 /**
  * Web Audio Api
@@ -216,7 +218,7 @@ const playlistA = new Playlist(lib);
 const playerA = new AudioPlayer(ctx, leftOutNode, playlistA);
 const playlistB = new Playlist(lib);
 const playerB = new AudioPlayer(ctx, rightOutNode, playlistB);
-  /**
+/**
  * get song and connect to mastergain
  */
 let songUrl = 'http://localhost:8080/static/example.mp3';
@@ -319,7 +321,7 @@ export default {
         document.getElementById('timeLeftA').innerHTML = Math.round(lib.list[this.listA[this.currentIdA].songId].metaData.length.total)
           .toString();
       });
-      this.canvasCtxB.fillRect(0,0,this.canvasB.width,this.canvasB.height);
+      this.canvasCtxB.fillRect(0, 0, this.canvasB.width, this.canvasB.height);
     },
     handleInitButton() {
       setTimeout(this.disableButton, 4000);
@@ -336,34 +338,32 @@ export default {
       //     console.log('Duplikat ' + this.songLibrary[i].name);
       //     return;
       //   }
-      //
-
-      let newSong=null;
+      let newSong = null;
       value.arrayBuffer()
-        .then( res =>  {
-          newSong = new Song(new MP3(res));
-          newSong.prepareForPlayback(ctx);
-          let newSongIndex = lib.insert(newSong);
-          if (lib.list[newSongIndex].metaData !== null) {
-            this.songLibrary.push(
-              {
-                artist: lib.list[newSongIndex].metaData.artist.toString(),
-                title: lib.list[newSongIndex].metaData.title,
-                songId: newSongIndex
-              });
-          } else {
-            this.songLibrary.push(
-              {
-                artist: 'unknown',
-                title: value.name,
-                songId: newSongIndex
-              });
+        .then(res => {
+            newSong = new Song(new MP3(res));
+            newSong.prepareForPlayback(ctx);
+            let newSongIndex = lib.insert(newSong);
+            if (lib.list[newSongIndex].metaData !== null) {
+              this.songLibrary.push(
+                {
+                  artist: lib.list[newSongIndex].metaData.artist.toString(),
+                  title: lib.list[newSongIndex].metaData.title,
+                  songId: newSongIndex
+                });
+            } else {
+              this.songLibrary.push(
+                {
+                  artist: 'unknown',
+                  title: value.name,
+                  songId: newSongIndex
+                });
+            }
+            console.log(lib.list[newSongIndex]);
           }
-          console.log(lib.list[newSongIndex]);
-        }
-    )
+        );
     },
-    updateLibraryFree(value) {
+    updateLibraryFree(value) {/*
       for (let i = 0; i < this.songLibrary.length; i++) {
         if (this.songLibrary[i].name === value.name) {
           console.log('Duplikat' + this.songLibrary[i].name);
@@ -371,13 +371,32 @@ export default {
           return;
         }
         ;
-      }
+      }*/
       this.duplicateFreesound = false;
       this.songLibrary.push(value);
       console.log('kein Duplikat');
     },
-    handleFreesound(value){
-      console.log(value)
+    handleFreesound(value) {
+      value.prepareForPlayback(ctx);
+      let newSongIdx = lib.insert(value);
+      console.log(lib.list[newSongIdx].metaData.artist);
+      if (lib.list[newSongIdx].metaData !== null) {
+        this.songLibrary.push(
+          {
+            artist: lib.list[newSongIdx].metaData.artist.toString(),
+            title: lib.list[newSongIdx].metaData.title,
+            songId: newSongIdx
+          });
+      } else {
+        this.songLibrary.push(
+          {
+            artist: 'unknown',
+            title: value.name,
+            songId: newSongIdx
+          });
+      }
+
+
     },
     startTimer() {
       this.durationA = Math.round(lib.list[this.listA[this.currentIdA].songId].metaData.length.total);
@@ -456,7 +475,7 @@ export default {
       playerA.resetAllNodes();
       playerA.prev();
       this.stopTimer();
-      this.speed=1000;
+      this.speed = 1000;
       this.insertMetadataA();
       if (this.playingA) {
         this.playA();

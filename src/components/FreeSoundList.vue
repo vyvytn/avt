@@ -14,13 +14,12 @@
       </b-row>
     </b-col>
     <div class="overflow-auto">
-
       <b-list-group>
-        <b-list-group-item v-for="(element, index) in freeSoundList">
-          <free-sound-item :imgurl="element.imgUrl"
-                           :title="element.title"
-                           :artist="element.artist"
-                           :duration="element.duration"
+        <b-list-group-item v-for="(element, index) in this.resultList">
+          <free-sound-item :imgurl="element.metaData.imgUrl"
+                           :title="element.metaData.title"
+                           :artist="element.metaData.artist"
+                           :duration="element.metaData.duration"
                            :idx="index"
                            @freeSound="downloadSong"
                            @addSong="updateLibrary(element)"></free-sound-item>
@@ -49,8 +48,7 @@
 <script>
 import FreeSoundItem from './FreeSoundItem';
 import axios from 'axios';
-import Song from '../logic/Song';
-import MP3 from '../logic/MP3';
+import { search } from '../logic/Freesound';
 
 export default {
   name: 'FreeSoundList',
@@ -59,7 +57,7 @@ export default {
   },
   data() {
     return {
-      freeSoundList: [],
+      resultList: [],
       dismissSecs: 1,
       dismissCountDown: 0,
       searchword: '',
@@ -74,35 +72,28 @@ export default {
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown;
     },
+    getSoundList() {
+      this.state = true;
+      search(this.searchword)
+        .then(result =>
+          this.resultList = result
+        );
+    },
     showAlert() {
       this.dismissCountDown = this.dismissSecs;
     },
-    getSoundList() {
-      this.state = true;
-      let songUrl = 'https://dj.jneidel.com/search/' + this.searchword;
-      axios.get(songUrl)
-        .then(res => {
-          // const bb = new Song(new MP3(res.data));
-          // await bb.prepareForPlayback(ctx);
-          // let index = lib.insert(bb);
-          // playlistA.add(index);
-          // playlistA.add(index);
-          // playlistA.add(index);
-          // playlistB.add(index);
-          console.log(res.data);
-          this.freeSoundList = res.data;
-        });
-
-    },
-    downloadSong(value){
-      let song=this.freeSoundList[value]
-      this.$emit('upload', song);
+    downloadSong(value) {
+      let song = this.resultList[value];
+      this.$emit('upload', song)
     }
-  },
+  }
+  ,
   props: {
     duplicate: Boolean
-  },
-};
+  }
+  ,
+}
+;
 </script>
 
 <style scoped>

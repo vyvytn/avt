@@ -15,6 +15,12 @@
         {{ element }}
       </b-list-group-item>
     </b-list-group>
+    <b-alert
+      v-model="uploadSuccess"
+      variant="success"
+      dismissible>
+      Zur Bibliothek erfolgreich hinzugefügt
+    </b-alert>
   </div>
 </template>
 
@@ -27,7 +33,8 @@ export default {
   data() {
     return {
       file: null,
-      fileList: []
+      fileList: [],
+      uploadSuccess: false,
     };
   },
   methods: {
@@ -35,7 +42,8 @@ export default {
       this.fileList.push(file.name);
       // this.$emit('songFile', file
       this.$emit('upload', file);
-    },
+      this.uploadSuccess = true;
+    }
 
   }
 };
