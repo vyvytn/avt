@@ -7,12 +7,12 @@
     <b-container fluid="">
       <b-row>
         <b-col col>
-          <canvas ref="canvasA" width="346" height="50" style="border-radius: 5px"></canvas>
+          <canvas ref="canvasA" width="450" height="50" style="border-radius: 5px"></canvas>
         </b-col>
-        <b-col cols="12" md="auto" width="343 px">
+        <b-col cols="12" md="auto">
         </b-col>
         <b-col col>
-          <canvas ref="canvasB" width="346" height="50" style="border-radius: 5px"></canvas>
+          <canvas ref="canvasB" width="450" height="50" style="border-radius: 5px"></canvas>
         </b-col>
       </b-row>
     </b-container>
@@ -20,27 +20,28 @@
       <b-container fluid="">
         <b-row>
           <b-col col>
-            <vue-slider
-              :max="100"
-              v-model="timeA"
-              :interval="10"
-              :hide-label=true
-              :tooltip=" 'none' "
-              direction="ltr"
-              :contained=true
-              :drag-on-click=true
-              style="display: block; width: 18em;"
-              @change="setSeekA(timeA)"></vue-slider>
-            <b-form-checkbox
-              v-model="mutedA"
-              name="check-button"
-              switch
-            >{{ mutedStringA }}
-            </b-form-checkbox>
-            <p>{{ minA }}:{{ secA }}</p>
-            <P id="timer">0</P>
+            <!--            <vue-slider
+                          :max="600"
+                          v-model="timeA"
+                          :interval="10"
+                          :hide-label=true
+                          :tooltip=" 'none' "
+                          direction="ltr"
+                          :contained=true
+                          :drag-on-click=true
+                          style="display: block; width: 18em;"
+                          @change="setSeekA(timeA)"></vue-slider>-->
+            <!--            <b-form-checkbox-->
+            <!--              v-model="mutedA"-->
+            <!--              name="check-button"-->
+            <!--              switch-->
+            <!--            >{{ mutedStringA }}-->
+            <!--            </b-form-checkbox>-->
+            <!--            <p>{{ minA }}:{{ secA }}</p>-->
+            <P id="timeLeftA">0</P>
             <deck @openLibraryClicked="togglePlaylistModal"
-                  id="deckA" :array-playlist="listA"
+                  id="deckA"
+                  :array-playlist="listA"
                   @play="playA"
                   @pause="pauseA"
                   @stop="stopA"
@@ -51,7 +52,6 @@
                   :songId.sync="currentIdA"
                   @playlistChanged="changePlaylistOrder('A')"
                   @changeEqDeck="setEqA"
-
             ></deck>
           </b-col>
           <b-col cols="12" md="auto">
@@ -82,7 +82,7 @@
               </b-col>
               <b-col cols="auto">
                 <VolumeSlider id="tempoRightDeckSlider" :horizontal="false" :tempo="true"
-                              @valueChanged="setTempoB" :value="defaultTempoB"></VolumeSlider>
+                              @valueChanged="setTempoB" :value3="defaultTempoB"></VolumeSlider>
                 <h6>R</h6>
               </b-col>
             </b-row>
@@ -90,29 +90,30 @@
               <b-col cols="auto">
                 <h4>Fading</h4>
                 <VolumeSlider id="crossfadeSlider" :horizontal="true" :tempo="false"
-                              @valueChanged="setCrossfader" ></VolumeSlider>
+                              @valueChanged="setCrossfader"></VolumeSlider>
               </b-col>
             </b-row>
           </b-col>
           <b-col col>
-            <vue-slider
-              :max="100"
-              v-model="timeB"
-              :interval="10"
-              :hide-label=true
-              :tooltip=" 'none' "
-              direction="ltr"
-              :contained=true
-              :drag-on-click=true
-              style="display: block; width: 18em;"
-              @change="setSeekB(timeB)"></vue-slider>
-            <b-form-checkbox
-              v-model="mutedB"
-              name="check-button"
-              switch
-            >{{ mutedStringB }}
-            </b-form-checkbox>
-            <p>{{ minB }}:{{ secB }}</p>
+            <!--            <vue-slider
+                          :max="600"
+                          v-model="timeB"
+                          :interval="10"
+                          :hide-label=true
+                          :tooltip=" 'none' "
+                          direction="ltr"
+                          :contained=true
+                          :drag-on-click=true
+                          style="display: block; width: 18em;"
+                          @change="setSeekB(timeB)"></vue-slider>-->
+            <!--            <b-form-checkbox-->
+            <!--              v-model="mutedB"-->
+            <!--              name="check-button"-->
+            <!--              switch-->
+            <!--            >{{ mutedStringB }}-->
+            <!--            </b-form-checkbox>-->
+            <!--            <p>{{ minB }}:{{ secB }}</p>-->
+            <P id="timeLeftB">0</P>
             <deck @openLibraryClicked="togglePlaylistModal"
                   id="deckB"
                   :array-playlist="listB"
@@ -125,8 +126,6 @@
                   :title.sync="currentTitleB"
                   :songId.sync="currentIdB"
                   @playlistChanged="changePlaylistOrder('B')"
-                  :playing="this.playingB"
-                  :pausing.sync="this.pausingB"
                   @changeEqDeck="setEqB"
             >
             </deck>
@@ -134,7 +133,7 @@
         </b-row>
 
         <!--MENU FOR PLAYLIST EDITING BEGIN-->
-        <b-modal ref="playlistModal" title="Playlist bearbeiten" size="lg">
+        <b-modal ok-only scrollable ref="playlistModal" title="Playlist bearbeiten" size="lg">
           <b-tabs pills card fill>
             <b-tab title="Bibliothek" active>
               <b-card-text>
@@ -150,11 +149,12 @@
             </b-tab>
             <b-tab title="Musik importieren">
               <b-card-text>
-                <FileExplorer @update="updateLibraryFile"></FileExplorer>
+                <FileExplorer @upload="updateLibraryFile"></FileExplorer>
               </b-card-text>
             </b-tab>
             <b-tab title="Freesound">
-              <FreeSoundList @update="updateLibraryFree" :duplicate="duplicateFreesound"></FreeSoundList>
+              <FreeSoundList :uploadSuccess="uploadFinished" @upload="handleFreesound"
+                             :duplicate="duplicateFreesound"></FreeSoundList>
             </b-tab>
           </b-tabs>
         </b-modal>
@@ -218,7 +218,6 @@ const playlistA = new Playlist(lib);
 const playerA = new AudioPlayer(ctx, leftOutNode, playlistA);
 const playlistB = new Playlist(lib);
 const playerB = new AudioPlayer(ctx, rightOutNode, playlistB);
-
 /**
  * get song and connect to mastergain
  */
@@ -229,8 +228,6 @@ axios.get(songUrl, { responseType: 'arraybuffer' })
     await bb.prepareForPlayback(ctx);
     let index = lib.insert(bb);
     playlistA.add(index);
-    playlistA.add(index);
-    playlistA.add(index);
     playlistB.add(index);
   })
   .then(() => axios.get('http://localhost:8080/static/Black Muffin - Die and Retry.mp3', { responseType: 'arraybuffer' }))
@@ -238,7 +235,6 @@ axios.get(songUrl, { responseType: 'arraybuffer' })
     const bm = new Song(new MP3(res.data));
     await bm.prepareForPlayback(ctx);
     let index = lib.insert(bm);
-    playlistA.add(index);
     playlistA.add(index);
     playlistB.add(index);
   })
@@ -290,19 +286,19 @@ export default {
       mutedB: false,
       mutedStringB: String,
       currentVolumeA: Number,
-      minA: 0,
-      secA: 0,
-      minB: 0,
-      secB: 0,
       timeA: playerA.currentPosition(),
       timeB: playerB.currentPosition(),
       timerA: null,
+      timerB: null,
       durationA: 0,
+      durationB: 0,
       pausedTimerA: true,
-      speed:1000,
-      defaultTempoA:1,
-      defaultTempoB:1
-
+      pausedTimerB: true,
+      speedA: 1000,
+      speedB: 1000,
+      defaultTempoA: 1,
+      defaultTempoB: 1,
+      uploadFinished: true
     };
   },
   methods: {
@@ -318,6 +314,13 @@ export default {
       this.pausingA = false;
       this.playingB = false;
       this.pausingB = false;
+      this.$nextTick(function () {
+        document.getElementById('timeLeftA').innerHTML = Math.round(lib.list[this.listA[this.currentIdA].songId].metaData.length.total)
+          .toString();
+        document.getElementById('timeLeftB').innerHTML = Math.round(lib.list[this.listB[this.currentIdB].songId].metaData.length.total)
+          .toString();
+      });
+      this.canvasCtxB.fillRect(0, 0, this.canvasB.width, this.canvasB.height);
     },
     handleInitButton() {
       setTimeout(this.disableButton, 4000);
@@ -328,55 +331,157 @@ export default {
     togglePlaylistModal() {
       this.$refs.playlistModal.show();
     },
+
+    /**
+     * add own mp3 to library
+     * add buffer to audiocontext
+     * */
     updateLibraryFile(value) {
-      for (let i = 0; i < this.songLibrary.length; i++) {
-        if (this.songLibrary[i].name === value.name) {
-          console.log('Duplikat ' + this.songLibrary[i].name);
-          return;
-        }
+      let newSong = null;
+      value.arrayBuffer()
+        .then(res => {
+            newSong = new Song(new MP3(res));
+            newSong.prepareForPlayback(ctx);
+            let newSongIndex = lib.insert(newSong);
+            if (lib.list[newSongIndex].metaData !== null) {
+              this.songLibrary.push(
+                {
+                  artist: lib.list[newSongIndex].metaData.artist.toString(),
+                  title: lib.list[newSongIndex].metaData.title,
+                  songId: newSongIndex
+                });
+            } else {
+              this.songLibrary.push(
+                {
+                  artist: 'unknown',
+                  title: value.name,
+                  songId: newSongIndex
+                });
+            }
+            console.log(lib.list[newSongIndex]);
+          }
+        );
+    },
+    /*    updateLibraryFree(value) {
+          for (let i = 0; i < this.songLibrary.length; i++) {
+            if (this.songLibrary[i].name === value.name) {
+              console.log('Duplikat' + this.songLibrary[i].name);
+              this.duplicateFreesound = true;
+              return;
+            }
+            ;
+          }
+          this.duplicateFreesound = false;
+          this.songLibrary.push(value);
+          console.log('kein Duplikat');
+        },*/
+
+    /**
+     * add chosen song from freesound to audiocontex context
+     * */
+    async handleFreesound(value) {
+      this.uploadFinished = false;
+      await value.prepareForPlayback(ctx);
+      let newSongIdx = lib.insert(value);
+      console.log(lib.list[newSongIdx].metaData.artist);
+      if (lib.list[newSongIdx].metaData !== null) {
+        this.songLibrary.push(
+          {
+            artist: lib.list[newSongIdx].metaData.artist.toString(),
+            title: lib.list[newSongIdx].metaData.title,
+            songId: newSongIdx
+          });
+      } else {
+        this.songLibrary.push(
+          {
+            artist: 'unknown',
+            title: value.name,
+            songId: newSongIdx
+          });
       }
-      this.songLibrary.push(value);
+      this.uploadFinished = true;
+      // this.changePlaylistOrder()
     },
-    updateLibraryFree(value) {
-      for (let i = 0; i < this.songLibrary.length; i++) {
-        if (this.songLibrary[i].name === value.name) {
-          console.log('Duplikat' + this.songLibrary[i].name);
-          this.duplicateFreesound = true;
-          return;
-        }
-      }
-      this.duplicateFreesound = false;
-      this.songLibrary.push(value);
-      console.log('kein Duplikat');
+    /**
+     * starts time left label for deck a
+     */
+    startTimerA() {
+      this.durationA = Math.round(lib.list[this.listA[this.currentIdA].songId].metaData.length.total);
+      this.timerA = setInterval(this.timeLeftA, this.speedA);
     },
-    startTimer() {
-      this.durationA = lib.list[this.listA[this.currentIdA].songId].metaData.length.total;
-      this.timerA = setInterval(this.timer, this.speed);
-    },
-    resumeTimer() {
+    /**
+     * resumes time left label for deck a
+     */
+    resumeTimerA() {
       clearInterval(this.timerA);
-      this.timerA = setInterval(this.timer, this.speed);
+      this.timerA = setInterval(this.timeLeftA, this.speedA);
     },
-    timer() {
+    /**
+     * time intervall function for time left on deck A
+     */
+    timeLeftA() {
       var minutes = Math.floor(this.durationA / 60);
       var seconds = this.durationA - minutes * 60;
       if (!this.pausedTimerA) {
         this.durationA--;
-        if(this.durationA<0.5){
-          this.stopTimer();
-          this.stopA();
-          this.speed=1000;
-          this.defaultTempoA=1;
-          this.startTimer();
-          this.playA();
-        }
+        // if (this.durationA < 0.5) {
+        //   this.stopTimer();
+        //   this.stopA();
+        //   this.currentIdA = this.getCurrentIdA();
+        //   // this.speed = 1000;
+        //   this.defaultTempoA = 1;
+        //   this.playA();
+        // }
       }
-      document.getElementById('timer').innerHTML = minutes+":"+seconds;
-    },
-    stopTimer() {
-      clearInterval(this.timerA);
+      document.getElementById('timeLeftA').innerHTML = minutes + ':' + seconds;
     },
 
+    /**
+     * pauses time left for deck A
+     */
+    stopTimerA() {
+      clearInterval(this.timerA);
+    },
+    /**
+     * starts time left label for deck B
+     */
+    startTimerB() {
+      this.durationB = Math.round(lib.list[this.listB[this.currentIdB].songId].metaData.length.total);
+      this.timerB = setInterval(this.timeLeftB, 1000);
+    },
+    /**
+     * resumes time left label for deck B
+     */
+    resumeTimerB() {
+      clearInterval(this.timerB);
+      this.timerB = setInterval(this.timeLeftB, 1000);
+    },
+    /**
+     * time intervall function for time left on deck B
+     */
+    timeLeftB() {
+      var minutes = Math.floor(this.durationB / 60);
+      var seconds = this.durationB - minutes * 60;
+      if (!this.pausedTimerB) {
+        this.durationB--;
+        // if (this.durationA < 0.5) {
+        //   this.stopTimer();
+        //   this.stopA();
+        //   this.currentIdA = this.getCurrentIdA();
+        //   // this.speed = 1000;
+        //   this.defaultTempoA = 1;
+        //   this.playA();
+        // }
+      }
+      document.getElementById('timeLeftB').innerHTML = minutes + ':' + seconds;
+    },
+
+    /**
+     * pauses time left for deck B
+     */
+    stopTimerB() {
+      clearInterval(this.timerB);
+    },
     /**
      * play pause stop previous next song functions for player A and B
      **/
@@ -385,10 +490,8 @@ export default {
       this.pausingA = false;
       playerA.addNode(analyzerA);
       playerA.play();
-      // this.minA = lib.list[this.listA[this.currentIdA].songId].metaData.length.minutes;
-      // this.secA = lib.list[this.listA[this.currentIdA].songId].metaData.length.seconds;
       this.pausedTimerA = false;
-      this.resumeTimer();
+      this.resumeTimerA();
       this.insertMetadataA();
       console.log('Deck A sollte spielen.');
     },
@@ -396,7 +499,7 @@ export default {
       this.playingA = false;
       this.pausingA = true;
       this.pausedTimerA = true;
-      this.stopTimer();
+      this.stopTimerA();
       playerA.pause();
       playerA.resetAllNodes();
       console.log('Deck A sollte pausieren.');
@@ -405,8 +508,8 @@ export default {
       this.playingA = false;
       this.pausingA = false;
       playerA.stop();
-      this.stopTimer();
-      this.speed=1000;
+      this.stopTimerA();
+      // this.speed = 1000;
       playerA.resetAllNodes();
       this.insertMetadataA();
       console.log('Deck A sollte stoppen.');
@@ -415,8 +518,7 @@ export default {
       playerA.stop();
       playerA.resetAllNodes();
       playerA.next();
-      this.speed=1000;
-      this.stopTimer();
+      this.stopTimerA();
       this.insertMetadataA();
       if (this.playingA) {
         this.playA();
@@ -426,8 +528,8 @@ export default {
       playerA.stop();
       playerA.resetAllNodes();
       playerA.prev();
-      this.stopTimer();
-      this.speed=1000;
+      this.stopTimerA();
+      // this.speed = 1000;
       this.insertMetadataA();
       if (this.playingA) {
         this.playA();
@@ -438,14 +540,16 @@ export default {
       this.pausingB = false;
       playerB.addNode(analyzerB);
       playerB.play();
-      this.minB = lib.list[this.listB[this.currentIdB].songId].metaData.length.minutes;
-      this.secB = lib.list[this.listB[this.currentIdB].songId].metaData.length.seconds;
+      this.pausedTimerB = false;
+      this.resumeTimerB();
       this.insertMetadataB();
       console.log('Deck B sollte spielen.');
     },
     pauseB() {
       this.playingB = false;
       this.pausingB = true;
+      this.pausedTimerB=true;
+      this.stopTimerB()
       playerB.pause();
       playerB.resetAllNodes();
       console.log('Deck B sollte pausieren.');
@@ -462,6 +566,7 @@ export default {
       playerB.stop();
       playerB.resetAllNodes();
       playerB.next();
+      this.stopTimerB()
       this.insertMetadataB();
       if (this.playingB) {
         this.playB();
@@ -471,6 +576,7 @@ export default {
       playerB.stop();
       playerB.resetAllNodes();
       playerB.prev();
+      this.stopTimerB()
       this.insertMetadataB();
       if (this.playingB) {
         this.playB();
@@ -493,15 +599,15 @@ export default {
      * refreshes shown metadata of a song
      */
     insertMetadataA() {
-      var artist = playerA.current.metaData.artist.toString();
-      var title = playerA.current.metaData.title.toString();
+      let artist = playerA.current.metaData.artist;
+      let title = playerA.current.metaData.title;
       this.currentArtistA = artist;
       this.currentTitleA = title;
       this.getCurrentIdA();
     },
     insertMetadataB() {
-      var artist = playerB.current.metaData.artist.toString();
-      var title = playerB.current.metaData.title.toString();
+      let artist = playerB.current.metaData.artist;
+      let title = playerB.current.metaData.title;
       this.currentArtistB = artist;
       this.currentTitleB = title;
       this.getCurrentIdB();
@@ -529,13 +635,11 @@ export default {
     },
     refreshPlaylistA() {
       this.listA.forEach((el, index) => playlistA.list[index] = this.listA[index].songId);
-      this.getCurrentIdA()
+      this.getCurrentIdA();
       if (this.playingA) {
         if (playlistA.musicLibrary.list[playerA.currentIndex].metaData.artist !== this.listA[this.currentIdA].artist) {
           playerA.resetAllNodes();
-          playerA.stop();
-          playerA.addNode(analyzerA);
-          playerA.play();
+          this.playA();
         }
       } else {
         playerA.resetAllNodes();
@@ -544,12 +648,11 @@ export default {
     },
     refreshPlaylistB() {
       this.listB.forEach((el, index) => playlistB.list[index] = this.listB[index].songId);
+      this.getCurrentIdB();
       if (this.playingB) {
         if (playlistB.musicLibrary.list[playerB.currentIndex].metaData.artist !== this.listB[this.currentIdB].artist) {
           playerB.resetAllNodes();
-          playerB.stop();
-          playerB.addNode(analyzerB);
-          playerB.play();
+          this.playB();
         }
       } else {
         playerB.resetAllNodes();
@@ -583,7 +686,7 @@ export default {
           this.refreshPlaylistA();
           this.insertMetadataA();
         }
-      } else {
+      } else if(deck==='B') {
         if (playlistB.list.length < 2) {
           playlistB.delete(sId);
           this.currentArtistB = 'no artist';
@@ -625,10 +728,8 @@ export default {
         } else {
           this.canvasCtxA.lineTo(x, y);
         }
-
         x += sliceWidth;
       }
-
       this.canvasCtxA.lineTo(this.canvasA.width, this.canvasA.height / 2);
       this.canvasCtxA.stroke();
     },
@@ -644,20 +745,24 @@ export default {
       this.canvasCtxB.fillStyle = 'rgb(164,152,238)';
       this.canvasCtxB.fillRect(0, 0, this.canvasB.width, this.canvasB.height);
 
+      this.canvasCtxB.lineWidth = 2;
+      this.canvasCtxB.strokeStyle = 'rgb(62,57,91)';
+      this.canvasCtxB.beginPath();
 
-      let barWidth = (this.canvasB.width/ bufferLengthB) * 2.5;
-      let barHeight;
+      let sliceWidth = this.canvasB.width * 1.0 / bufferLengthB;
       let x = 0;
 
       for (let i = 0; i < bufferLengthB; i++) {
-        barHeight = dataArrayB[i] / 2;
+        let v = dataArrayB[i] / 128.0;
+        let y = v * this.canvasB.height / 2;
 
-        this.canvasCtxB.fillStyle = 'rbg(' + (barHeight+100) + ',50,50)';
-        this.canvasCtxB.fillRect(x, this.canvasB.height - barHeight/2, barWidth, barHeight);
-
-        x += barWidth + 1;
+        if (i == 0) {
+          this.canvasCtxB.moveTo(x, y);
+        } else {
+          this.canvasCtxB.lineTo(x, y);
+        }
+        x += sliceWidth;
       }
-
       this.canvasCtxB.lineTo(this.canvasB.width, this.canvasB.height / 2);
       this.canvasCtxB.stroke();
     },
@@ -682,7 +787,7 @@ export default {
       console.log('Crossfader Balance: ' + value);
     },
     setTempoA(value) {
-      this.speed=-500*value+1500;
+      this.speedA = -500 * value + 1500;
       playerA.setTempo(value);
       console.log('Player A Tempo: ' + playerA.playingSpeed);
 
@@ -700,10 +805,10 @@ export default {
       console.log(time);
     },
     setEqA(index, value) {
-      playerA.setEq(index,value);
+      playerA.setEq(index, value);
     },
     setEqB(index, value) {
-      playerB.setEq(index,value);
+      playerB.setEq(index, value);
     },
   },
   mounted() {
@@ -724,17 +829,21 @@ export default {
   watch: {
     // whenever question changes, this function will run
     currentIdA: function () {
+      // this.speed = 1000;
+      this.startTimerA();
       this.insertMetadataA();
     },
     currentIdB: function () {
+      this.startTimerB();
       this.insertMetadataB();
-      this.defaultTempoB=1;
     }
     ,
-    speed:function (){
-      this.resumeTimer()
+    speed: function () {
+      this.resumeTimerA();
+      this.resumeTimerB();
+      console.log('speed ist: ' + this.speedA);
     },
-    mutedA: function () {
+ /*   mutedA: function () {
       if (this.mutedA) {
         this.mutedStringA = 'muted';
         this.setVolumeA(0);
@@ -750,7 +859,7 @@ export default {
       } else {
         this.mutedStringB = 'not muted';
       }
-    }
+    }*/
   }
 }
 ;

@@ -7,12 +7,21 @@
       drop-placeholder="Drop file here..."
       accept=".mp3"
     ></b-form-file>
-    <div class="mt-3">Selected file: {{ file ? file.name : '' }}  <b-button @click="uploadSong(file)">Upload</b-button></div>
-    <b-list-group v-for="element in fileList">
-      <b-list-group-item >
-        {{element}}<b-button @click="addToLibrary()">Add to library</b-button>
+    <div class="mt-3">Selected file: {{ file ? file.name : '' }}
+      <b-button @click="uploadSong(file)">Upload</b-button>
+    </div>
+    <b-list-group v-for="(element, index) in fileList"
+    :key="index">
+      <b-list-group-item>
+        {{ element }}
       </b-list-group-item>
     </b-list-group>
+    <b-alert
+      v-model="uploadSuccess"
+      variant="success"
+      dismissible>
+      Zur Bibliothek erfolgreich hinzugefügt
+    </b-alert>
   </div>
 </template>
 
@@ -22,20 +31,21 @@
 */
 export default {
   name: 'FileExplorer',
-  data(){
-    return{
+  data() {
+    return {
       file: null,
-      fileList:[]
-    }
+      fileList: [],
+      uploadSuccess: false,
+    };
   },
-  methods:{
-    uploadSong(file){
+  methods: {
+    uploadSong(file) {
       this.fileList.push(file.name);
-    },
-    addToLibrary(){
-      /*song hochladen und als buffer im emit übergeben*/
-      this.$emit("update")
+      // this.$emit('songFile', file
+      this.$emit('upload', file);
+      this.uploadSuccess = true;
     }
+
   }
 };
 </script>
