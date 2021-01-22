@@ -52,7 +52,7 @@
                   :songId.sync="currentIdA"
                   @playlistChanged="changePlaylistOrder('A')"
                   @changeEqDeck="setEqA"
-                  @toggleFXButton="setFXA"
+                  @toggleFX="setFXA"
             ></deck>
           </b-col>
           <b-col cols="12" md="auto">
@@ -128,7 +128,7 @@
                   :songId.sync="currentIdB"
                   @playlistChanged="changePlaylistOrder('B')"
                   @changeEqDeck="setEqB"
-                  @toggleFXButton="setFXA"
+                  @toggleFX="setFXA"
             >
             </deck>
           </b-col>
@@ -783,7 +783,7 @@ export default {
     },
     setMaster(value) {
       masterGain.gain.value = value;
-      console.log('Master Gain: ' + masterGain.value);
+      console.log('Master Gain: ' + masterGain.gain.value);
     },
     setCrossfader(value) {
       crossfader.setBalance(value);
@@ -814,8 +814,8 @@ export default {
       playerB.setEq(index, value);
     },
     setFXA(name){
-      playerA.effects.toggle(name);
       console.log(name);
+      playerA.effects.toggle(name);
     },
     setFXB(name){
       playerB.effects.toggle(name);

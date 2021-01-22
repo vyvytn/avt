@@ -80,7 +80,7 @@
               v-for="el in effectsList"
               :key="el.name"
               :label="el.name"
-              @toggleFXButton="toggleFXButton"></f-x-button>
+              @toggleFXButton="toggleFXB"></f-x-button>
           </div>
         </b-card-text>
       </b-tab>
@@ -203,7 +203,7 @@ export default {
       this.$emit('changeEqDeck', index, value);
       console.log(index + ", " + value);
     },
-    toggleFXButton(name){
+    toggleFXB(name){
       this.$emit('toggleFX', name);
     }
 

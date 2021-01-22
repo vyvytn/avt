@@ -56,16 +56,15 @@ export default {
   components: { VueSlider },
   data() {
     return {
-      // value: 1,
       value2: 0.5,
-      // value3: 1,
+      value3: 1,
       value:0.5,
     };
   },
   props: {
     horizontal: Boolean,
     tempo: Boolean,
-    value3:Number
+    //value3:Number
   },
   methods: {
     emitValue(val) {
