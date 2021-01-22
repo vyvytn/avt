@@ -221,6 +221,9 @@ const playlistA = new Playlist(lib);
 const playerA = new AudioPlayer(ctx, leftOutNode, playlistA);
 const playlistB = new Playlist(lib);
 const playerB = new AudioPlayer(ctx, rightOutNode, playlistB);
+playerA.addNode(analyzerA);
+playerB.addNode(analyzerB);
+
 /**
  * get song and connect to mastergain
  */
@@ -423,8 +426,8 @@ export default {
      * time intervall function for time left on deck A
      */
     timeLeftA() {
-      var minutes = Math.floor(this.durationA / 60);
-      var seconds = this.durationA - minutes * 60;
+      let minutes = Math.floor(this.durationA / 60);
+      let seconds = this.durationA - minutes * 60;
       if (!this.pausedTimerA) {
         this.durationA--;
         // if (this.durationA < 0.5) {
@@ -463,8 +466,8 @@ export default {
      * time intervall function for time left on deck B
      */
     timeLeftB() {
-      var minutes = Math.floor(this.durationB / 60);
-      var seconds = this.durationB - minutes * 60;
+      let minutes = Math.floor(this.durationB / 60);
+      let seconds = this.durationB - minutes * 60;
       if (!this.pausedTimerB) {
         this.durationB--;
         // if (this.durationA < 0.5) {
@@ -832,10 +835,8 @@ export default {
     this.playingB = false;
     this.mutedStringA = 'not muted';
     this.mutedStringB = 'not muted';
-  }
-  ,
-  computed: {}
-  ,
+  },
+  computed: {},
   watch: {
     // whenever question changes, this function will run
     currentIdA: function () {
