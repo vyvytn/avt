@@ -31,7 +31,7 @@ export default class AudioEffects {
         active: false, input: null, output: null,
       },
     };
-    let totalActive = 0;
+    this.totalActive = 0;
 
     // only make effects obj available after initializing all of them
     Promise.all( [ effects.Hall.node, effects.Telefon.node ] )
@@ -44,7 +44,7 @@ export default class AudioEffects {
 
   isAcceptedEffect( effectName ) {
     if ( this.effects ) {
-      if ( ~Object.keys( this.effects ).indexOf( name ) )
+      if ( !~Object.keys( this.effects ).indexOf( effectName ) )
         throw new Error( "passed unaccepted effect name" );
     } else {
       console.log( "effects not loaded yet" )
@@ -71,6 +71,7 @@ export default class AudioEffects {
   toggle( name ) {
     this.isAcceptedEffect( name );
 
+    console.log(this.effects, this.effects[name]);
     if ( this.effects ) {
       if ( this.effects[name].active ) { // toggle off
         this.effects[name].input.disconnect( this.effects[name].node );

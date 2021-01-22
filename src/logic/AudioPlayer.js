@@ -174,7 +174,7 @@ export default class AudioPlayer {
         .forEach( x => this.effects.toggle( x ) );
     }
 
-    this.eq.frequencies.forEach( f => this.setEq( f ) );
+    Array.from(this.eq.frequencies).forEach( f => this.setEq( f ) );
   }
   /**
    * stop the playing song (does not allow resuming playback)
@@ -182,7 +182,7 @@ export default class AudioPlayer {
    */
   stop() {
     this.resetPlayer();
-    //this.resetEffects();
+    this.resetEffects();
     this.isPlaying = false;
   }
   /**

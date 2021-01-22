@@ -123,6 +123,7 @@ export default {
         { name: 'Verzerrer' },
         { name: 'Telefon' },
         { name: 'Hall' },
+        { name: 'Bitcrusher'}
       ],
       isReady: false,
       isPlaying: this.playing,

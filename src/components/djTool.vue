@@ -122,7 +122,7 @@
                   :songId.sync="currentIdB"
                   @playlistChanged="changePlaylistOrder('B')"
                   @changeEqDeck="setEqB"
-                  @toggleFX="setFXA"
+                  @toggleFX="setFXB"
             >
             </deck>
           </b-col>
@@ -819,8 +819,8 @@ export default {
       playerB.setEq(index, value);
     },
     setFXA(name){
-      console.log(name);
       playerA.effects.toggle(name);
+
     },
     setFXB(name){
       playerB.effects.toggle(name);
