@@ -173,7 +173,6 @@ import FreeSoundList from './FreeSoundList';
 import FileExplorer from './FileExplorer';
 import EditPlayList from './EditPlayList';
 import AudioPlayer from '../logic/AudioPlayer';
-import AudioEffects from '../logic/AudioEffects';
 import Playlist from '../logic/Playlist';
 import MusicLibrary from '../logic/MusicLibrary';
 import MP3 from '../logic/MP3';
@@ -181,6 +180,8 @@ import Song from '../logic/Song';
 import axios from 'axios';
 import Crossfader from '../logic/Crossfader';
 import VueSlider from 'vue-slider-component';
+
+const serverConnection = "https://dj-api.jneidel.com";
 
 /**
  * Web Audio Api
@@ -221,7 +222,7 @@ const playerB = new AudioPlayer(ctx, rightOutNode, playlistB);
 /**
  * get song and connect to mastergain
  */
-let songUrl = 'http://localhost:8080/static/example.mp3';
+let songUrl = serverConnection + '/static/example.mp3';
 axios.get(songUrl, { responseType: 'arraybuffer' })
   .then(async res => {
     const bb = new Song(new MP3(res.data));
@@ -230,7 +231,7 @@ axios.get(songUrl, { responseType: 'arraybuffer' })
     playlistA.add(index);
     playlistB.add(index);
   })
-  .then(() => axios.get('http://localhost:8080/static/Black Muffin - Die and Retry.mp3', { responseType: 'arraybuffer' }))
+  .then(() => axios.get(serverConnection + '/static/Black Muffin - Die and Retry.mp3', { responseType: 'arraybuffer' }))
   .then(async res => {
     const bm = new Song(new MP3(res.data));
     await bm.prepareForPlayback(ctx);
@@ -238,7 +239,7 @@ axios.get(songUrl, { responseType: 'arraybuffer' })
     playlistA.add(index);
     playlistB.add(index);
   })
-  .then(() => axios.get('http://localhost:8080/static/Bosshafte Beats - Sunglass Evo.mp3', { responseType: 'arraybuffer' }))
+  .then(() => axios.get(serverConnection + '/static/Bosshafte Beats - Sunglass Evo.mp3', { responseType: 'arraybuffer' }))
   .then(async res => {
     const m = new Song(new MP3(res.data));
     await m.prepareForPlayback(ctx);
@@ -488,7 +489,7 @@ export default {
     playA() {
       this.playingA = true;
       this.pausingA = false;
-      playerA.addNode(analyzerA);
+      //playerA.addNode(analyzerA);
       playerA.play();
       this.pausedTimerA = false;
       this.resumeTimerA();
@@ -501,7 +502,7 @@ export default {
       this.pausedTimerA = true;
       this.stopTimerA();
       playerA.pause();
-      playerA.resetAllNodes();
+      //playerA.resetAllNodes();
       console.log('Deck A sollte pausieren.');
     },
     stopA() {
@@ -510,13 +511,13 @@ export default {
       playerA.stop();
       this.stopTimerA();
       // this.speed = 1000;
-      playerA.resetAllNodes();
+      //playerA.resetAllNodes();
       this.insertMetadataA();
       console.log('Deck A sollte stoppen.');
     },
     nextA() {
-      playerA.stop();
-      playerA.resetAllNodes();
+      //playerA.stop();
+      //playerA.resetAllNodes();
       playerA.next();
       this.stopTimerA();
       this.insertMetadataA();
@@ -525,8 +526,8 @@ export default {
       }
     },
     prevA() {
-      playerA.stop();
-      playerA.resetAllNodes();
+      //playerA.stop();
+      //playerA.resetAllNodes();
       playerA.prev();
       this.stopTimerA();
       // this.speed = 1000;
@@ -538,7 +539,7 @@ export default {
     playB() {
       this.playingB = true;
       this.pausingB = false;
-      playerB.addNode(analyzerB);
+      //playerB.addNode(analyzerB);
       playerB.play();
       this.pausedTimerB = false;
       this.resumeTimerB();
@@ -551,20 +552,20 @@ export default {
       this.pausedTimerB=true;
       this.stopTimerB()
       playerB.pause();
-      playerB.resetAllNodes();
+      //playerB.resetAllNodes();
       console.log('Deck B sollte pausieren.');
     },
     stopB() {
       this.playingB = false;
       this.pausingB = false;
       playerB.stop();
-      playerB.resetAllNodes();
+      //playerB.resetAllNodes();
       this.insertMetadataB();
       console.log('Deck B sollte stoppen.');
     },
     nextB() {
-      playerB.stop();
-      playerB.resetAllNodes();
+      //playerB.stop();
+      //playerB.resetAllNodes();
       playerB.next();
       this.stopTimerB()
       this.insertMetadataB();
@@ -573,8 +574,8 @@ export default {
       }
     },
     prevB() {
-      playerB.stop();
-      playerB.resetAllNodes();
+      //playerB.stop();
+      //playerB.resetAllNodes();
       playerB.prev();
       this.stopTimerB()
       this.insertMetadataB();
