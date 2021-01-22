@@ -4,41 +4,32 @@
       <b-spinner v-if="!initReady" type="grow" label="Loading..."></b-spinner>
       <b-button :disabled="!initReady" @click="initialize()" variant="danger">start the dj tool</b-button>
     </div>
-    <b-container fluid="">
-      <b-row>
-        <b-col col>
-          <canvas ref="canvasA" width="450" height="50" style="border-radius: 5px"></canvas>
-        </b-col>
-        <b-col cols="12" md="auto">
-        </b-col>
-        <b-col col>
-          <canvas ref="canvasB" width="450" height="50" style="border-radius: 5px"></canvas>
-        </b-col>
-      </b-row>
-    </b-container>
     <div v-if="isClicked">
       <b-container fluid="">
         <b-row>
           <b-col col>
-            <!--            <vue-slider
-                          :max="600"
-                          v-model="timeA"
-                          :interval="10"
-                          :hide-label=true
-                          :tooltip=" 'none' "
-                          direction="ltr"
-                          :contained=true
-                          :drag-on-click=true
-                          style="display: block; width: 18em;"
-                          @change="setSeekA(timeA)"></vue-slider>-->
-            <!--            <b-form-checkbox-->
-            <!--              v-model="mutedA"-->
-            <!--              name="check-button"-->
-            <!--              switch-->
-            <!--            >{{ mutedStringA }}-->
-            <!--            </b-form-checkbox>-->
-            <!--            <p>{{ minA }}:{{ secA }}</p>-->
-            <P id="timeLeftA">0</P>
+            <div style="background-color: #84e8ca; padding: 20px; border-radius: 5px">
+              <vue-slider
+                :max="510"
+                v-model="timeA"
+                :interval="10"
+                :hide-label=true
+                :tooltip=" 'none' "
+                direction="ltr"
+                :contained=true
+                :drag-on-click=true
+                style="display: block; width: 100%;"
+                @change="setSeekA(timeA)"></vue-slider>
+              <!--            <b-form-checkbox-->
+              <!--              v-model="mutedA"-->
+              <!--              name="check-button"-->
+              <!--              switch-->
+              <!--            >{{ mutedStringA }}-->
+              <!--            </b-form-checkbox>-->
+              <!--            <p>{{ minA }}:{{ secA }}</p>-->
+              <canvas ref="canvasA" height="50" style="border-radius: 5px; width: 100%"></canvas>
+              <P id="timeLeftA">0</P>
+            </div>
             <deck @openLibraryClicked="togglePlaylistModal"
                   id="deckA"
                   :array-playlist="listA"
@@ -96,25 +87,28 @@
             </b-row>
           </b-col>
           <b-col col>
-            <!--            <vue-slider
-                          :max="600"
-                          v-model="timeB"
-                          :interval="10"
-                          :hide-label=true
-                          :tooltip=" 'none' "
-                          direction="ltr"
-                          :contained=true
-                          :drag-on-click=true
-                          style="display: block; width: 18em;"
-                          @change="setSeekB(timeB)"></vue-slider>-->
-            <!--            <b-form-checkbox-->
-            <!--              v-model="mutedB"-->
-            <!--              name="check-button"-->
-            <!--              switch-->
-            <!--            >{{ mutedStringB }}-->
-            <!--            </b-form-checkbox>-->
-            <!--            <p>{{ minB }}:{{ secB }}</p>-->
-            <P id="timeLeftB">0</P>
+            <div style="background-color: #a498ee; padding: 20px; border-radius: 5px;">
+              <vue-slider
+                :max="510"
+                v-model="timeB"
+                :interval="10"
+                :hide-label=true
+                :tooltip=" 'none' "
+                direction="ltr"
+                :contained=true
+                :drag-on-click=true
+                style="display: block; width: 100%;"
+                @change="setSeekB(timeB)"></vue-slider>
+              <!--            <b-form-checkbox-->
+              <!--              v-model="mutedB"-->
+              <!--              name="check-button"-->
+              <!--              switch-->
+              <!--            >{{ mutedStringB }}-->
+              <!--            </b-form-checkbox>-->
+              <!--            <p>{{ minB }}:{{ secB }}</p>-->
+              <canvas ref="canvasB" height="50" style="border-radius: 5px; width: 100%"></canvas>
+              <P id="timeLeftB">0</P>
+            </div>
             <deck @openLibraryClicked="togglePlaylistModal"
                   id="deckB"
                   :array-playlist="listB"
@@ -315,8 +309,9 @@ export default {
       this.insertMetadataB();
       this.isClicked = true;
       //playlistA.list.forEach(el=>  this.playlistUIA.prototype.push(el));
-      this.frameLooperA();
-      this.frameLooperB();
+      //this.initCanvas();
+      //this.frameLooperA();
+      //this.frameLooperB();
       this.playingA = false;
       this.pausingA = false;
       this.playingB = false;
@@ -327,7 +322,6 @@ export default {
         document.getElementById('timeLeftB').innerHTML = Math.round(lib.list[this.listB[this.currentIdB].songId].metaData.length.total)
           .toString();
       });
-      this.canvasCtxB.fillRect(0, 0, this.canvasB.width, this.canvasB.height);
     },
     handleInitButton() {
       setTimeout(this.disableButton, 4000);
@@ -493,6 +487,10 @@ export default {
      * play pause stop previous next song functions for player A and B
      **/
     playA() {
+      this.canvasA = this.$refs['canvasA'];
+      this.canvasCtxA = this.$refs['canvasA'].getContext('2d');
+      this.frameLooperA();
+
       this.playingA = true;
       this.pausingA = false;
       //playerA.addNode(analyzerA);
@@ -543,6 +541,9 @@ export default {
       }
     },
     playB() {
+      this.canvasB = this.$refs['canvasB'];
+      this.canvasCtxB = this.$refs['canvasB'].getContext('2d');
+      this.frameLooperB();
       this.playingB = true;
       this.pausingB = false;
       //playerB.addNode(analyzerB);
@@ -823,15 +824,17 @@ export default {
     },
     setFXB(name){
       playerB.effects.toggle(name);
+    },
+    initCanvas(){
+        this.canvasA = this.$refs['canvasA'];
+        this.canvasCtxA = this.$refs['canvasA'].getContext('2d');
+        this.canvasB = this.$refs['canvasB'];
+        this.canvasCtxB = this.$refs['canvasB'].getContext('2d');
     }
   },
   mounted() {
     //this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
     this.handleInitButton();
-    this.canvasA = this.$refs['canvasA'];
-    this.canvasCtxA = this.$refs['canvasA'].getContext('2d');
-    this.canvasB = this.$refs['canvasB'];
-    this.canvasCtxB = this.$refs['canvasB'].getContext('2d');
     this.playingA = false;
     this.playingB = false;
     this.mutedStringA = 'not muted';
