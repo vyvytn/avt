@@ -213,16 +213,17 @@ let bufferLengthB = analyzerB.frequencyBinCount;
 let dataArrayB = new Uint8Array(bufferLengthB);
 analyzerB.getByteTimeDomainData(dataArrayB);
 
+analyzerA.connect( leftOutNode );
+analyzerB.connect( rightOutNode );
+
 /**
  * creating player and playlists for deck a and b
  */
 const lib = new MusicLibrary();
 const playlistA = new Playlist(lib);
-const playerA = new AudioPlayer(ctx, leftOutNode, playlistA);
+const playerA = new AudioPlayer(ctx, analyzerA, playlistA);
 const playlistB = new Playlist(lib);
-const playerB = new AudioPlayer(ctx, rightOutNode, playlistB);
-playerA.addNode(analyzerA);
-playerB.addNode(analyzerB);
+const playerB = new AudioPlayer(ctx, analyzerB, playlistB);
 
 /**
  * get song and connect to mastergain

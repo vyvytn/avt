@@ -24,11 +24,6 @@ export default class AudioPlayer {
     this.outputNode = this.gain;
   }
 
-  addNode(node){
-    node.connect(this.outputNode);
-    this.outputNode = node;
-  }
-
   // helper variables for calculating the position
   lastTimestamp = 0;
   get now() {
