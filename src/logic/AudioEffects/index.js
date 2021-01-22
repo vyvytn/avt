@@ -31,7 +31,7 @@ export default class AudioEffects {
         active: false, input: null, output: null,
       },
     };
-    totalActive = 0;
+    let totalActive = 0;
 
     // only make effects obj available after initializing all of them
     Promise.all( [ effects.Hall.node, effects.Telefon.node ] )
