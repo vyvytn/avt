@@ -98,9 +98,6 @@ export default class AudioEffects {
 
         this.totalActive--;
       } else { // toggle on
-        const connectSelectedTo = ( inNode, outNode ) => {
-        }
-
         if ( this.totalActive === 0 ) {
           this.entryNode.disconnect( this.outputNode );
 

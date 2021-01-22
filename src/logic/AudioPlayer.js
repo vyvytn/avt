@@ -114,9 +114,13 @@ export default class AudioPlayer {
     console.log( "seek", this.seekTo || 0 )
     */
 
-    return ((this.now - this.lastTimestamp) * this.playingSpeed) + // speed * time elapsed
-      this.tempoTimeBonus + // pre calculated extra time at other speed
-      (this.seekTo !== null ? this.seekTo : 0); // previous seek time
+    if ( this.isPause ) {
+      return this.seekTo;
+    } else {
+      return ((this.now - this.lastTimestamp) * this.playingSpeed) + // speed * time elapsed
+        this.tempoTimeBonus + // pre calculated extra time at other speed
+        (this.seekTo !== null ? this.seekTo : 0); // previous seek time
+    }
   }
   /**
    * pause the playing song (allows for resuming playback at the same position)
