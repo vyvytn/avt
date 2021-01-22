@@ -79,7 +79,8 @@
             <f-x-button
               v-for="el in effectsList"
               :key="el.name"
-              :label="el.name"></f-x-button>
+              :label="el.name"
+              @toggleFXButton="toggleFXButton"></f-x-button>
           </div>
         </b-card-text>
       </b-tab>
@@ -119,12 +120,9 @@ export default {
 
       ],
       effectsList: [
-        { name: 'Panning' },
-        { name: 'Echo' },
-        { name: 'Chorus' },
         { name: 'Verzerrer' },
+        { name: 'Telefon' },
         { name: 'Hall' },
-        { name: 'Delay' },
       ],
       isReady: false,
       isPlaying: this.playing,
@@ -204,6 +202,9 @@ export default {
     changeEqSlider(index, value){
       this.$emit('changeEqDeck', index, value);
       console.log(index + ", " + value);
+    },
+    toggleFXButton(name){
+      this.$emit('toggleFX', name);
     }
 
   },

@@ -20,7 +20,7 @@ export default class AudioPlayer {
     this.effects.outputNode.connect( outputNode );
 
     this.globalOutputNode = outputNode;
-    this.gain.gain.value = 1.0;
+    this.gain.gain.value = 0.5;
     this.outputNode = this.gain;
   }
 
@@ -182,7 +182,7 @@ export default class AudioPlayer {
    */
   stop() {
     this.resetPlayer();
-    this.resetEffects();
+    //this.resetEffects();
     this.isPlaying = false;
   }
   /**

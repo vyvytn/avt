@@ -59,7 +59,7 @@ export default {
       // value: 1,
       value2: 0.5,
       // value3: 1,
-      value:0.5
+      value:0.5,
     };
   },
   props: {

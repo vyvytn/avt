@@ -52,6 +52,7 @@
                   :songId.sync="currentIdA"
                   @playlistChanged="changePlaylistOrder('A')"
                   @changeEqDeck="setEqA"
+                  @toggleFXButton="setFXA"
             ></deck>
           </b-col>
           <b-col cols="12" md="auto">
@@ -127,6 +128,7 @@
                   :songId.sync="currentIdB"
                   @playlistChanged="changePlaylistOrder('B')"
                   @changeEqDeck="setEqB"
+                  @toggleFXButton="setFXA"
             >
             </deck>
           </b-col>
@@ -639,11 +641,11 @@ export default {
       this.getCurrentIdA();
       if (this.playingA) {
         if (playlistA.musicLibrary.list[playerA.currentIndex].metaData.artist !== this.listA[this.currentIdA].artist) {
-          playerA.resetAllNodes();
+          //playerA.resetAllNodes();
           this.playA();
         }
       } else {
-        playerA.resetAllNodes();
+        //playerA.resetAllNodes();
         playerA.stop();
       }
     },
@@ -652,11 +654,11 @@ export default {
       this.getCurrentIdB();
       if (this.playingB) {
         if (playlistB.musicLibrary.list[playerB.currentIndex].metaData.artist !== this.listB[this.currentIdB].artist) {
-          playerB.resetAllNodes();
+          //playerB.resetAllNodes();
           this.playB();
         }
       } else {
-        playerB.resetAllNodes();
+        //playerB.resetAllNodes();
         playerB.stop();
       }
     },
@@ -811,6 +813,13 @@ export default {
     setEqB(index, value) {
       playerB.setEq(index, value);
     },
+    setFXA(name){
+      playerA.effects.toggle(name);
+      console.log(name);
+    },
+    setFXB(name){
+      playerB.effects.toggle(name);
+    }
   },
   mounted() {
     //this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
