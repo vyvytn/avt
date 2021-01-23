@@ -15,7 +15,7 @@
     <b-container fluid="" v-if="isClicked">
       <b-row>
         <b-col col>
-          <div style="background-color: #84e8ca; padding: 20px; border-radius: 5px">
+          <div style="background-color: #84e8ca; margin-bottom: 1em ;padding: 2em; border-radius: 5px">
             <vue-slider
               :max="510"
               v-model="timeA"
@@ -25,7 +25,7 @@
               direction="ltr"
               :contained=true
               :drag-on-click=true
-              style="display: block; width: 100%;"
+              style="display: block; width: 98%;"
               @change="setSeekA(timeA)"></vue-slider>
             <!--            <b-form-checkbox-->
             <!--              v-model="mutedA"-->
@@ -34,7 +34,7 @@
             <!--            >{{ mutedStringA }}-->
             <!--            </b-form-checkbox>-->
             <!--            <p>{{ minA }}:{{ secA }}</p>-->
-            <canvas ref="canvasA" height="50" style="border-radius: 5px; width: 100%"></canvas>
+            <canvas ref="canvasA" height="50" style="width: 100%"></canvas>
             <!--            <P id="timeLeftA">0</P>-->
           </div>
           <deck @openLibraryClicked="togglePlaylistModal"
@@ -95,7 +95,7 @@
           </b-row>
         </b-col>
         <b-col col>
-          <div style="background-color: #a498ee; padding: 20px; border-radius: 5px;">
+          <div style="background-color: #a498ee; margin-bottom: 1em; padding: 2em; border-radius: 5px;">
             <vue-slider
               :max="510"
               v-model="timeB"
@@ -105,7 +105,7 @@
               direction="ltr"
               :contained=true
               :drag-on-click=true
-              style="display: block; width: 100%;"
+              style="display: block; width: 98%;"
               @change="setSeekB(timeB)"></vue-slider>
             <!--            <b-form-checkbox-->
             <!--              v-model="mutedB"-->
@@ -114,7 +114,7 @@
             <!--            >{{ mutedStringB }}-->
             <!--            </b-form-checkbox>-->
             <!--            <p>{{ minB }}:{{ secB }}</p>-->
-            <canvas ref="canvasB" height="50" style="border-radius: 5px; width: 100%"></canvas>
+            <canvas ref="canvasB" height="50" style="width: 100%"></canvas>
             <!--            <P id="timeLeftB">0</P>-->
           </div>
           <deck @openLibraryClicked="togglePlaylistModal"
