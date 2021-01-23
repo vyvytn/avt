@@ -5,37 +5,34 @@
         <h1>Welcome to our DJ App with Freesound connection</h1>
       </b-row>
       <b-row>
+        <p class="h1">
+          <b-icon icon="music-note-beamed" style="color: white;"></b-icon>
+        </p>
+      </b-row>
+      <b-row>
         <b-button :disabled="!initReady" @click="initialize()" variant="outline-light">
           <b-spinner small v-if="!initReady" label="Loading...">
           </b-spinner>
-          let's start
+          <b>let's start</b>
         </b-button>
       </b-row>
     </b-container>
-    <b-container fluid="" v-if="isClicked">
+    <b-container id="dj-app" fluid="" v-if="isClicked">
       <b-row>
         <b-col col>
-          <div class="p-4 mb-3 shadow-sm rounded-lg border-0" style="background-color: #84e8ca;">
+          <div class="p-2 mb-3 shadow-sm rounded-lg border-0" style="background: linear-gradient(135deg, #84e8ca, #b9efe0);">
             <vue-slider
               :max="510"
               v-model="timeA"
               :interval="10"
               :hide-label=true
-              :tooltip=" 'none' "
+              :tooltip-placement="'bottom'"
               direction="ltr"
               :contained=true
               :drag-on-click=true
               style="display: block; width: 98%;"
               @change="setSeekA(timeA)"></vue-slider>
-            <!--            <b-form-checkbox-->
-            <!--              v-model="mutedA"-->
-            <!--              name="check-button"-->
-            <!--              switch-->
-            <!--            >{{ mutedStringA }}-->
-            <!--            </b-form-checkbox>-->
-            <!--            <p>{{ minA }}:{{ secA }}</p>-->
-            <canvas ref="canvasA" height="50" style="width: 100%"></canvas>
-            <!--            <P id="timeLeftA">0</P>-->
+            <canvas ref="canvasA" class="rounded" style="width: 100%; max-height: 50px"></canvas>
           </div>
           <deck @openLibraryClicked="togglePlaylistModal"
                 id="deckA"
@@ -95,27 +92,19 @@
           </b-row>
         </b-col>
         <b-col col>
-          <div class="p-4 mb-3 shadow-sm rounded-lg border-0" style="background-color: #a498ee;">
+          <div class="p-2 mb-3 shadow-sm rounded-lg border-0" style="background:linear-gradient(135deg, #a498ee, #bbb1f8);">
             <vue-slider
               :max="510"
               v-model="timeB"
               :interval="10"
               :hide-label=true
-              :tooltip=" 'none' "
+              :tooltip-placement="'bottom'"
               direction="ltr"
               :contained=true
               :drag-on-click=true
               style="display: block; width: 98%;"
               @change="setSeekB(timeB)"></vue-slider>
-            <!--            <b-form-checkbox-->
-            <!--              v-model="mutedB"-->
-            <!--              name="check-button"-->
-            <!--              switch-->
-            <!--            >{{ mutedStringB }}-->
-            <!--            </b-form-checkbox>-->
-            <!--            <p>{{ minB }}:{{ secB }}</p>-->
-            <canvas ref="canvasB" height="50" style="width: 100%"></canvas>
-            <!--            <P id="timeLeftB">0</P>-->
+            <canvas ref="canvasB" class="rounded" style="width: 100%; max-height: 50px"></canvas>
           </div>
           <deck @openLibraryClicked="togglePlaylistModal"
                 id="deckB"
@@ -139,29 +128,29 @@
 
       <!--MENU FOR PLAYLIST EDITING BEGIN-->
       <b-modal ok-only scrollable ref="playlistModal" title="Playlist bearbeiten" size="lg">
-        <b-tabs pills card fill>
-          <b-tab title="Bibliothek" active>
-            <b-card-text>
-              <edit-play-list
-                :play-list-array-a="listA"
-                :play-list-array-b="listB"
-                :song-library="songLibrary"
-                @playlistChanged="changePlaylistOrder"
-                @deleteFromPlaylistA="deleteSongFromDeckById ('A', value)"
-                @deleteFromPlaylistB="deleteSongFromDeckById('B', value)"
-              ></edit-play-list>
-            </b-card-text>
-          </b-tab>
-          <b-tab title="Musik importieren">
-            <b-card-text>
-              <FileExplorer @upload="updateLibraryFile"></FileExplorer>
-            </b-card-text>
-          </b-tab>
-          <b-tab title="Freesound">
-            <FreeSoundList :uploadSuccess="uploadFinished" @upload="handleFreesound"
-                           :duplicate="duplicateFreesound"></FreeSoundList>
-          </b-tab>
-        </b-tabs>
+          <b-tabs pills fill v-model="tabIndex">
+            <b-tab title="Bibliothek" class="mt-4" :title-link-class="linkClass(0)">
+              <b-card-text>
+                <edit-play-list
+                  :play-list-array-a="listA"
+                  :play-list-array-b="listB"
+                  :song-library="songLibrary"
+                  @playlistChanged="changePlaylistOrder"
+                  @deleteFromPlaylistA="deleteSongFromDeckById ('A', value)"
+                  @deleteFromPlaylistB="deleteSongFromDeckById('B', value)"
+                ></edit-play-list>
+              </b-card-text>
+            </b-tab>
+            <b-tab title="Musik importieren" class="mt-4" :title-link-class="linkClass(1)">
+              <b-card-text>
+                <FileExplorer @upload="updateLibraryFile"></FileExplorer>
+              </b-card-text>
+            </b-tab>
+            <b-tab title="Freesound" class="mt-4" :title-link-class="linkClass(2)">
+              <FreeSoundList :uploadSuccess="uploadFinished" @upload="handleFreesound"
+                             :duplicate="duplicateFreesound"></FreeSoundList>
+            </b-tab>
+          </b-tabs>
       </b-modal>
       <!--MENU FOR PLAYLIST EDITING END-->
     </b-container>
@@ -184,6 +173,7 @@ import Song from '../logic/Song';
 import axios from 'axios';
 import Crossfader from '../logic/Crossfader';
 import VueSlider from 'vue-slider-component';
+import 'vue-slider-component/theme/default.css'
 
 const serverConnection = 'https://dj-api.jneidel.com';
 
@@ -269,6 +259,7 @@ export default {
   },
   data() {
     return {
+      tabIndex: 0,
       isClicked: false,
       initReady: false,
       value: 0,
@@ -684,11 +675,11 @@ export default {
         window.webkitRequestAnimationFrame(this.frameLooperA);
       analyzerA.getByteTimeDomainData(dataArrayA);
 
-      this.canvasCtxA.fillStyle = 'rgb(132,232,202)';
+      this.canvasCtxA.fillStyle = 'rgba(185,239,224,1)';
       this.canvasCtxA.fillRect(0, 0, this.canvasA.width, this.canvasA.height);
 
       this.canvasCtxA.lineWidth = 2;
-      this.canvasCtxA.strokeStyle = 'rgb(32,55,47)';
+      this.canvasCtxA.strokeStyle = 'rgb(82,141,125)';
       this.canvasCtxA.beginPath();
 
       let sliceWidth = this.canvasA.width * 1.0 / bufferLengthA;
@@ -717,11 +708,11 @@ export default {
         window.webkitRequestAnimationFrame(this.frameLooperB);
       analyzerB.getByteTimeDomainData(dataArrayB);
 
-      this.canvasCtxB.fillStyle = 'rgb(164,152,238)';
+      this.canvasCtxB.fillStyle = 'rgba(187,177,248,1)';
       this.canvasCtxB.fillRect(0, 0, this.canvasB.width, this.canvasB.height);
 
       this.canvasCtxB.lineWidth = 2;
-      this.canvasCtxB.strokeStyle = 'rgb(62,57,91)';
+      this.canvasCtxB.strokeStyle = 'rgb(100,94,157)';
       this.canvasCtxB.beginPath();
 
       let sliceWidth = this.canvasB.width * 1.0 / bufferLengthB;
@@ -797,7 +788,14 @@ export default {
       this.canvasCtxA = this.$refs['canvasA'].getContext('2d');
       this.canvasB = this.$refs['canvasB'];
       this.canvasCtxB = this.$refs['canvasB'].getContext('2d');
-    }
+    },
+    linkClass(idx){
+      if (this.tabIndex ===idx){
+        return ['bg-secondary', 'text-light' , 'm-2']
+      } else {
+        return ['bg-light','text-dark' , 'm-2']
+      }
+    },
   },
   mounted() {
     //this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
@@ -859,12 +857,17 @@ export default {
 <style scoped>
 
 #loading-state {
+  min-height: 100vh;
+  max-height: 100vh;
   background: linear-gradient(135deg, #84e8ca, #a498ee);
 }
 
-.container-fluid {
-  min-height: 100vh;
+#dj-app{
   max-height: 100vh;
+  background: linear-gradient(135deg, rgba(147, 233, 202, 0.8), rgba(161, 150, 233, 0.8));
+}
+
+.container-fluid {
   padding: 1em;
 }
 

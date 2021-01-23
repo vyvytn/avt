@@ -1,8 +1,8 @@
 <template>
-  <b-overlay :show="loading" rounded="sm">
+  <b-overlay :show="loading" class="rounded-sm p-2">
     <div id="freesoundList" @keyup.enter="getSoundList">
       <b-col>
-        <b-row>
+        <b-row class="mb-4">
           <b-col class="col-10">
             <b-form-input placeholder="Suche nach einem Freesound..." :state="state" v-model="searchword">{{ searchword }}
             </b-form-input>
@@ -24,7 +24,8 @@
         <b-list-group v-if="!loading">
           <b-overlay :show="!uploadSuccess">
             <b-list-group-item v-for="(element, index) in this.resultList"
-            :key="index">
+            :key="index"
+            class="rounded mb-4 shadow">
               <free-sound-item :imgurl="element.metaData.imgUrl"
                                :title="element.metaData.title"
                                :artist="element.metaData.artist"

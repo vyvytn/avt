@@ -1,5 +1,7 @@
 <template>
-  <b-button :pressed.sync="effectOn" @click="toggleEffect(buttonLabel)" variant="outline-dark">{{this.buttonLabel}}</b-button>
+  <div class="m-4">
+    <b-button :pressed.sync="effectOn" @click="toggleEffect(buttonLabel)" variant="outline-dark">{{this.buttonLabel}}</b-button>
+  </div>
 </template>
 
 <script>

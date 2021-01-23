@@ -5,25 +5,27 @@
     >
       <b-card-text>
         <b-row>
-          <b-col cols="1">
-          <b-icon icon="music-note-list"></b-icon>
+          <b-col cols="2">
+            <p class="h1">
+              <b-icon icon="music-note-beamed" style="color: white"></b-icon>
+            </p>
           </b-col>
-          <b-col cols="10">
-            <p id="songTitle" class="font-weight-medium">{{ currentTitle }}</p>
-            <p id="interpretName" class="font-weight-light">{{ currentArtist }}</p>
+          <b-col cols="9">
+            <p id="songTitle" class="font-weight-bold text-light"><span class="font-weight-normal">Titel: </span> {{ currentTitle }}</p>
+            <p id="interpretName" class="font-weight-bolder text-light"><span class="font-weight-normal">Künstler: </span> {{ currentArtist }}</p>
           </b-col>
           <b-col cols="1">
-            <p id="interpretLength" class="font-weight-bold float-right">{{ length }}</p>
+            <p id="interpretLength" class="font-weight-bold float-right text-light">{{ length }}</p>
           </b-col>
         </b-row>
 
       </b-card-text>
     </b-card>
-    <div style="padding: 1em" align="center">
+    <div style="margin: 0.2em ;padding: 0.2em" align="center">
       <b-button
         variant="success"
         @click="buttonClickedPlay"
-      :disabled.sync="isPlaying">
+        :disabled.sync="isPlaying">
         <b-icon font-scale="2" icon="play-fill"></b-icon>
       </b-button>
       <b-button
@@ -46,8 +48,9 @@
         <b-icon font-scale="2" icon="skip-end-fill" @click="buttonClickedNext"></b-icon>
       </b-button>
     </div>
-    <b-tabs pills fill card>
-      <b-tab title="Playlist" active>
+
+    <b-tabs pills fill v-model="tabIndex">
+      <b-tab title="Playlist" class="mt-4" :title-link-class="linkClass(0)">
         <b-card-text>
           <div style="overflow-y: auto ; max-height: 60vh">
             <Playlist
@@ -58,20 +61,21 @@
           </div>
           <div align="center">
             <b-button variant="secondary" id="modalBtn" @click="togglePlaylistModal">Bibliothek
-              <b-icon icon="Box-arrow-up-right"></b-icon>
+              <b-icon class="p-1" icon="Box-arrow-up-right"></b-icon>
             </b-button>
           </div>
-
         </b-card-text>
       </b-tab>
-      <b-tab title="Equalizer">
+      <b-tab title="Equalizer" class="mt-4" :title-link-class="linkClass(1)">
         <b-card-text>
           <b-col>
             <b-row>
               <b-checkbox
                 v-model="eqStatus"
-              >Ein
+              >EQ Ein
               </b-checkbox>
+            </b-row>
+            <b-row>
               <eq-slider
                 v-for="el in equalizerList"
                 :key="el.name"
@@ -83,19 +87,20 @@
           </b-col>
         </b-card-text>
       </b-tab>
-      <b-tab title="Effekte">
-        <b-card-text>
-          <div>
-            <f-x-button
-              v-for="el in effectsList"
-              :key="el.name"
-              :label="el.name"
-              @toggleFXButton="toggleFXB"></f-x-button>
-          </div>
-        </b-card-text>
+      <b-tab title="Effekte" class="mt-4" :title-link-class="linkClass(2)">
+        <b-row class="justify-content-center">
+            <b-card-text>
+              <div>
+                <f-x-button
+                  v-for="el in effectsList"
+                  :key="el.name"
+                  :label="el.name"
+                  @toggleFXButton="toggleFXB"></f-x-button>
+              </div>
+            </b-card-text>
+        </b-row>
       </b-tab>
     </b-tabs>
-
   </div>
 </template>
 
@@ -115,6 +120,7 @@ export default {
   },
   data() {
     return {
+      tabIndex: 0,
       eqStatus: false,
       equalizerList: [
         { name: '32', label: '32' },
@@ -133,14 +139,14 @@ export default {
         { name: 'Verzerrer' },
         { name: 'Telefon' },
         { name: 'Hall' },
-        { name: 'Bitcrusher'}
+        { name: 'Bitcrusher' }
       ],
       isReady: false,
       isPlaying: this.playing,
       isPausing: this.pausing,
       playListA: this.arrayPlaylist,
       timeLeftMin: this.min,
-      timeLeftSec:this.sec,
+      timeLeftSec: this.sec,
     };
   },
   props: {
@@ -152,11 +158,18 @@ export default {
       type: String,
     },
     songId: Number,
-    length:String,
-    playing:Boolean,
-    pausing:Boolean,
+    length: String,
+    playing: Boolean,
+    pausing: Boolean,
   },
   methods: {
+    linkClass(idx){
+      if (this.tabIndex ===idx){
+        return ['bg-secondary', 'text-light' , 'm-2']
+      } else {
+        return ['bg-light','text-dark' , 'm-2']
+      }
+    },
 
     onEdit(song) {
       alert(`Editing ${song.name}`);
@@ -208,14 +221,14 @@ export default {
       this.isPlaying = true;
       this.isPausing = false;
     },
-    updatePlaylist(){
-      this.$emit("playlistChanged")
+    updatePlaylist() {
+      this.$emit('playlistChanged');
     },
-    changeEqSlider(index, value){
+    changeEqSlider(index, value) {
       this.$emit('changeEqDeck', index, value);
-      console.log(index + ", " + value);
+      console.log(index + ', ' + value);
     },
-    toggleFXB(name){
+    toggleFXB(name) {
       this.$emit('toggleFX', name);
     }
 
@@ -227,7 +240,7 @@ export default {
     currentTitle: function () {
       return this.title;
     },
-    currentSongId:function (){
+    currentSongId: function () {
       return this.songId;
     },
 
@@ -237,12 +250,12 @@ export default {
 
 <style scoped>
 
-#deckA .card{
-  background-color: #84e8ca;
+#deckA .card {
+  background:linear-gradient(135deg, #84e8ca, #b9efe0);
 }
 
-#deckB .card{
-  background-color: #a498ee;
+#deckB .card {
+  background:linear-gradient(135deg, #a498ee, #bbb1f8);
 }
 
 </style>
