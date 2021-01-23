@@ -69,15 +69,21 @@ curl https://dj.jneidel.com/download/183881 >wave.wav
 ## Dependencies
 
 ### frontend
-- `vue` - spa framework
 - `axios` - ajax/fetch library
-- `node-id3` - mp3 handling library
 - `bitcrusher` - implementation of bitcrusher effect
+- `bootstrap`/`bootstrap-vue` -
+- `node-id3` - mp3 handling library
+- `vue` - spa framework
+- `vue-audio-visual` -
+- `vue-slider-component` -
+- `vue-virtual-scroll-list` -
+- `vue-wave-surfer` -
+- `vue2-dropzone` -
+- `vuedraggable` -
 
 ### backend
 - `express` - http server
 - `body-parser` - express middleware
-___
 
 ## Manual
 
@@ -152,10 +158,4 @@ ___
 **set the fading**
 **set the equalizer**
 **activate effects**
-
-
-
-
-
-
 
