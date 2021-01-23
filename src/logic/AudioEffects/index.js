@@ -15,7 +15,7 @@ export default class AudioEffects {
     // initialize effects
     const effects = {
       "Verzerrer": {
-        node: createVerzerrer( ctx ),
+        node: createVerzerrer( ctx, 100 ),
         active: false, input: null, output: null,
       },
       "Hall": {
