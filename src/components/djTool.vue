@@ -41,6 +41,7 @@
                   :artist.sync="currentArtistA"
                   :title.sync="currentTitleA"
                   :songId.sync="currentIdA"
+                  :length.sync="lengthA"
                   @playlistChanged="changePlaylistOrder('A')"
                   @changeEqDeck="setEqA"
                   @toggleFX="setFXA"
@@ -177,7 +178,7 @@ import axios from 'axios';
 import Crossfader from '../logic/Crossfader';
 import VueSlider from 'vue-slider-component';
 
-const serverConnection = "https://dj-api.jneidel.com";
+const serverConnection = 'https://dj-api.jneidel.com';
 
 /**
  * Web Audio Api
@@ -207,8 +208,8 @@ let bufferLengthB = analyzerB.frequencyBinCount;
 let dataArrayB = new Uint8Array(bufferLengthB);
 analyzerB.getByteTimeDomainData(dataArrayB);
 
-analyzerA.connect( leftOutNode );
-analyzerB.connect( rightOutNode );
+analyzerA.connect(leftOutNode);
+analyzerB.connect(rightOutNode);
 
 /**
  * creating player and playlists for deck a and b
@@ -270,6 +271,7 @@ export default {
       duplicateFreesound: false,
       currentArtistA: String,
       currentTitleA: String,
+      lengthA:0,
       currentArtistB: String,
       currentTitleB: String,
       currentIdA: Number,
@@ -299,7 +301,8 @@ export default {
       speedB: 1000,
       defaultTempoA: 1,
       defaultTempoB: 1,
-      uploadFinished: true
+      uploadFinished: true,
+      timeID: null,
     };
   },
   methods: {
@@ -316,9 +319,10 @@ export default {
       this.pausingA = false;
       this.playingB = false;
       this.pausingB = false;
+      document.getElementById('timeLeftA').innerHTML =0+":"+0;
       this.$nextTick(function () {
-        document.getElementById('timeLeftA').innerHTML = Math.round(lib.list[this.listA[this.currentIdA].songId].metaData.length.total)
-          .toString();
+        document.getElementById('timeLeftA').innerHTML =0*":"+0;
+
         document.getElementById('timeLeftB').innerHTML = Math.round(lib.list[this.listB[this.currentIdB].songId].metaData.length.total)
           .toString();
       });
@@ -363,20 +367,6 @@ export default {
           }
         );
     },
-    /*    updateLibraryFree(value) {
-          for (let i = 0; i < this.songLibrary.length; i++) {
-            if (this.songLibrary[i].name === value.name) {
-              console.log('Duplikat' + this.songLibrary[i].name);
-              this.duplicateFreesound = true;
-              return;
-            }
-            ;
-          }
-          this.duplicateFreesound = false;
-          this.songLibrary.push(value);
-          console.log('kein Duplikat');
-        },*/
-
     /**
      * add chosen song from freesound to audiocontex context
      * */
@@ -402,6 +392,16 @@ export default {
       }
       this.uploadFinished = true;
       // this.changePlaylistOrder()
+    },
+    showTime() {
+      this.timeID = window.setTimeout(this.getCurrentTime, 100);
+    },
+    getCurrentTime() {
+      let sec = Math.round(playerA.currentPosition());
+      let min = Math.floor(sec / 60);
+        document.getElementById('timeLeftA').innerHTML = min + ':' + sec;
+        this.showTime();
+
     },
     /**
      * starts time left label for deck a
@@ -434,7 +434,7 @@ export default {
         //   this.playA();
         // }
       }
-      document.getElementById('timeLeftA').innerHTML = minutes + ':' + seconds;
+      // document.getElementById('timeLeftA').innerHTML = minutes + ':' + seconds;
     },
 
     /**
@@ -489,6 +489,7 @@ export default {
     playA() {
       this.canvasA = this.$refs['canvasA'];
       this.canvasCtxA = this.$refs['canvasA'].getContext('2d');
+      this.showTime();
       this.frameLooperA();
 
       this.playingA = true;
@@ -556,8 +557,8 @@ export default {
     pauseB() {
       this.playingB = false;
       this.pausingB = true;
-      this.pausedTimerB=true;
-      this.stopTimerB()
+      this.pausedTimerB = true;
+      this.stopTimerB();
       playerB.pause();
       //playerB.resetAllNodes();
       console.log('Deck B sollte pausieren.');
@@ -574,7 +575,7 @@ export default {
       //playerB.stop();
       //playerB.resetAllNodes();
       playerB.next();
-      this.stopTimerB()
+      this.stopTimerB();
       this.insertMetadataB();
       if (this.playingB) {
         this.playB();
@@ -584,7 +585,7 @@ export default {
       //playerB.stop();
       //playerB.resetAllNodes();
       playerB.prev();
-      this.stopTimerB()
+      this.stopTimerB();
       this.insertMetadataB();
       if (this.playingB) {
         this.playB();
@@ -609,8 +610,13 @@ export default {
     insertMetadataA() {
       let artist = playerA.current.metaData.artist;
       let title = playerA.current.metaData.title;
+      let total= playerA.current.metaData.length.total
+      var minutes = Math.floor(total / 60).toString();
+      var seconds = Math.round(total - minutes * 60).toString();
       this.currentArtistA = artist;
       this.currentTitleA = title;
+      this.lengthA=minutes+":"+seconds;
+      // this.lengthA=duration
       this.getCurrentIdA();
     },
     insertMetadataB() {
@@ -625,6 +631,7 @@ export default {
         {
           artist: playlistA.musicLibrary.list[el].metaData.artist.toString(),
           title: playlistA.musicLibrary.list[el].metaData.title,
+          length:playlistA.musicLibrary.list[el].metaData.length.total,
           songId: el
         }));
       playlistB.list.forEach(el => this.listB.push(
@@ -638,6 +645,7 @@ export default {
         {
           artist: lib.list[lib.list.indexOf(el)].metaData.artist.toString(),
           title: lib.list[lib.list.indexOf(el)].metaData.title,
+          length:lib.list[lib.list.indexOf(el)].metaData.length.total,
           songId: lib.list.indexOf(el)
         }));
     },
@@ -687,6 +695,7 @@ export default {
           playlistA.delete(sId);
           this.currentArtistA = 'no artist';
           this.currentTitleA = 'no title';
+          this.lengthA='unknown'
           this.pauseA();
           this.stopA();
         } else {
@@ -694,7 +703,7 @@ export default {
           this.refreshPlaylistA();
           this.insertMetadataA();
         }
-      } else if(deck==='B') {
+      } else if (deck === 'B') {
         if (playlistB.list.length < 2) {
           playlistB.delete(sId);
           this.currentArtistB = 'no artist';
@@ -818,20 +827,21 @@ export default {
     setEqB(index, value) {
       playerB.setEq(index, value);
     },
-    setFXA(name){
+    setFXA(name) {
       playerA.effects.toggle(name);
 
     },
-    setFXB(name){
+    setFXB(name) {
       playerB.effects.toggle(name);
     },
-    initCanvas(){
-        this.canvasA = this.$refs['canvasA'];
-        this.canvasCtxA = this.$refs['canvasA'].getContext('2d');
-        this.canvasB = this.$refs['canvasB'];
-        this.canvasCtxB = this.$refs['canvasB'].getContext('2d');
+    initCanvas() {
+      this.canvasA = this.$refs['canvasA'];
+      this.canvasCtxA = this.$refs['canvasA'].getContext('2d');
+      this.canvasB = this.$refs['canvasB'];
+      this.canvasCtxB = this.$refs['canvasB'].getContext('2d');
     }
-  },
+  }
+  ,
   mounted() {
     //this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
     this.handleInitButton();
@@ -839,15 +849,18 @@ export default {
     this.playingB = false;
     this.mutedStringA = 'not muted';
     this.mutedStringB = 'not muted';
-  },
-  computed: {},
+  }
+  ,
+  computed: {}
+  ,
   watch: {
     // whenever question changes, this function will run
     currentIdA: function () {
       // this.speed = 1000;
       this.startTimerA();
       this.insertMetadataA();
-    },
+    }
+    ,
     currentIdB: function () {
       this.startTimerB();
       this.insertMetadataB();
@@ -857,24 +870,33 @@ export default {
       this.resumeTimerA();
       this.resumeTimerB();
       console.log('speed ist: ' + this.speedA);
-    },
- /*   mutedA: function () {
-      if (this.mutedA) {
-        this.mutedStringA = 'muted';
-        this.setVolumeA(0);
-      } else {
-        this.mutedStringA = 'not muted';
-      }
     }
     ,
-    mutedB: function () {
-      if (this.mutedB) {
-        this.mutedStringB = 'muted';
-        this.setVolumeB(0);
-      } else {
-        this.mutedStringB = 'not muted';
-      }
-    }*/
+    /*   mutedA: function () {
+         if (this.mutedA) {
+           this.mutedStringA = 'muted';
+           this.setVolumeA(0);
+         } else {
+           this.mutedStringA = 'not muted';
+         }
+       }
+       ,
+       mutedB: function () {
+         if (this.mutedB) {
+           this.mutedStringB = 'muted';
+           this.setVolumeB(0);
+         } else {
+           this.mutedStringB = 'not muted';
+         }
+       }*/
+  }
+  ,
+  playingA: function () {
+    if (playerA.currentPosition() < lib.list[this.listA[this.currentIdA].songId].metaData.length.total) {
+      this.timeID = window.setTimeout(this.getCurrentTime, 1000);
+    } else {
+      console.log('Ende');
+    }
   }
 }
 ;
