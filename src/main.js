@@ -16,14 +16,14 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 // audiwave
 // eslint-disable-next-line import/first
-import VueWaveSurfer from 'vue-wave-surfer';
+// import VueWaveSurfer from 'vue-wave-surfer';
 
 // eslint-disable-next-line import/first
 import Router from 'vue-router';
 
 // eslint-disable-next-line import/first,import/no-duplicates
 import BootstrapVueIcons from 'bootstrap-vue';
-import './../node_modules/dropzone/dist/dropzone.css';
+// import './../node_modules/dropzone/dist/dropzone.css';
 import AudioVisual from 'vue-audio-visual';
 Vue.use(AudioVisual);
 Vue.use(BootstrapVue);
@@ -31,7 +31,7 @@ Vue.use(BootstrapVueIcons);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(Router);
-Vue.use(VueWaveSurfer);
+// Vue.use(VueWaveSurfer);
 
 // import * as audioLogic from "./logic"; // uncomment to run player example
 
