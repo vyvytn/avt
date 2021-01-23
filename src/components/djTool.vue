@@ -1,162 +1,168 @@
 <template>
   <div>
-    <div v-if="!isClicked">
-      <b-spinner v-if="!initReady" type="grow" label="Loading..."></b-spinner>
-      <b-button :disabled="!initReady" @click="initialize()" variant="danger">start the dj tool</b-button>
-    </div>
-    <div v-if="isClicked">
-      <b-container fluid="">
-        <b-row>
-          <b-col col>
-            <div style="background-color: #84e8ca; padding: 20px; border-radius: 5px">
-              <vue-slider
-                :max="510"
-                v-model="timeA"
-                :interval="10"
-                :hide-label=true
-                :tooltip=" 'none' "
-                direction="ltr"
-                :contained=true
-                :drag-on-click=true
-                style="display: block; width: 100%;"
-                @change="setSeekA(timeA)"></vue-slider>
-              <!--            <b-form-checkbox-->
-              <!--              v-model="mutedA"-->
-              <!--              name="check-button"-->
-              <!--              switch-->
-              <!--            >{{ mutedStringA }}-->
-              <!--            </b-form-checkbox>-->
-              <!--            <p>{{ minA }}:{{ secA }}</p>-->
-              <canvas ref="canvasA" height="50" style="border-radius: 5px; width: 100%"></canvas>
-              <P id="timeLeftA">0</P>
-            </div>
-            <deck @openLibraryClicked="togglePlaylistModal"
-                  id="deckA"
-                  :array-playlist="listA"
-                  @play="playA"
-                  @pause="pauseA"
-                  @stop="stopA"
-                  @next="nextA"
-                  @prev="prevA"
-                  :artist.sync="currentArtistA"
-                  :title.sync="currentTitleA"
-                  :songId.sync="currentIdA"
-                  @playlistChanged="changePlaylistOrder('A')"
-                  @changeEqDeck="setEqA"
-                  @toggleFX="setFXA"
-            ></deck>
-          </b-col>
-          <b-col cols="12" md="auto">
-            <h4>Volume</h4>
-            <b-row>
-              <b-col cols="auto">
-                <VolumeSlider id="gainLeftDeckSlider" :horizontal="false" :tempo="false"
-                              @valueChanged="setVolumeA"></VolumeSlider>
-                <h6>L</h6>
-              </b-col>
-              <b-col cols="auto">
-                <VolumeSlider id="gainMasterSlider" :horizontal="false" :tempo="false"
-                              @valueChanged="setMaster"></VolumeSlider>
-                <h6>M</h6>
-              </b-col>
-              <b-col cols="auto">
-                <VolumeSlider id="gainRightDeckSlider" :horizontal="false" :tempo="false"
-                              @valueChanged="setVolumeB"></VolumeSlider>
-                <h6>R</h6>
-              </b-col>
-            </b-row>
-            <h4>Tempo</h4>
-            <b-row>
-              <b-col cols="auto">
-                <VolumeSlider id="tempoLeftDeckSlider" :horizontal="false" :tempo="true"
-                              @valueChanged="setTempoA" :value3="defaultTempoA"></VolumeSlider>
-                <h6>L</h6>
-              </b-col>
-              <b-col cols="auto">
-                <VolumeSlider id="tempoRightDeckSlider" :horizontal="false" :tempo="true"
-                              @valueChanged="setTempoB" :value3="defaultTempoB"></VolumeSlider>
-                <h6>R</h6>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col cols="auto">
-                <h4>Fading</h4>
-                <VolumeSlider id="crossfadeSlider" :horizontal="true" :tempo="false"
-                              @valueChanged="setCrossfader"></VolumeSlider>
-              </b-col>
-            </b-row>
-          </b-col>
-          <b-col col>
-            <div style="background-color: #a498ee; padding: 20px; border-radius: 5px;">
-              <vue-slider
-                :max="510"
-                v-model="timeB"
-                :interval="10"
-                :hide-label=true
-                :tooltip=" 'none' "
-                direction="ltr"
-                :contained=true
-                :drag-on-click=true
-                style="display: block; width: 100%;"
-                @change="setSeekB(timeB)"></vue-slider>
-              <!--            <b-form-checkbox-->
-              <!--              v-model="mutedB"-->
-              <!--              name="check-button"-->
-              <!--              switch-->
-              <!--            >{{ mutedStringB }}-->
-              <!--            </b-form-checkbox>-->
-              <!--            <p>{{ minB }}:{{ secB }}</p>-->
-              <canvas ref="canvasB" height="50" style="border-radius: 5px; width: 100%"></canvas>
-              <P id="timeLeftB">0</P>
-            </div>
-            <deck @openLibraryClicked="togglePlaylistModal"
-                  id="deckB"
-                  :array-playlist="listB"
-                  @play="playB"
-                  @pause="pauseB"
-                  @stop="stopB"
-                  @next="nextB"
-                  @prev="prevB"
-                  :artist.sync="currentArtistB"
-                  :title.sync="currentTitleB"
-                  :songId.sync="currentIdB"
-                  @playlistChanged="changePlaylistOrder('B')"
-                  @changeEqDeck="setEqB"
-                  @toggleFX="setFXB"
-            >
-            </deck>
-          </b-col>
-        </b-row>
+    <b-container id="loading-state" fluid="" v-if="!isClicked">
+      <b-row>
+        <h1>Welcome to our DJ App with Freesound connection</h1>
+      </b-row>
+      <b-row>
+        <b-button :disabled="!initReady" @click="initialize()" variant="outline-light">
+          <b-spinner small v-if="!initReady" label="Loading...">
+          </b-spinner>
+          let's start
+        </b-button>
+      </b-row>
+    </b-container>
+    <b-container fluid="" v-if="isClicked">
+      <b-row>
+        <b-col col>
+          <div style="background-color: #84e8ca; padding: 20px; border-radius: 5px">
+            <vue-slider
+              :max="510"
+              v-model="timeA"
+              :interval="10"
+              :hide-label=true
+              :tooltip=" 'none' "
+              direction="ltr"
+              :contained=true
+              :drag-on-click=true
+              style="display: block; width: 100%;"
+              @change="setSeekA(timeA)"></vue-slider>
+            <!--            <b-form-checkbox-->
+            <!--              v-model="mutedA"-->
+            <!--              name="check-button"-->
+            <!--              switch-->
+            <!--            >{{ mutedStringA }}-->
+            <!--            </b-form-checkbox>-->
+            <!--            <p>{{ minA }}:{{ secA }}</p>-->
+            <canvas ref="canvasA" height="50" style="border-radius: 5px; width: 100%"></canvas>
+            <P id="timeLeftA">0</P>
+          </div>
+          <deck @openLibraryClicked="togglePlaylistModal"
+                id="deckA"
+                :array-playlist="listA"
+                @play="playA"
+                @pause="pauseA"
+                @stop="stopA"
+                @next="nextA"
+                @prev="prevA"
+                :artist.sync="currentArtistA"
+                :title.sync="currentTitleA"
+                :songId.sync="currentIdA"
+                @playlistChanged="changePlaylistOrder('A')"
+                @changeEqDeck="setEqA"
+                @toggleFX="setFXA"
+          ></deck>
+        </b-col>
+        <b-col cols="12" md="auto">
+          <h4>Volume</h4>
+          <b-row>
+            <b-col cols="auto">
+              <VolumeSlider id="gainLeftDeckSlider" :horizontal="false" :tempo="false"
+                            @valueChanged="setVolumeA"></VolumeSlider>
+              <h6>L</h6>
+            </b-col>
+            <b-col cols="auto">
+              <VolumeSlider id="gainMasterSlider" :horizontal="false" :tempo="false"
+                            @valueChanged="setMaster"></VolumeSlider>
+              <h6>M</h6>
+            </b-col>
+            <b-col cols="auto">
+              <VolumeSlider id="gainRightDeckSlider" :horizontal="false" :tempo="false"
+                            @valueChanged="setVolumeB"></VolumeSlider>
+              <h6>R</h6>
+            </b-col>
+          </b-row>
+          <h4>Tempo</h4>
+          <b-row>
+            <b-col cols="auto">
+              <VolumeSlider id="tempoLeftDeckSlider" :horizontal="false" :tempo="true"
+                            @valueChanged="setTempoA" :value3="defaultTempoA"></VolumeSlider>
+              <h6>L</h6>
+            </b-col>
+            <b-col cols="auto">
+              <VolumeSlider id="tempoRightDeckSlider" :horizontal="false" :tempo="true"
+                            @valueChanged="setTempoB" :value3="defaultTempoB"></VolumeSlider>
+              <h6>R</h6>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col cols="auto">
+              <h4>Fading</h4>
+              <VolumeSlider id="crossfadeSlider" :horizontal="true" :tempo="false"
+                            @valueChanged="setCrossfader"></VolumeSlider>
+            </b-col>
+          </b-row>
+        </b-col>
+        <b-col col>
+          <div style="background-color: #a498ee; padding: 20px; border-radius: 5px;">
+            <vue-slider
+              :max="510"
+              v-model="timeB"
+              :interval="10"
+              :hide-label=true
+              :tooltip=" 'none' "
+              direction="ltr"
+              :contained=true
+              :drag-on-click=true
+              style="display: block; width: 100%;"
+              @change="setSeekB(timeB)"></vue-slider>
+            <!--            <b-form-checkbox-->
+            <!--              v-model="mutedB"-->
+            <!--              name="check-button"-->
+            <!--              switch-->
+            <!--            >{{ mutedStringB }}-->
+            <!--            </b-form-checkbox>-->
+            <!--            <p>{{ minB }}:{{ secB }}</p>-->
+            <canvas ref="canvasB" height="50" style="border-radius: 5px; width: 100%"></canvas>
+            <P id="timeLeftB">0</P>
+          </div>
+          <deck @openLibraryClicked="togglePlaylistModal"
+                id="deckB"
+                :array-playlist="listB"
+                @play="playB"
+                @pause="pauseB"
+                @stop="stopB"
+                @next="nextB"
+                @prev="prevB"
+                :artist.sync="currentArtistB"
+                :title.sync="currentTitleB"
+                :songId.sync="currentIdB"
+                @playlistChanged="changePlaylistOrder('B')"
+                @changeEqDeck="setEqB"
+                @toggleFX="setFXB"
+          >
+          </deck>
+        </b-col>
+      </b-row>
 
-        <!--MENU FOR PLAYLIST EDITING BEGIN-->
-        <b-modal ok-only scrollable ref="playlistModal" title="Playlist bearbeiten" size="lg">
-          <b-tabs pills card fill>
-            <b-tab title="Bibliothek" active>
-              <b-card-text>
-                <edit-play-list
-                  :play-list-array-a="listA"
-                  :play-list-array-b="listB"
-                  :song-library="songLibrary"
-                  @playlistChanged="changePlaylistOrder"
-                  @deleteFromPlaylistA="deleteSongFromDeckById ('A', value)"
-                  @deleteFromPlaylistB="deleteSongFromDeckById('B', value)"
-                ></edit-play-list>
-              </b-card-text>
-            </b-tab>
-            <b-tab title="Musik importieren">
-              <b-card-text>
-                <FileExplorer @upload="updateLibraryFile"></FileExplorer>
-              </b-card-text>
-            </b-tab>
-            <b-tab title="Freesound">
-              <FreeSoundList :uploadSuccess="uploadFinished" @upload="handleFreesound"
-                             :duplicate="duplicateFreesound"></FreeSoundList>
-            </b-tab>
-          </b-tabs>
-        </b-modal>
-        <!--MENU FOR PLAYLIST EDITING END-->
-      </b-container>
-    </div>
+      <!--MENU FOR PLAYLIST EDITING BEGIN-->
+      <b-modal ok-only scrollable ref="playlistModal" title="Playlist bearbeiten" size="lg">
+        <b-tabs pills card fill>
+          <b-tab title="Bibliothek" active>
+            <b-card-text>
+              <edit-play-list
+                :play-list-array-a="listA"
+                :play-list-array-b="listB"
+                :song-library="songLibrary"
+                @playlistChanged="changePlaylistOrder"
+                @deleteFromPlaylistA="deleteSongFromDeckById ('A', value)"
+                @deleteFromPlaylistB="deleteSongFromDeckById('B', value)"
+              ></edit-play-list>
+            </b-card-text>
+          </b-tab>
+          <b-tab title="Musik importieren">
+            <b-card-text>
+              <FileExplorer @upload="updateLibraryFile"></FileExplorer>
+            </b-card-text>
+          </b-tab>
+          <b-tab title="Freesound">
+            <FreeSoundList :uploadSuccess="uploadFinished" @upload="handleFreesound"
+                           :duplicate="duplicateFreesound"></FreeSoundList>
+          </b-tab>
+        </b-tabs>
+      </b-modal>
+      <!--MENU FOR PLAYLIST EDITING END-->
+    </b-container>
   </div>
 
 </template>
@@ -177,7 +183,7 @@ import axios from 'axios';
 import Crossfader from '../logic/Crossfader';
 import VueSlider from 'vue-slider-component';
 
-const serverConnection = "https://dj-api.jneidel.com";
+const serverConnection = 'https://dj-api.jneidel.com';
 
 /**
  * Web Audio Api
@@ -207,8 +213,8 @@ let bufferLengthB = analyzerB.frequencyBinCount;
 let dataArrayB = new Uint8Array(bufferLengthB);
 analyzerB.getByteTimeDomainData(dataArrayB);
 
-analyzerA.connect( leftOutNode );
-analyzerB.connect( rightOutNode );
+analyzerA.connect(leftOutNode);
+analyzerB.connect(rightOutNode);
 
 /**
  * creating player and playlists for deck a and b
@@ -556,8 +562,8 @@ export default {
     pauseB() {
       this.playingB = false;
       this.pausingB = true;
-      this.pausedTimerB=true;
-      this.stopTimerB()
+      this.pausedTimerB = true;
+      this.stopTimerB();
       playerB.pause();
       //playerB.resetAllNodes();
       console.log('Deck B sollte pausieren.');
@@ -574,7 +580,7 @@ export default {
       //playerB.stop();
       //playerB.resetAllNodes();
       playerB.next();
-      this.stopTimerB()
+      this.stopTimerB();
       this.insertMetadataB();
       if (this.playingB) {
         this.playB();
@@ -584,7 +590,7 @@ export default {
       //playerB.stop();
       //playerB.resetAllNodes();
       playerB.prev();
-      this.stopTimerB()
+      this.stopTimerB();
       this.insertMetadataB();
       if (this.playingB) {
         this.playB();
@@ -694,7 +700,7 @@ export default {
           this.refreshPlaylistA();
           this.insertMetadataA();
         }
-      } else if(deck==='B') {
+      } else if (deck === 'B') {
         if (playlistB.list.length < 2) {
           playlistB.delete(sId);
           this.currentArtistB = 'no artist';
@@ -818,18 +824,18 @@ export default {
     setEqB(index, value) {
       playerB.setEq(index, value);
     },
-    setFXA(name){
+    setFXA(name) {
       playerA.effects.toggle(name);
 
     },
-    setFXB(name){
+    setFXB(name) {
       playerB.effects.toggle(name);
     },
-    initCanvas(){
-        this.canvasA = this.$refs['canvasA'];
-        this.canvasCtxA = this.$refs['canvasA'].getContext('2d');
-        this.canvasB = this.$refs['canvasB'];
-        this.canvasCtxB = this.$refs['canvasB'].getContext('2d');
+    initCanvas() {
+      this.canvasA = this.$refs['canvasA'];
+      this.canvasCtxA = this.$refs['canvasA'].getContext('2d');
+      this.canvasB = this.$refs['canvasB'];
+      this.canvasCtxB = this.$refs['canvasB'].getContext('2d');
     }
   },
   mounted() {
@@ -858,30 +864,36 @@ export default {
       this.resumeTimerB();
       console.log('speed ist: ' + this.speedA);
     },
- /*   mutedA: function () {
-      if (this.mutedA) {
-        this.mutedStringA = 'muted';
-        this.setVolumeA(0);
-      } else {
-        this.mutedStringA = 'not muted';
-      }
-    }
-    ,
-    mutedB: function () {
-      if (this.mutedB) {
-        this.mutedStringB = 'muted';
-        this.setVolumeB(0);
-      } else {
-        this.mutedStringB = 'not muted';
-      }
-    }*/
+    /*   mutedA: function () {
+         if (this.mutedA) {
+           this.mutedStringA = 'muted';
+           this.setVolumeA(0);
+         } else {
+           this.mutedStringA = 'not muted';
+         }
+       }
+       ,
+       mutedB: function () {
+         if (this.mutedB) {
+           this.mutedStringB = 'muted';
+           this.setVolumeB(0);
+         } else {
+           this.mutedStringB = 'not muted';
+         }
+       }*/
   }
 }
 ;
 </script>
 
 <style scoped>
+
+#loading-state {
+  background: linear-gradient(135deg, #84e8ca, #a498ee);
+}
+
 .container-fluid {
+  min-height: 100vh;
   max-height: 100vh;
   padding: 1em;
 }
@@ -895,6 +907,11 @@ export default {
 .row {
   justify-content: center;
   margin-bottom: 1.5em;
+}
+
+h1 {
+  margin-top: 5em;
+  color: whitesmoke;
 }
 
 h6, h4 {
