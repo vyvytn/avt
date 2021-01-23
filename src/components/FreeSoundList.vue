@@ -28,7 +28,8 @@
               <free-sound-item :imgurl="element.metaData.imgUrl"
                                :title="element.metaData.title"
                                :artist="element.metaData.artist"
-                               :duration="element.metaData.length.total"
+                               :durationMin="element.metaData.length.minutes"
+                               :durationSec="element.metaData.length.seconds"
                                :idx="index"
                                @freeSound="downloadSong"
               ></free-sound-item>
@@ -88,7 +89,7 @@ export default {
         this.loading = true;
         await search(this.searchword)
           .then(result => this.resultList = result);
-        console.log(this.resultList);
+        console.log(this.resultList[1].metaData);
         this.loading = false;
       } else {
         this.noSearchword = true;

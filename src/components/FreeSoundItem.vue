@@ -5,7 +5,7 @@
         <b-col>
           <p><b>Künstler: </b>{{artist}}</p>
           <p><b>Titel: </b>{{title}}</p>
-          <p><b>Dauer: </b>{{duration}} sec</p>
+          <p><b>Dauer: </b>{{durationMin}}:{{durationSec}} min</p>
         </b-col><b-col>          <img :src=imgurl>
       </b-col>
         <b-button @click="downloadSong(idx)">Add</b-button>
@@ -23,14 +23,17 @@
       artist: null,
       title:null,
       imgurl:'',
-      duration:null,
+      durationMin:null,
+      durationSec:null,
       idx:null
     },
     methods:{
       downloadSong(i){
         this.$emit('freeSound', i)
-      }
-
+      },
+    },
+    mounted() {
+      this.durationSec=Math.round(this.durationSec)
     }
   };
 
