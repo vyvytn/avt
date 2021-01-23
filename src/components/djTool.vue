@@ -310,7 +310,8 @@ export default {
       defaultTempoA: 1,
       defaultTempoB: 1,
       uploadFinished: true,
-      timeID: null,
+      timeIDA: null,
+      timeIDB: null,
     };
   },
   methods: {
@@ -401,7 +402,7 @@ export default {
       // this.changePlaylistOrder()
     },
     showTimeA() {
-      this.timeID = window.setTimeout(this.getCurrentTimeA, 100);
+      this.timeIDA = window.setTimeout(this.getCurrentTimeA, 100);
     },
     getCurrentTimeA() {
       let total = Math.round(playerA.currentPosition());
@@ -411,8 +412,12 @@ export default {
       this.showTimeA();
 
     },
+    stopTimerA(){
+      clearTimeout(this.timeIDA);
+      document.getElementById('timeLeftA').innerHTML = 0 + ':' + 0;
+    },
     showTimeB() {
-      this.timeID = window.setTimeout(this.getCurrentTimeB, 100);
+      this.timeIDB = window.setTimeout(this.getCurrentTimeB, 100);
     },
     getCurrentTimeB() {
       let total = Math.round(playerB.currentPosition());
@@ -422,86 +427,10 @@ export default {
       this.showTimeB();
 
     },
-    /* /!**
-      * starts time left label for deck a
-      *!/
-     startTimerA() {
-       this.durationA = Math.round(lib.list[this.listA[this.currentIdA].songId].metaData.length.total);
-       this.timerA = setInterval(this.timeLeftA, this.speedA);
-     },
-     /!**
-      * resumes time left label for deck a
-      *!/
-     resumeTimerA() {
-       clearInterval(this.timerA);
-       this.timerA = setInterval(this.timeLeftA, this.speedA);
-     },
-     /!**
-      * time intervall function for time left on deck A
-      *!/
-     timeLeftA() {
-       let minutes = Math.floor(this.durationA / 60);
-       let seconds = this.durationA - minutes * 60;
-       if (!this.pausedTimerA) {
-         this.durationA--;
-         // if (this.durationA < 0.5) {
-         //   this.stopTimer();
-         //   this.stopA();
-         //   this.currentIdA = this.getCurrentIdA();
-         //   // this.speed = 1000;
-         //   this.defaultTempoA = 1;
-         //   this.playA();
-         // }
-       }
-       // document.getElementById('timeLeftA').innerHTML = minutes + ':' + seconds;
-     },
-
-     /!**
-      * pauses time left for deck A
-      *!/
-     stopTimerA() {
-       clearInterval(this.timerA);
-     },
-     /!**
-      * starts time left label for deck B
-      *!/
-     startTimerB() {
-       this.durationB = Math.round(lib.list[this.listB[this.currentIdB].songId].metaData.length.total);
-       this.timerB = setInterval(this.timeLeftB, 1000);
-     },
-     /!**
-      * resumes time left label for deck B
-      *!/
-     resumeTimerB() {
-       clearInterval(this.timerB);
-       this.timerB = setInterval(this.timeLeftB, 1000);
-     },
-     /!**
-      * time intervall function for time left on deck B
-      *!/
-     timeLeftB() {
-       let minutes = Math.floor(this.durationB / 60);
-       let seconds = this.durationB - minutes * 60;
-       if (!this.pausedTimerB) {
-         this.durationB--;
-         // if (this.durationA < 0.5) {
-         //   this.stopTimer();
-         //   this.stopA();
-         //   this.currentIdA = this.getCurrentIdA();
-         //   // this.speed = 1000;
-         //   this.defaultTempoA = 1;
-         //   this.playA();
-         // }
-       }
-       document.getElementById('timeLeftB').innerHTML = minutes + ':' + seconds;
-     },
-
-     /!**
-      * pauses time left for deck B
-      *!/
-     stopTimerB() {
-       clearInterval(this.timerB);
-     },*/
+    stopTimerB(){
+      clearTimeout(this.timeIDB);
+      document.getElementById('timeLeftB').innerHTML = 0 + ':' + 0;
+    },
     /**
      * play pause stop previous next song functions for player A and B
      **/
@@ -510,21 +439,16 @@ export default {
       this.canvasCtxA = this.$refs['canvasA'].getContext('2d');
       this.showTimeA();
       this.frameLooperA();
-
       this.playingA = true;
       this.pausingA = false;
       //playerA.addNode(analyzerA);
       playerA.play();
-      // this.pausedTimerA = false;
-      // this.resumeTimerA();
       this.insertMetadataA();
       console.log('Deck A sollte spielen.');
     },
     pauseA() {
       this.playingA = false;
       this.pausingA = true;
-      // this.pausedTimerA = true;
-      // this.stopTimerA();
       playerA.pause();
       //playerA.resetAllNodes();
       console.log('Deck A sollte pausieren.');
@@ -533,8 +457,7 @@ export default {
       this.playingA = false;
       this.pausingA = false;
       playerA.stop();
-      // this.stopTimerA();
-      // this.speed = 1000;
+      this.stopTimerA();
       //playerA.resetAllNodes();
       this.insertMetadataA();
       console.log('Deck A sollte stoppen.');
@@ -543,7 +466,6 @@ export default {
       //playerA.stop();
       //playerA.resetAllNodes();
       playerA.next();
-      // this.stopTimerA();
       this.insertMetadataA();
       if (this.playingA) {
         this.playA();
@@ -553,8 +475,6 @@ export default {
       //playerA.stop();
       //playerA.resetAllNodes();
       playerA.prev();
-      // this.stopTimerA();
-      // this.speed = 1000;
       this.insertMetadataA();
       if (this.playingA) {
         this.playA();
@@ -569,16 +489,12 @@ export default {
       this.pausingB = false;
       //playerB.addNode(analyzerB);
       playerB.play();
-      // this.pausedTimerB = false;
-      // this.resumeTimerB();
       this.insertMetadataB();
       console.log('Deck B sollte spielen.');
     },
     pauseB() {
       this.playingB = false;
       this.pausingB = true;
-      // this.pausedTimerB = true;
-      // this.stopTimerB();
       playerB.pause();
       //playerB.resetAllNodes();
       console.log('Deck B sollte pausieren.');
@@ -587,6 +503,7 @@ export default {
       this.playingB = false;
       this.pausingB = false;
       playerB.stop();
+      this.stopTimerB();
       //playerB.resetAllNodes();
       this.insertMetadataB();
       console.log('Deck B sollte stoppen.');
@@ -595,7 +512,6 @@ export default {
       //playerB.stop();
       //playerB.resetAllNodes();
       playerB.next();
-      // this.stopTimerB();
       this.insertMetadataB();
       if (this.playingB) {
         this.playB();
@@ -605,7 +521,6 @@ export default {
       //playerB.stop();
       //playerB.resetAllNodes();
       playerB.prev();
-      // this.stopTimerB();
       this.insertMetadataB();
       if (this.playingB) {
         this.playB();
@@ -917,13 +832,13 @@ export default {
        }*/
   }
   ,
-  playingA: function () {
-    if (playerA.currentPosition() < lib.list[this.listA[this.currentIdA].songId].metaData.length.total) {
-      this.timeID = window.setTimeout(this.getCurrentTime, 1000);
-    } else {
-      console.log('Ende');
-    }
-  }
+  // playingA: function () {
+  //   if (playerA.currentPosition() < lib.list[this.listA[this.currentIdA].songId].metaData.length.total) {
+  //     this.timeIDA = window.setTimeout(this.getCurrentTime, 1000);
+  //   } else {
+  //     console.log('Ende');
+  //   }
+  // }
 }
 ;
 </script>
