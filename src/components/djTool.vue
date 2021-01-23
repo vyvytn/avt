@@ -424,13 +424,13 @@ export default {
       this.timeIDB = window.setTimeout(this.getCurrentTimeB, 100);
     },
     getCurrentTimeB() {
-      let total = Math.round(playerB.currentPosition());
-      let min = Math.floor(total / 60);
-      let sec = total - (min * 60);
-      let minLeft = lib.list[playlistB.list[this.currentIdB]].metaData.length.minutes - min;
-      let secLeft = 60 - sec;
+      let totalLeft = Math.round(lib.list[playlistB.list[this.currentIdB]].metaData.length.total -playerB.currentPosition());
+      let min = Math.floor(totalLeft / 60);
+      let sec = totalLeft - (min * 60);
+      // let minLeft = lib.list[playlistB.list[this.currentIdB]].metaData.length.minutes - min;
+      // let secLeft = 60 - sec;
       // document.getElementById('timeLeftB').innerHTML = minLeft + ':' + secLeft;
-      this.lengthB = minLeft.toString() + ':' + secLeft.toString();
+      this.lengthB = min.toString() + ':' + sec.toString();
       this.showTimeB();
     },
     stopTimerB() {
