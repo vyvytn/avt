@@ -74,8 +74,10 @@ export default class AudioPlayer {
       const START_DELAY = 0;
       this.bufferSrc.start( START_DELAY, this.seekTo );
 
-      if ( this.isPause )
+      if ( this.isPause ) {
         this.lastTimestamp = this.now; // on pause time continues to elapse
+        this.isPause = false;
+      }
     } else {
       this.bufferSrc.start();
       this.lastTimestamp = this.now; // initial timestamp
