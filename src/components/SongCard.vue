@@ -15,8 +15,8 @@
             </p>
           </b-col>
           <b-col cols="10">
-            <p class="text-white font-weight-normal font-sans">{{ s.title }}</p>
             <p class="text-white font-weight-bold font-sans">{{ s.artist }}</p>
+            <p class="text-white font-weight-normal font-sans">{{ s.title }}</p>
           </b-col>
         </b-row>
       </li>

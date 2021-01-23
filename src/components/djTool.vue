@@ -863,6 +863,7 @@ export default {
 }
 
 #dj-app{
+  min-height: 100vh;
   max-height: 100vh;
   background: linear-gradient(135deg, rgba(147, 233, 202, 0.8), rgba(161, 150, 233, 0.8));
 }
