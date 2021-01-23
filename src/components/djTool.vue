@@ -35,7 +35,7 @@
             <!--            </b-form-checkbox>-->
             <!--            <p>{{ minA }}:{{ secA }}</p>-->
             <canvas ref="canvasA" height="50" style="border-radius: 5px; width: 100%"></canvas>
-<!--            <P id="timeLeftA">0</P>-->
+            <!--            <P id="timeLeftA">0</P>-->
           </div>
           <deck @openLibraryClicked="togglePlaylistModal"
                 id="deckA"
@@ -115,7 +115,7 @@
             <!--            </b-form-checkbox>-->
             <!--            <p>{{ minB }}:{{ secB }}</p>-->
             <canvas ref="canvasB" height="50" style="border-radius: 5px; width: 100%"></canvas>
-<!--            <P id="timeLeftB">0</P>-->
+            <!--            <P id="timeLeftB">0</P>-->
           </div>
           <deck @openLibraryClicked="togglePlaylistModal"
                 id="deckB"
@@ -405,19 +405,20 @@ export default {
       this.timeIDA = window.setTimeout(this.getCurrentTimeA, 100);
     },
     getCurrentTimeA() {
-      let total = Math.round(playerA.currentPosition());
-      let min = Math.floor(total / 60);
-      let sec = total -(min * 60);
-      let minLeft=lib.list[playlistA.list[this.currentIdA]].metaData.length.minutes-min;
-      let secLeft=Math.round(lib.list[playlistA.list[this.currentIdA]].metaData.length.seconds) - sec;
+      let totalLeft = Math.round(lib.list[playlistA.list[this.currentIdA]].metaData.length.total -playerA.currentPosition());
+      let min = Math.floor(totalLeft / 60);
+      let sec = totalLeft - (min * 60);
+      // let minLeft = lib.list[playlistA.list[this.currentIdA]].metaData.length.minutes - min;
+      // let secLeft = Math.round(lib.list[playlistA.list[this.currentIdA]].metaData.length.seconds) - (60-sec);
+
       // document.getElementById('timeLeftA').innerHTML = minLeft + ':' + secLeft;
-      this.lengthA=minLeft.toString() + ':' + secLeft.toString()
+      this.lengthA = min.toString() + ':' + sec.toString();
       this.showTimeA();
 
     },
-    stopTimerA(){
+    stopTimerA() {
       clearTimeout(this.timeIDA);
-      this.lengthA= '0:0';
+      this.lengthA = '0:0';
     },
     showTimeB() {
       this.timeIDB = window.setTimeout(this.getCurrentTimeB, 100);
@@ -425,16 +426,16 @@ export default {
     getCurrentTimeB() {
       let total = Math.round(playerB.currentPosition());
       let min = Math.floor(total / 60);
-      let sec = total -(min * 60);
-      let minLeft=lib.list[playlistB.list[this.currentIdB]].metaData.length.minutes-min;
-      let secLeft=Math.round(lib.list[playlistB.list[this.currentIdB]].metaData.length.seconds) - sec;
+      let sec = total - (min * 60);
+      let minLeft = lib.list[playlistB.list[this.currentIdB]].metaData.length.minutes - min;
+      let secLeft = 60 - sec;
       // document.getElementById('timeLeftB').innerHTML = minLeft + ':' + secLeft;
-      this.lengthB=minLeft.toString() + ':' + secLeft.toString()
+      this.lengthB = minLeft.toString() + ':' + secLeft.toString();
       this.showTimeB();
     },
-    stopTimerB(){
+    stopTimerB() {
       clearTimeout(this.timeIDB);
-      this.lengthB= '0:0';
+      this.lengthB = '0:0';
     },
     /**
      * play pause stop previous next song functions for player A and B
@@ -470,20 +471,25 @@ export default {
     nextA() {
       //playerA.stop();
       //playerA.resetAllNodes();
+      // this.pausingA = true;
       playerA.next();
       this.insertMetadataA();
-      if (this.playingA) {
-        this.playA();
-      }
+      this.playA();
+      // if (this.playingA) {
+      //   this.playA();
+      // }else{
+      //   this.pausingA = true;
+      // }
     },
     prevA() {
       //playerA.stop();
       //playerA.resetAllNodes();
       playerA.prev();
       this.insertMetadataA();
-      if (this.playingA) {
-        this.playA();
-      }
+      this.playA();
+      // if (this.playingA) {
+      //   this.playA();
+      // }
     },
     playB() {
       this.canvasB = this.$refs['canvasB'];
@@ -518,18 +524,20 @@ export default {
       //playerB.resetAllNodes();
       playerB.next();
       this.insertMetadataB();
-      if (this.playingB) {
-        this.playB();
-      }
+      this.playB();
+      // if (this.playingB) {
+      //   this.playB();
+      // }
     },
     prevB() {
       //playerB.stop();
       //playerB.resetAllNodes();
       playerB.prev();
       this.insertMetadataB();
-      if (this.playingB) {
-        this.playB();
-      }
+      this.playB();
+      // if (this.playingB) {
+      //   this.playB();
+      // }
     },
 
     printTest(val) {
