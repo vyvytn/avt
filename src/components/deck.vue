@@ -55,7 +55,7 @@
 
         </b-card-text>
       </b-tab>
-      <b-tab title="EQ">
+      <b-tab title="Equalizer">
         <b-card-text>
           <b-col>
             <b-row>
@@ -74,7 +74,7 @@
           </b-col>
         </b-card-text>
       </b-tab>
-      <b-tab title="FX">
+      <b-tab title="Effekte">
         <b-card-text>
           <div>
             <f-x-button

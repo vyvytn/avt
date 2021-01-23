@@ -4,7 +4,7 @@
       <b-col>
         <b-row>
           <b-col class="col-10">
-            <b-form-input placeholder="Search for free Sounds" :state="state" v-model="searchword">{{ searchword }}
+            <b-form-input placeholder="Suche nach einem Freesound..." :state="state" v-model="searchword">{{ searchword }}
             </b-form-input>
           </b-col>
           <b-col>

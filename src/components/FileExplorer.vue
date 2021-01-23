@@ -3,11 +3,11 @@
     <b-form-file
       v-model="file"
       :state="Boolean(file)"
-      placeholder="Choose a file or drop it here..."
+      placeholder="Lade eigene MP3-Dateien hoch..."
       drop-placeholder="Drop file here..."
       accept=".mp3"
     ></b-form-file>
-    <div class="mt-3">Selected file: {{ file ? file.name : '' }}
+    <div class="mt-3">Deine MP3: {{ file ? file.name : '' }}
       <b-button @click="uploadSong(file)">Upload</b-button>
     </div>
     <b-list-group v-for="(element, index) in fileList"
