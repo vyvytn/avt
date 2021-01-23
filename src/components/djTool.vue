@@ -35,7 +35,7 @@
             <!--            </b-form-checkbox>-->
             <!--            <p>{{ minA }}:{{ secA }}</p>-->
             <canvas ref="canvasA" height="50" style="border-radius: 5px; width: 100%"></canvas>
-            <P id="timeLeftA">0</P>
+<!--            <P id="timeLeftA">0</P>-->
           </div>
           <deck @openLibraryClicked="togglePlaylistModal"
                 id="deckA"
@@ -115,7 +115,7 @@
             <!--            </b-form-checkbox>-->
             <!--            <p>{{ minB }}:{{ secB }}</p>-->
             <canvas ref="canvasB" height="50" style="border-radius: 5px; width: 100%"></canvas>
-            <P id="timeLeftB">0</P>
+<!--            <P id="timeLeftB">0</P>-->
           </div>
           <deck @openLibraryClicked="togglePlaylistModal"
                 id="deckB"
@@ -329,11 +329,11 @@ export default {
       this.playingB = false;
       this.pausingB = false;
       // document.getElementById('timeLeftA').innerHTML =0+":"+0;
-      this.$nextTick(function () {
-        document.getElementById('timeLeftA').innerHTML = 0 + ':' + 0;
-
-        document.getElementById('timeLeftB').innerHTML = 0 + ':' + 0;
-      });
+      // this.$nextTick(function () {
+      //   document.getElementById('timeLeftA').innerHTML = 0 + ':' + 0;
+      //
+      //   document.getElementById('timeLeftB').innerHTML = 0 + ':' + 0;
+      // });
     },
     handleInitButton() {
       setTimeout(this.disableButton, 4000);
@@ -408,13 +408,16 @@ export default {
       let total = Math.round(playerA.currentPosition());
       let min = Math.floor(total / 60);
       let sec = total -(min * 60);
-      document.getElementById('timeLeftA').innerHTML = min + ':' + sec;
+      let minLeft=lib.list[playlistA.list[this.currentIdA]].metaData.length.minutes-min;
+      let secLeft=Math.round(lib.list[playlistA.list[this.currentIdA]].metaData.length.seconds) - sec;
+      // document.getElementById('timeLeftA').innerHTML = minLeft + ':' + secLeft;
+      this.lengthA=minLeft.toString() + ':' + secLeft.toString()
       this.showTimeA();
 
     },
     stopTimerA(){
       clearTimeout(this.timeIDA);
-      document.getElementById('timeLeftA').innerHTML = 0 + ':' + 0;
+      this.lengthA= '0:0';
     },
     showTimeB() {
       this.timeIDB = window.setTimeout(this.getCurrentTimeB, 100);
@@ -423,13 +426,15 @@ export default {
       let total = Math.round(playerB.currentPosition());
       let min = Math.floor(total / 60);
       let sec = total -(min * 60);
-      document.getElementById('timeLeftB').innerHTML = min + ':' + sec;
+      let minLeft=lib.list[playlistB.list[this.currentIdB]].metaData.length.minutes-min;
+      let secLeft=Math.round(lib.list[playlistB.list[this.currentIdB]].metaData.length.seconds) - sec;
+      // document.getElementById('timeLeftB').innerHTML = minLeft + ':' + secLeft;
+      this.lengthB=minLeft.toString() + ':' + secLeft.toString()
       this.showTimeB();
-
     },
     stopTimerB(){
       clearTimeout(this.timeIDB);
-      document.getElementById('timeLeftB').innerHTML = 0 + ':' + 0;
+      this.lengthB= '0:0';
     },
     /**
      * play pause stop previous next song functions for player A and B
