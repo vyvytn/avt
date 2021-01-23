@@ -5,9 +5,9 @@
     >
       <b-card-text>
         <b-icon icon="music-note-list"></b-icon>
-        <p id="songTitle" class="font-weight-bold">{{ currentTitle }}</p>
-        <p id="interpretName" class="font-weight-medium">{{ currentArtist }}</p>
-        <p id="interpretLength" class="font-weight-medium">{{ length }}</p>
+        <p id="songTitle" class="font-weight-medium">{{ currentTitle }}</p>
+        <p id="interpretName" class="font-weight-light">{{ currentArtist }}</p>
+        <p id="interpretLength" class="font-weight-bold">{{ length }}</p>
       </b-card-text>
     </b-card>
     <div style="padding: 1em" align="center">
