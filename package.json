@@ -23,11 +23,8 @@
     "express": "^4.17.1",
     "node-id3": "^0.2.2",
     "vue": "^2.6.12",
-    "vue-audio-visual": "^2.2.1",
     "vue-slider-component": "^3.2.11",
     "vue-virtual-scroll-list": "^2.3.1",
-    "vue-wave-surfer": "^1.0.1",
-    "vue2-dropzone": "^3.6.0",
     "vuedraggable": "^2.24.3"
   },
   "devDependencies": {

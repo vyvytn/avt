@@ -72,19 +72,16 @@ curl https://dj.jneidel.com/download/183881 >wave.wav
 - `axios` - ajax/fetch library
 - `bitcrusher` - implementation of bitcrusher effect
 - `bootstrap`/`bootstrap-vue` - framework for css/html
+- `bootstrap-icon` - for icons in the media control and button
 - `node-id3` - mp3 handling library
 - `vue` - spa framework
-- `vue-audio-visual` -
-- `vue-slider-component` - make list slidable
-- `vue-virtual-scroll-list` -
-- `vue-wave-surfer` -
-- `vue2-dropzone` -
-- `vuedraggable` -
+- `vue-slider-component` - for each slider component
+- `vue-virtual-scroll-list` - make each list able to slide
+- `vuedraggable` - for draggable list
 
 ### backend
 - `express` - http server
 - `body-parser` - express middleware
-___
 
 # Manual
 
