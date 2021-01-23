@@ -2,23 +2,25 @@
   <div>
     <div v-if="current">
       <li
-        class="p-2 mb-3 list-group-item rounded-lg cursor-move border border-white "
-        style="background-color: #A498EE"
+        class="p-4 mb-3 list-group-item shadow-sm rounded-lg cursor-move border-0"
+        style="background-color: #cdcdcd;"
       >
 <!--        <i class="p-1 text-teal-500 focus:outline-none focus:shadow-outline hover:text-teal-600">-->
 <!--          <b-icon icon="grip-horizontal"></b-icon>-->
 <!--        </i>-->
-        <div>
+        <div >
 <!--          <b-avatar></b-avatar>-->
           <b-icon icon="music-note-list"></b-icon>
-          <p class="text-white font-weight-normal font-sans">{{ s.title }}</p>
-          <p class="text-white font-weight-bold font-sans">{{ s.artist }}</p>
+          <div>
+            <p class="text-white font-weight-normal font-sans">{{ s.title }}</p>
+            <p class="text-white font-weight-bold font-sans">{{ s.artist }}</p>
+          </div>
         </div>
       </li>
     </div>
     <div v-if="!current">
       <li
-        class="p-2 mb-3 list-group-item bg-white rounded-lg cursor-move border border-white"
+        class="p-4 mb-3 list-group-item shadow-sm bg-light rounded-lg cursor-move border-0"
       >
 <!--        <i class="p-1 text-teal-500 focus:outline-none focus:shadow-outline hover:text-teal-600">-->
 <!--          <b-icon icon="grip-horizontal"></b-icon>-->

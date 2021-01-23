@@ -15,7 +15,7 @@
     <b-container fluid="" v-if="isClicked">
       <b-row>
         <b-col col>
-          <div style="background-color: #84e8ca; margin-bottom: 1em ;padding: 2em; border-radius: 5px">
+          <div class="p-4 mb-3 shadow-sm rounded-lg border-0" style="background-color: #84e8ca;">
             <vue-slider
               :max="510"
               v-model="timeA"
@@ -95,7 +95,7 @@
           </b-row>
         </b-col>
         <b-col col>
-          <div style="background-color: #a498ee; margin-bottom: 1em; padding: 2em; border-radius: 5px;">
+          <div class="p-4 mb-3 shadow-sm rounded-lg border-0" style="background-color: #a498ee;">
             <vue-slider
               :max="510"
               v-model="timeB"

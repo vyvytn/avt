@@ -13,6 +13,7 @@
     @change="updatePlaylist"
   >
     <song-card
+      style="padding: 0.3em"
     v-for="(s,index) in songlist"
     :s="s"
     :key="index"

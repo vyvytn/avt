@@ -1,13 +1,22 @@
 <template>
   <div id="deckRoot">
     <b-card
-      style="padding: 1em;"
+      class="p-2 mb-3 shadow-sm rounded-lg border-0"
     >
       <b-card-text>
-        <b-icon icon="music-note-list"></b-icon>
-        <p id="songTitle" class="font-weight-medium">{{ currentTitle }}</p>
-        <p id="interpretName" class="font-weight-light">{{ currentArtist }}</p>
-        <p id="interpretLength" class="font-weight-bold">{{ length }}</p>
+        <b-row>
+          <b-col cols="1">
+          <b-icon icon="music-note-list"></b-icon>
+          </b-col>
+          <b-col cols="10">
+            <p id="songTitle" class="font-weight-medium">{{ currentTitle }}</p>
+            <p id="interpretName" class="font-weight-light">{{ currentArtist }}</p>
+          </b-col>
+          <b-col cols="1">
+            <p id="interpretLength" class="font-weight-bold float-right">{{ length }}</p>
+          </b-col>
+        </b-row>
+
       </b-card-text>
     </b-card>
     <div style="padding: 1em" align="center">
