@@ -1,7 +1,7 @@
 <template>
   <div id="deckRoot">
     <b-card
-      style="padding: 1em; background-color: #a498ee"
+      style="padding: 1em;"
     >
       <b-card-text>
         <b-icon icon="music-note-list"></b-icon>
@@ -227,4 +227,13 @@ export default {
 </script>
 
 <style scoped>
+
+#deckA .card{
+  background-color: #84e8ca;
+}
+
+#deckB .card{
+  background-color: #a498ee;
+}
+
 </style>
