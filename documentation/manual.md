@@ -30,6 +30,8 @@
 - using Freesound library
 
 ## User interface
+![User interface](image/app.png)
+
 - 2 decks
   - Each deck has its audio player that shows the current song
 - master area
@@ -42,21 +44,21 @@
   - delete/add/search songs
 
 ## How to ?
+
 ### play a song
 - toggle play/pausing button for playing/pausing
 - stop button resets the current song to the beginning
-  - resets also effects, equalizer and tempo
+- resets also effects, equalizer and tempo
 - skip next/previous plays the next/previous song
-    - activated effects and equalizer will be adopted
-    - no end/beginning - endless looping of a playlist
+- activated effects and equalizer will be adopted
+- no end/beginning - endless looping of a playlist
 
-![Play a Song](image/playSong.png)
-<!-- smaller alternative:
-<img src="image/playSong.png" width="300px" alt="Play a Song"/>
--->
+  ![Play a Song](image/playSong.png)
+  <img src="image/playSong.png" width="300px" alt="Play a Song"/>
 
 ### seek a song
 - manipulating the slider will lead you to the chosen point in a song
+  ![Seek a Song](image/seek.png)
 
 ### change the playlist
 - change the order by dragging the songs
@@ -66,12 +68,16 @@
     - under the tab **Bibliothek**
     - through dragging a song from the library list into the list **Deck A** or **Deck B**
     - a song can be added often
+      ![Seek a Song](image/changePlaylist.png)
   - own mp3
     - under the tab **Mp3 importieren**
     - select an .mp3 file from the file explorer
     - click upload
     - song will be available under the tab **Bibliothek** in the list **Bibliothek** after the upload
     -  drag the uploaded song from the library list into  **Deck A** or **Deck B**
+       ![Seek a Song](image/DRop mp3.png)
+       ![Seek a Song](image/SongAddBib.png)
+
   - Freesound
     - under the tab **Freesound Suche**
     - search for a song with any term
@@ -80,6 +86,10 @@
     - applications needs some seconds for uploading the chosen song
     - afterwards the song will be available under the tab **Bibliothek** in the list **Bibliothek**
     -  drag the uploaded song from the library list into  **Deck A** or **Deck B**
+       ![Seek a Song](image/Freesound.png)
+       ![Seek a Song](image/Freesound Item.png)
+       ![Seek a Song](image/FreesoundItemAddBib.png)
+
 - **DELETE A SONG**
   - library
     - under the tab **Bibliothek**
@@ -92,24 +102,37 @@
     - can be added again through dragging from the **Bibliothek** list
 - **CHANGE ORDER**
   - change the order of list **DECK A** or **DECK B** through dragging
+    ![Seek a Song](image/playlist.png)
+
 
 ### change the volume
 - in the master area: slide up for increasing the volume, slide down for decreasing the volume
 - **L** is for the **left** deck
 - **R** is for the **right** deck
 - **M** is for the **mastervolume**
+  ![Seek a Song](image/Volume.png)
+
 ### change the tempo
 - in the master area: slide up for increasing the speed, slide down for decreasing the speed
 - **L** is for the **left** deck
 - **R** is for the **right** deck
+  ![Seek a Song](image/Tempo.png)
+
+
 ### set the fading
 - this is a **non-linear crossfader**
 - on default: centered and balanced
 - **slide** to the **left** to fade into the left deck or to **right** to fade into the right deck
+  ![Seek a Song](image/Fading.png)
+
 ### set the equalizer
 - enable the equalizer in the checkbox under the tab **Equalizer**
 - **slide up or down** at the chosen frequency
+  ![Seek a Song](image/EQ.png)
+
 ### activate effects
 - under the tab **Effekte**
 - switch an effect on or off by **toggling the buttons**
 - effects can be activated all at once
+  ![Seek a Song](image/FX.png)
+
