@@ -20,6 +20,7 @@
 - [Dependencies](#dependencies)
   * [Frontend](#frontend-1)
   * [Backend](#backend-1)
+- [Supported Browser](#supported-browser)
 
 <!-- tocstop -->
 
@@ -94,3 +95,10 @@ curl https://dj.jneidel.com/download/183881 >wave.wav
 ### Backend
 - `express` - http server
 - `body-parser` - express middleware
+
+## Supported Browser
+- Google Chrome
+- Firefox 
+
+- Safari -> doesn´t Work
+- IE 9 -> not tested
