@@ -2,7 +2,7 @@
   <div>
     <b-container id="loading-state" fluid="" v-if="!isClicked">
       <b-row>
-        <h1>Welcome to our DJ App with Freesound connection</h1>
+        <h1 class="text-light">Welcome to our DJ App with Freesound.org API</h1>
       </b-row>
       <b-row>
         <p class="h1">
@@ -13,14 +13,16 @@
         <b-button :disabled="!initReady" @click="initialize()" variant="outline-light">
           <b-spinner small v-if="!initReady" label="Loading...">
           </b-spinner>
-          <b>let's start</b>
+          <b>LET'S BEGIN</b>
         </b-button>
       </b-row>
     </b-container>
     <b-container id="dj-app" fluid="" v-if="isClicked">
       <b-row>
         <b-col col>
-          <div class="p-2 mb-3 shadow-sm rounded-lg border-0" style="background: linear-gradient(135deg, #84e8ca, #b9efe0);">
+          <div class="p-2 mb-3 shadow-sm rounded-lg border-0"
+               style="background: linear-gradient(135deg, #84e8ca, #b9efe0);">
+            <h4 class="text-light" style="text-align: center;">DECK A</h4>
             <vue-slider
               :max="510"
               v-model="timeA"
@@ -52,47 +54,49 @@
           ></deck>
         </b-col>
         <b-col cols="12" md="auto">
-          <h4>Volume</h4>
+          <h4 class="text-light">Volume</h4>
           <b-row>
             <b-col cols="auto">
               <VolumeSlider id="gainLeftDeckSlider" :horizontal="false" :tempo="false"
                             @valueChanged="setVolumeA"></VolumeSlider>
-              <h6>L</h6>
+              <h5 class="text-dark">L</h5>
             </b-col>
             <b-col cols="auto">
               <VolumeSlider id="gainMasterSlider" :horizontal="false" :tempo="false"
                             @valueChanged="setMaster"></VolumeSlider>
-              <h6>M</h6>
+              <h5 class="text-dark">M</h5>
             </b-col>
             <b-col cols="auto">
               <VolumeSlider id="gainRightDeckSlider" :horizontal="false" :tempo="false"
                             @valueChanged="setVolumeB"></VolumeSlider>
-              <h6>R</h6>
+              <h5 class="text-dark">R</h5>
             </b-col>
           </b-row>
-          <h4>Tempo</h4>
+          <h4 class="text-light">Tempo</h4>
           <b-row>
             <b-col cols="auto">
               <VolumeSlider id="tempoLeftDeckSlider" :horizontal="false" :tempo="true"
                             @valueChanged="setTempoA" :value3="defaultTempoA"></VolumeSlider>
-              <h6>L</h6>
+              <h5 class="text-dark">L</h5>
             </b-col>
             <b-col cols="auto">
               <VolumeSlider id="tempoRightDeckSlider" :horizontal="false" :tempo="true"
                             @valueChanged="setTempoB" :value3="defaultTempoB"></VolumeSlider>
-              <h6>R</h6>
+              <h5 class="text-dark">R</h5>
             </b-col>
           </b-row>
           <b-row>
             <b-col cols="auto">
-              <h4>Fading</h4>
+              <h4 class="text-light">Fading</h4>
               <VolumeSlider id="crossfadeSlider" :horizontal="true" :tempo="false"
                             @valueChanged="setCrossfader"></VolumeSlider>
             </b-col>
           </b-row>
         </b-col>
-        <b-col col>
-          <div class="p-2 mb-3 shadow-sm rounded-lg border-0" style="background:linear-gradient(135deg, #a498ee, #bbb1f8);">
+        <b-col col class="justify-content-center">
+          <div class="p-2 mb-3 shadow-sm rounded-lg border-0"
+               style="background:linear-gradient(135deg, #a498ee, #bbb1f8);">
+            <h4 class="text-light" style="text-align: center ">DECK B</h4>
             <vue-slider
               :max="510"
               v-model="timeB"
@@ -127,30 +131,30 @@
       </b-row>
 
       <!--MENU FOR PLAYLIST EDITING BEGIN-->
-      <b-modal ok-only scrollable ref="playlistModal" title="Playlist bearbeiten" size="lg">
-          <b-tabs pills fill v-model="tabIndex">
-            <b-tab title="Bibliothek" class="mt-4" :title-link-class="linkClass(0)">
-              <b-card-text>
-                <edit-play-list
-                  :play-list-array-a="listA"
-                  :play-list-array-b="listB"
-                  :song-library="songLibrary"
-                  @playlistChanged="changePlaylistOrder"
-                  @deleteFromPlaylistA="deleteSongFromDeckById ('A', value)"
-                  @deleteFromPlaylistB="deleteSongFromDeckById('B', value)"
-                ></edit-play-list>
-              </b-card-text>
-            </b-tab>
-            <b-tab title="Musik importieren" class="mt-4" :title-link-class="linkClass(1)">
-              <b-card-text>
-                <FileExplorer @upload="updateLibraryFile"></FileExplorer>
-              </b-card-text>
-            </b-tab>
-            <b-tab title="Freesound" class="mt-4" :title-link-class="linkClass(2)">
-              <FreeSoundList :uploadSuccess="uploadFinished" @upload="handleFreesound"
-                             :duplicate="duplicateFreesound"></FreeSoundList>
-            </b-tab>
-          </b-tabs>
+      <b-modal ok-only scrollable ref="playlistModal" title="PLAYLIST BEARBEITEN" size="lg">
+        <b-tabs pills fill v-model="tabIndex">
+          <b-tab title="Bibliothek" class="mt-4" :title-link-class="linkClass(0)">
+            <b-card-text>
+              <edit-play-list
+                :play-list-array-a="listA"
+                :play-list-array-b="listB"
+                :song-library="songLibrary"
+                @playlistChanged="changePlaylistOrder"
+                @deleteFromPlaylistA="deleteSongFromDeckById ('A', value)"
+                @deleteFromPlaylistB="deleteSongFromDeckById('B', value)"
+              ></edit-play-list>
+            </b-card-text>
+          </b-tab>
+          <b-tab title="Mp3 Hochladen" class="mt-4" :title-link-class="linkClass(1)">
+            <b-card-text>
+              <FileExplorer @upload="updateLibraryFile"></FileExplorer>
+            </b-card-text>
+          </b-tab>
+          <b-tab title="Freesound Suche" class="mt-4" :title-link-class="linkClass(2)">
+            <FreeSoundList :uploadSuccess="uploadFinished" @upload="handleFreesound"
+                           :duplicate="duplicateFreesound"></FreeSoundList>
+          </b-tab>
+        </b-tabs>
       </b-modal>
       <!--MENU FOR PLAYLIST EDITING END-->
     </b-container>
@@ -173,7 +177,7 @@ import Song from '../logic/Song';
 import axios from 'axios';
 import Crossfader from '../logic/Crossfader';
 import VueSlider from 'vue-slider-component';
-import 'vue-slider-component/theme/default.css'
+import 'vue-slider-component/theme/default.css';
 
 const serverConnection = 'https://dj-api.jneidel.com';
 
@@ -192,7 +196,7 @@ const [leftOutNode, rightOutNode] = crossfader.generateOutputNodes(masterGain);
 /**create analyzer for player A
  */
 const analyzerA = ctx.createAnalyser();
-analyzerA.fftSize = 2048;
+analyzerA.fftSize = 256;
 let bufferLengthA = analyzerA.frequencyBinCount;
 let dataArrayA = new Uint8Array(bufferLengthA);
 analyzerA.getByteTimeDomainData(dataArrayA);
@@ -200,7 +204,7 @@ analyzerA.getByteTimeDomainData(dataArrayA);
 /**create analyzer for player B
  */
 const analyzerB = ctx.createAnalyser();
-analyzerB.fftSize = 2048;
+analyzerB.fftSize = 256;
 let bufferLengthB = analyzerB.frequencyBinCount;
 let dataArrayB = new Uint8Array(bufferLengthB);
 analyzerB.getByteTimeDomainData(dataArrayB);
@@ -396,7 +400,7 @@ export default {
       this.timeIDA = window.setTimeout(this.getCurrentTimeA, 100);
     },
     getCurrentTimeA() {
-      let totalLeft = Math.round(lib.list[playlistA.list[this.currentIdA]].metaData.length.total -playerA.currentPosition());
+      let totalLeft = Math.round(lib.list[playlistA.list[this.currentIdA]].metaData.length.total - playerA.currentPosition());
       let min = Math.floor(totalLeft / 60);
       let sec = totalLeft - (min * 60);
       // let minLeft = lib.list[playlistA.list[this.currentIdA]].metaData.length.minutes - min;
@@ -415,7 +419,7 @@ export default {
       this.timeIDB = window.setTimeout(this.getCurrentTimeB, 100);
     },
     getCurrentTimeB() {
-      let totalLeft = Math.round(lib.list[playlistB.list[this.currentIdB]].metaData.length.total -playerB.currentPosition());
+      let totalLeft = Math.round(lib.list[playlistB.list[this.currentIdB]].metaData.length.total - playerB.currentPosition());
       let min = Math.floor(totalLeft / 60);
       let sec = totalLeft - (min * 60);
       // let minLeft = lib.list[playlistB.list[this.currentIdB]].metaData.length.minutes - min;
@@ -550,9 +554,9 @@ export default {
       let artist = playerA.current.metaData.artist;
       let title = playerA.current.metaData.title;
       let total = playerA.current.metaData.length.total;
-      var minutes = Math.floor(total / 60)
+      let minutes = Math.floor(total / 60)
         .toString();
-      var seconds = Math.round(total - minutes * 60)
+      let seconds = Math.round(total - minutes * 60)
         .toString();
       this.currentArtistA = artist;
       this.currentTitleA = title;
@@ -564,9 +568,9 @@ export default {
       let artist = playerB.current.metaData.artist;
       let title = playerB.current.metaData.title;
       let total = playerB.current.metaData.length.total;
-      var minutes = Math.floor(total / 60)
+      let minutes = Math.floor(total / 60)
         .toString();
-      var seconds = Math.round(total - minutes * 60)
+      let seconds = Math.round(total - minutes * 60)
         .toString();
       this.currentArtistB = artist;
       this.currentTitleB = title;
@@ -667,18 +671,34 @@ export default {
       }
     },
     /**
-     * for visualizing the sound in player A and B
+     * for visualizing the sound in player A
      */
     frameLooperA() {
       window.RequestAnimationFrame =
         window.requestAnimationFrame(this.frameLooperA) ||
         window.webkitRequestAnimationFrame(this.frameLooperA);
       analyzerA.getByteTimeDomainData(dataArrayA);
+      this.canvasCtxA.clearRect(0, 0, this.canvasA.width, this.canvasA.height);
 
-      this.canvasCtxA.fillStyle = 'rgba(185,239,224,1)';
+      let barWidth = (this.canvasA.width / bufferLengthA) * 4;
+      let barHeight;
+      let x = 0;
+
+      this.canvasCtxA.fillStyle = 'rgb(185,240,225)';
       this.canvasCtxA.fillRect(0, 0, this.canvasA.width, this.canvasA.height);
 
-      this.canvasCtxA.lineWidth = 2;
+      for (let i = 0; i < bufferLengthA; i++) {
+        barHeight = (dataArrayA[i] / 2);
+
+        this.canvasCtxA.fillStyle = 'rgb(155,210,' + Math.floor(barHeight + 125) + ')';
+        this.canvasCtxA.fillRect(x, this.canvasA.height - barHeight, barWidth, barHeight);
+
+        x += barWidth + 3; // Gives 1px space between each bar
+      }
+      /*this.canvasCtxA.fillStyle = 'rgba(185,239,224,1)';
+      this.canvasCtxA.fillRect(0, 0, this.canvasA.width, this.canvasA.height);
+
+      this.canvasCtxA.lineWidth = 4;
       this.canvasCtxA.strokeStyle = 'rgb(82,141,125)';
       this.canvasCtxA.beginPath();
 
@@ -697,10 +717,10 @@ export default {
         x += sliceWidth;
       }
       this.canvasCtxA.lineTo(this.canvasA.width, this.canvasA.height / 2);
-      this.canvasCtxA.stroke();
+      this.canvasCtxA.stroke();*/
     },
     /**
-     * visualizing sound for deck a & b
+     * visualizing sound for deck B
      */
     frameLooperB() {
       window.RequestAnimationFrame =
@@ -708,10 +728,26 @@ export default {
         window.webkitRequestAnimationFrame(this.frameLooperB);
       analyzerB.getByteTimeDomainData(dataArrayB);
 
-      this.canvasCtxB.fillStyle = 'rgba(187,177,248,1)';
+      let barWidth = (this.canvasB.width / bufferLengthB) * 4;
+      let barHeight;
+      let x = 0;
+
+      this.canvasCtxB.fillStyle = 'rgb(185,175,245)';
       this.canvasCtxB.fillRect(0, 0, this.canvasB.width, this.canvasB.height);
 
-      this.canvasCtxB.lineWidth = 2;
+      for (let i = 0; i < bufferLengthB; i++) {
+        barHeight = Math.floor(dataArrayB[i] / 2);
+
+        this.canvasCtxB.fillStyle = 'rgb(150,140,' + (barHeight + 165) + ')';
+        this.canvasCtxB.fillRect(x, this.canvasB.height - barHeight, barWidth, barHeight);
+
+        x += barWidth + 3; // Gives 1px space between each bar
+      }
+
+      /*this.canvasCtxB.fillStyle = 'rgb(187,177,248)';
+      this.canvasCtxB.fillRect(0, 0, this.canvasB.width, this.canvasB.height);
+
+      this.canvasCtxB.lineWidth = 4;
       this.canvasCtxB.strokeStyle = 'rgb(100,94,157)';
       this.canvasCtxB.beginPath();
 
@@ -730,7 +766,7 @@ export default {
         x += sliceWidth;
       }
       this.canvasCtxB.lineTo(this.canvasB.width, this.canvasB.height / 2);
-      this.canvasCtxB.stroke();
+      this.canvasCtxB.stroke();*/
     },
 
     /**
@@ -748,10 +784,16 @@ export default {
       masterGain.gain.value = value;
       console.log('Master Gain: ' + masterGain.gain.value);
     },
+    /**
+     * set non-linear Crossfader
+     */
     setCrossfader(value) {
       crossfader.setBalance(value);
       console.log('Crossfader Balance: ' + value);
     },
+    /**
+     * set Tempo in player A and B
+     */
     setTempoA(value) {
       this.speedA = -500 * value + 1500;
       playerA.setTempo(value);
@@ -762,6 +804,9 @@ export default {
       playerB.setTempo(value);
       console.log('Player B Tempo: ' + playerB.playingSpeed);
     },
+    /**
+     * seek a song at a certain point
+     */
     setSeekA(time) {
       playerA.seek(time);
       console.log(time);
@@ -770,15 +815,20 @@ export default {
       playerB.seek(time);
       console.log(time);
     },
+    /**
+     * sets the equalizer of a certain frequency and Q value
+     */
     setEqA(index, value) {
       playerA.setEq(index, value);
     },
     setEqB(index, value) {
       playerB.setEq(index, value);
     },
+    /**
+     * toogle an effect
+     */
     setFXA(name) {
       playerA.effects.toggle(name);
-
     },
     setFXB(name) {
       playerB.effects.toggle(name);
@@ -788,12 +838,18 @@ export default {
       this.canvasCtxA = this.$refs['canvasA'].getContext('2d');
       this.canvasB = this.$refs['canvasB'];
       this.canvasCtxB = this.$refs['canvasB'].getContext('2d');
+
+      this.canvasCtxA.clearRect(0, 0, this.canvasA.width, this.canvasA.height);
+      this.canvasCtxB.clearRect(0, 0, this.canvasB.width, this.canvasB.height);
     },
-    linkClass(idx){
-      if (this.tabIndex ===idx){
-        return ['bg-secondary', 'text-light' , 'm-2']
+    /**
+     * style Tab Buttons
+     */
+    linkClass(idx) {
+      if (this.tabIndex === idx) {
+        return ['bg-secondary', 'text-light', 'm-2'];
       } else {
-        return ['bg-light','text-dark' , 'm-2']
+        return ['bg-light', 'text-dark', 'm-2'];
       }
     },
   },
@@ -862,10 +918,10 @@ export default {
   background: linear-gradient(135deg, #84e8ca, #a498ee);
 }
 
-#dj-app{
+#dj-app {
   min-height: 100vh;
   max-height: 100vh;
-  background: linear-gradient(135deg, rgba(147, 233, 202, 0.8), rgba(161, 150, 233, 0.8));
+  background: linear-gradient(135deg, rgba(170, 239, 216, 0.8), rgba(179, 168, 236, 0.8));
 }
 
 .container-fluid {

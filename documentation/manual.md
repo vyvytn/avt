@@ -34,7 +34,7 @@
   - Each deck has its audio player that shows the current song
 - master area
   - for manipulating volume, tempo and fading
-- music visualisation as a wave
+- music visualisation as a bar graph
 - slider for seeking a song to a certain point
 - playlist/effect window
   - change playlist, add effects, set the equalizer
@@ -62,12 +62,13 @@
     - through dragging a song from the library list into the list **Deck A** or **Deck B**
     - a song can be added often
   - own mp3
-    - under the tab **Musik importieren**
+    - under the tab **Mp3 importieren**
     - select an .mp3 file from the file explorer
     - click upload
     - song will be available under the tab **Bibliothek** in the list **Bibliothek** after the upload
     -  drag the uploaded song from the library list into  **Deck A** or **Deck B**
   - Freesound
+    - under the tab **Freesound Suche**
     - search for a song with any term
     - 15 songs will be shown fitting to your search term
     - if you like a song, then click on the **ADD** button
@@ -77,15 +78,15 @@
 - **DELETE A SONG**
   - library
     - under the tab **Bibliothek**
-    - click the **trash** button within the **Bibliothek** list
+    - click the **trash** button within the **BIBLIOTHEK** list
     - song wont be available anymore
-    - ! deletes automatically from **Deck A** and **Deck B** !
+    - ! deletes automatically from **DECK A** and **DECK B** !
   - playlist
-    - click the **trash** button within the **Deck A** or **Deck B** list
+    - click the **trash** button within the **DECK A** or **DECK B** list
     - wont be available anymore in the playlist
     - can be added again through dragging from the **Bibliothek** list
 - **CHANGE ORDER**
-  - change the order of list **Deck A** or **Deck B** through dragging
+  - change the order of list **DECK A** or **DECK B** through dragging
 
 ### change the volume
 - in the master area: slide up for increasing the volume, slide down for decreasing the volume

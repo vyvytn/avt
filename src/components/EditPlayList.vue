@@ -3,7 +3,7 @@
     <b-row class="p-2 mb-4">
       <b-col>
         <div class="p-2 mb-2 rounded bg-secondary" style="text-align: center;">
-          <h3 class="text-light">Bibliothek</h3>
+          <h3 class="text-light">BIBLIOTHEK</h3>
         </div>
         <div style="overflow-y: auto ; max-height: 200px">
           <draggable
@@ -25,9 +25,13 @@
                     <b-icon icon="music-note-list"></b-icon>
                   </p>
                 </b-col>
-                <b-col cols="9">
-                  <p><b>Künstler: </b>{{ element.artist }}</p>
-                  <p><b>Titel: </b>{{ element.title }}</p>
+                <b-col cols="3">
+                  <p class="font-weight-lighter">Titel: </p>
+                  <p class="font-weight-lighter">Künstler: </p>
+                </b-col>
+                <b-col cols="6">
+                  <p class="font-weight-normal">{{ element.title }}</p>
+                  <p class="font-weight-bold">{{ element.artist }}</p>
                   <!--              <p><b>Länge: </b>{{ element.duration }}</p>-->
                 </b-col>
                 <b-col cols="2">
@@ -44,7 +48,7 @@
     <b-row class="p-2">
       <b-col>
         <div class="p-2 mb-2 rounded" style="text-align: center; background:linear-gradient(135deg, #84e8ca, #b9efe0)">
-          <h3 class="text-light">Deck A</h3>
+          <h3 class="text-light">DECK A</h3>
         </div>
         <div style="overflow-y: auto ; max-height: 200px">
           <draggable
@@ -67,8 +71,8 @@
                   </p>
                 </b-col>
                 <b-col cols="7">
-                  <p>{{ element.artist }}</p>
-                  <p>{{ element.title }}</p>
+                  <p class="font-weight-normal">{{ element.title }}</p>
+                  <p class="font-weight-bold">{{ element.artist }}</p>
                 </b-col>
                 <b-col cols="1">
                   <b-button @click="deleteFromPlaylistA(element.songId,index)" variant="outline-danger">
@@ -82,7 +86,7 @@
       </b-col>
       <b-col>
         <div class="p-2 mb-1 rounded" style="text-align: center; background:linear-gradient(135deg, #a498ee, #bbb1f8)">
-          <h3 class="text-light">Deck B</h3>
+          <h3 class="text-light">DECK B</h3>
         </div>
         <div style="overflow-y: auto ; max-height: 200px">
           <draggable
@@ -105,8 +109,8 @@
                   </p>
                 </b-col>
                 <b-col cols="7">
-                  <p>{{ element.artist }}</p>
-                  <p>{{ element.title }}</p>
+                  <p class="font-weight-normal">{{ element.title }}</p>
+                  <p class="font-weight-bold">{{ element.artist }}</p>
                 </b-col>
                 <b-col cols="1">
                   <b-button @click="deleteFromPlaylistB(element.songId, index)" variant="outline-danger">

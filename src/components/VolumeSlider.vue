@@ -7,6 +7,7 @@
         :interval="0.10"
         :marks=true
         :hide-label=true
+        :tooltip-placement="'bottom'"
         direction="btt"
         :contained=true
         :drag-on-click=true
@@ -22,6 +23,7 @@
         :interval="0.1"
         v-model="value3"
         :hide-label=true
+        :tooltip-placement="'bottom'"
         direction="btt"
         :contained=true
         :drag-on-click=true
@@ -58,7 +60,7 @@ export default {
     return {
       value2: 0.5,
       value3: 1,
-      value:0.5,
+      value: 0.5,
     };
   },
   props: {

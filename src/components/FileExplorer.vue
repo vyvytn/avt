@@ -11,7 +11,7 @@
       <b-button @click="uploadSong(file)">Upload</b-button>
     </div>
     <b-list-group v-for="(element, index) in fileList"
-    :key="index">
+                  :key="index">
       <b-list-group-item>
         {{ element }}
       </b-list-group-item>

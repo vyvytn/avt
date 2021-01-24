@@ -1,6 +1,8 @@
 <template>
   <div class="m-4">
-    <b-button :pressed.sync="effectOn" @click="toggleEffect(buttonLabel)" variant="outline-dark">{{this.buttonLabel}}</b-button>
+    <b-button :pressed.sync="effectOn" @click="toggleEffect(buttonLabel)" variant="outline-dark">
+      {{ this.buttonLabel }}
+    </b-button>
   </div>
 </template>
 
@@ -13,9 +15,9 @@ export default {
       buttonLabel: this.label,
     };
   },
-  methods:{
-    toggleEffect(name){
-      this.$emit('toggleFXButton', name)
+  methods: {
+    toggleEffect(name) {
+      this.$emit('toggleFXButton', name);
     }
   },
   props: {

@@ -3,13 +3,13 @@
     <div v-if=on>
 
       <vue-slider
-        :min="-20"
-        :max="20"
+        :min="-12"
+        :max="12"
         v-model="value2"
         :interval="1"
         :marks=true
         :hide-label=true
-        :tooltip=" 'none' "
+        :tooltip-placement="'bottom'"
         direction="btt"
         :contained=true
         :drag-on-click=true
@@ -30,6 +30,7 @@
         :disabled=true
         :drag-on-click=true
         style="display: inline-block; margin: 5em 1em; height: 15em;"
+        @change="emitValue(value, 0)"
       >
       </vue-slider>
     </div>
@@ -55,10 +56,10 @@ export default {
     };
   },
   methods: {
-    emitValue(index,value){
+    emitValue(index, value) {
       this.$emit('changeEq', index, value);
-      console.log(this.value + ", " + this.value2)
-      console.log(index + ", " + value)
+      //console.log(this.value + ", " + this.value2)
+      console.log(index + ', ' + value);
     }
   }
 };

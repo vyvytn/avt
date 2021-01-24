@@ -10,9 +10,14 @@
               <b-icon icon="music-note-beamed" style="color: white"></b-icon>
             </p>
           </b-col>
-          <b-col cols="9">
-            <p id="songTitle" class="font-weight-bold text-light"><span class="font-weight-normal">Titel: </span> {{ currentTitle }}</p>
-            <p id="interpretName" class="font-weight-bolder text-light"><span class="font-weight-normal">Künstler: </span> {{ currentArtist }}</p>
+          <b-col cols="3">
+            <p class="font-weight-lighter">Titel: </p>
+            <p class="font-weight-lighter">Künstler: </p>
+          </b-col>
+          <b-col cols="6">
+            <p id="songTitle" class="font-weight-normal text-light">
+              {{ currentTitle }}</p>
+            <p id="interpretName" class="font-weight-normal text-light"> {{ currentArtist }}</p>
           </b-col>
           <b-col cols="1">
             <p id="interpretLength" class="font-weight-bold float-right text-light">{{ length }}</p>
@@ -21,25 +26,29 @@
 
       </b-card-text>
     </b-card>
-    <div style="margin: 0.2em ;padding: 0.2em" align="center">
+    <div style="padding: 0.2em" align="center">
       <b-button
+        class="mr-2"
         variant="success"
         @click="buttonClickedPlay"
         :disabled.sync="isPlaying">
         <b-icon font-scale="2" icon="play-fill"></b-icon>
       </b-button>
       <b-button
+        class="mr-2"
         variant="success"
         @click="buttonClickedPause"
         :disabled.sync="isPausing">
         <b-icon font-scale="2" icon="pause-fill"></b-icon>
       </b-button>
       <b-button
+        class="mr-2"
         variant="danger"
         @click="buttonClickedStop">
         <b-icon font-scale="2" icon="stop-fill"></b-icon>
       </b-button>
       <b-button
+        class="mr-2"
         variant="outline-secondary">
         <b-icon font-scale="2" icon="skip-start-fill" @click="buttonClickedPrev"></b-icon>
       </b-button>
@@ -52,7 +61,7 @@
     <b-tabs pills fill v-model="tabIndex">
       <b-tab title="Playlist" class="mt-4" :title-link-class="linkClass(0)">
         <b-card-text>
-          <div style="overflow-y: auto ; max-height: 60vh">
+          <div style="overflow-y: auto ; max-height: 40vh">
             <Playlist
               :array-playlist="playListA"
               @playlistChanged="updatePlaylist"
@@ -60,7 +69,7 @@
             ></Playlist>
           </div>
           <div align="center">
-            <b-button variant="secondary" id="modalBtn" @click="togglePlaylistModal">Bibliothek
+            <b-button class="mt-4" variant="secondary" id="modalBtn" @click="togglePlaylistModal">Bibliothek
               <b-icon class="p-1" icon="Box-arrow-up-right"></b-icon>
             </b-button>
           </div>
@@ -68,36 +77,34 @@
       </b-tab>
       <b-tab title="Equalizer" class="mt-4" :title-link-class="linkClass(1)">
         <b-card-text>
-          <b-col>
-            <b-row>
-              <b-checkbox
-                v-model="eqStatus"
-              >EQ Ein
-              </b-checkbox>
-            </b-row>
-            <b-row>
-              <eq-slider
-                v-for="el in equalizerList"
-                :key="el.name"
-                :value="el.label"
-                :on=eqStatus
-                @changeEq="changeEqSlider"
-              ></eq-slider>
-            </b-row>
-          </b-col>
+          <b-row class="pl-5">
+            <b-checkbox
+              v-model="eqStatus"
+            >Ein/Aus
+            </b-checkbox>
+          </b-row>
+          <b-row class="justify-content-center">
+            <eq-slider
+              v-for="el in equalizerList"
+              :key="el.name"
+              :value="el.label"
+              :on=eqStatus
+              @changeEq="changeEqSlider"
+            ></eq-slider>
+          </b-row>
         </b-card-text>
       </b-tab>
       <b-tab title="Effekte" class="mt-4" :title-link-class="linkClass(2)">
         <b-row class="justify-content-center">
-            <b-card-text>
-              <div>
-                <f-x-button
-                  v-for="el in effectsList"
-                  :key="el.name"
-                  :label="el.name"
-                  @toggleFXButton="toggleFXB"></f-x-button>
-              </div>
-            </b-card-text>
+          <b-card-text>
+            <div>
+              <f-x-button
+                v-for="el in effectsList"
+                :key="el.name"
+                :label="el.name"
+                @toggleFXButton="toggleFXB"></f-x-button>
+            </div>
+          </b-card-text>
         </b-row>
       </b-tab>
     </b-tabs>
@@ -163,11 +170,11 @@ export default {
     pausing: Boolean,
   },
   methods: {
-    linkClass(idx){
-      if (this.tabIndex ===idx){
-        return ['bg-secondary', 'text-light' , 'm-2']
+    linkClass(idx) {
+      if (this.tabIndex === idx) {
+        return ['bg-secondary', 'text-light', 'm-2'];
       } else {
-        return ['bg-light','text-dark' , 'm-2']
+        return ['bg-light', 'text-dark', 'm-2'];
       }
     },
 
@@ -251,11 +258,11 @@ export default {
 <style scoped>
 
 #deckA .card {
-  background:linear-gradient(135deg, #84e8ca, #b9efe0);
+  background: linear-gradient(135deg, #84e8ca, #b9efe0);
 }
 
 #deckB .card {
-  background:linear-gradient(135deg, #a498ee, #bbb1f8);
+  background: linear-gradient(135deg, #a498ee, #bbb1f8);
 }
 
 </style>

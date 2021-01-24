@@ -14,11 +14,11 @@
   >
     <song-card
       style="padding: 0.3em"
-    v-for="(s,index) in songlist"
-    :s="s"
-    :key="index"
-    :sId.sync="songId"
-    :idx.sync="index"
+      v-for="(s,index) in songlist"
+      :s="s"
+      :key="index"
+      :sId.sync="songId"
+      :idx.sync="index"
     ></song-card>
   </draggable>
 </template>
@@ -34,18 +34,18 @@ export default {
     SongCard,
 
   },
-  data: function (){
-    return{
+  data: function () {
+    return {
       songlist: this.arrayPlaylist,
-      currentSongId:this.songId
-    }
+      currentSongId: this.songId
+    };
   },
-  props:{
+  props: {
     arrayPlaylist: Array,
-    songId:Number
+    songId: Number
   },
   methods: {
-    updatePlaylist(){
+    updatePlaylist() {
       this.$emit('playlistChanged');
     }
   }
