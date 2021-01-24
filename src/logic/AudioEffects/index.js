@@ -71,7 +71,6 @@ export default class AudioEffects {
   toggle( name ) {
     this.isAcceptedEffect( name );
 
-    console.log(this.effects, this.effects[name]);
     if ( this.effects ) {
       if ( this.effects[name].active ) { // toggle off
         this.effects[name].input.disconnect( this.effects[name].node );

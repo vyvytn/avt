@@ -195,11 +195,7 @@ export default {
         name: `${el.name} cloned`,
       };
     },
-    log(evt) {
-      window.console.log(evt);
-    },
     togglePlaylistModal() {
-      //this.$refs.playlistModal.show();
       this.$emit('openLibraryClicked');
     },
     buttonClickedPlay() {
@@ -233,7 +229,6 @@ export default {
     },
     changeEqSlider(index, value) {
       this.$emit('changeEqDeck', index, value);
-      console.log(index + ', ' + value);
     },
     toggleFXB(name) {
       this.$emit('toggleFX', name);

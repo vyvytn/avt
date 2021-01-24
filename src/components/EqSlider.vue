@@ -58,8 +58,6 @@ export default {
   methods: {
     emitValue(index, value) {
       this.$emit('changeEq', index, value);
-      //console.log(this.value + ", " + this.value2)
-      console.log(index + ', ' + value);
     }
   }
 };

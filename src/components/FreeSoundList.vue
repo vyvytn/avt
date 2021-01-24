@@ -92,7 +92,6 @@ export default {
         this.loading = true;
         await search(this.searchword)
           .then(result => this.resultList = result);
-        console.log(this.resultList[1].metaData);
         this.loading = false;
       } else {
         this.noSearchword = true;

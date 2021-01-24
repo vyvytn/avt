@@ -315,20 +315,10 @@ export default {
       this.insertMetadataA();
       this.insertMetadataB();
       this.isClicked = true;
-      //playlistA.list.forEach(el=>  this.playlistUIA.prototype.push(el));
-      //this.initCanvas();
-      //this.frameLooperA();
-      //this.frameLooperB();
       this.playingA = false;
       this.pausingA = false;
       this.playingB = false;
       this.pausingB = false;
-      // document.getElementById('timeLeftA').innerHTML =0+":"+0;
-      // this.$nextTick(function () {
-      //   document.getElementById('timeLeftA').innerHTML = 0 + ':' + 0;
-      //
-      //   document.getElementById('timeLeftB').innerHTML = 0 + ':' + 0;
-      // });
     },
     handleInitButton() {
       setTimeout(this.disableButton, 4000);
@@ -366,7 +356,6 @@ export default {
                   songId: newSongIndex
                 });
             }
-            console.log(lib.list[newSongIndex]);
           }
         );
     },
@@ -377,7 +366,6 @@ export default {
       this.uploadFinished = false;
       await value.prepareForPlayback(ctx);
       let newSongIdx = lib.insert(value);
-      console.log(lib.list[newSongIdx].metaData.artist);
       if (lib.list[newSongIdx].metaData !== null) {
         this.songLibrary.push(
           {
@@ -394,7 +382,6 @@ export default {
           });
       }
       this.uploadFinished = true;
-      // this.changePlaylistOrder()
     },
     showTimeA() {
       this.timeIDA = window.setTimeout(this.getCurrentTimeA, 100);
@@ -403,10 +390,7 @@ export default {
       let totalLeft = Math.round(lib.list[playlistA.list[this.currentIdA]].metaData.length.total - playerA.currentPosition());
       let min = Math.floor(totalLeft / 60);
       let sec = totalLeft - (min * 60);
-      // let minLeft = lib.list[playlistA.list[this.currentIdA]].metaData.length.minutes - min;
-      // let secLeft = Math.round(lib.list[playlistA.list[this.currentIdA]].metaData.length.seconds) - (60-sec);
 
-      // document.getElementById('timeLeftA').innerHTML = minLeft + ':' + secLeft;
       this.lengthA = min.toString() + ':' + sec.toString();
       this.showTimeA();
 
@@ -422,9 +406,6 @@ export default {
       let totalLeft = Math.round(lib.list[playlistB.list[this.currentIdB]].metaData.length.total - playerB.currentPosition());
       let min = Math.floor(totalLeft / 60);
       let sec = totalLeft - (min * 60);
-      // let minLeft = lib.list[playlistB.list[this.currentIdB]].metaData.length.minutes - min;
-      // let secLeft = 60 - sec;
-      // document.getElementById('timeLeftB').innerHTML = minLeft + ':' + secLeft;
       this.lengthB = min.toString() + ':' + sec.toString();
       this.showTimeB();
     },
@@ -442,49 +423,30 @@ export default {
       this.frameLooperA();
       this.playingA = true;
       this.pausingA = false;
-      //playerA.addNode(analyzerA);
       playerA.play();
       this.insertMetadataA();
-      console.log('Deck A sollte spielen.');
     },
     pauseA() {
       this.playingA = false;
       this.pausingA = true;
       playerA.pause();
-      //playerA.resetAllNodes();
-      console.log('Deck A sollte pausieren.');
     },
     stopA() {
       this.playingA = false;
       this.pausingA = false;
       playerA.stop();
       this.stopTimerA();
-      //playerA.resetAllNodes();
       this.insertMetadataA();
-      console.log('Deck A sollte stoppen.');
     },
     nextA() {
-      //playerA.stop();
-      //playerA.resetAllNodes();
-      // this.pausingA = true;
       playerA.next();
       this.insertMetadataA();
       this.playA();
-      // if (this.playingA) {
-      //   this.playA();
-      // }else{
-      //   this.pausingA = true;
-      // }
     },
     prevA() {
-      //playerA.stop();
-      //playerA.resetAllNodes();
       playerA.prev();
       this.insertMetadataA();
       this.playA();
-      // if (this.playingA) {
-      //   this.playA();
-      // }
     },
     playB() {
       this.canvasB = this.$refs['canvasB'];
@@ -493,59 +455,36 @@ export default {
       this.showTimeB();
       this.playingB = true;
       this.pausingB = false;
-      //playerB.addNode(analyzerB);
       playerB.play();
       this.insertMetadataB();
-      console.log('Deck B sollte spielen.');
     },
     pauseB() {
       this.playingB = false;
       this.pausingB = true;
       playerB.pause();
-      //playerB.resetAllNodes();
-      console.log('Deck B sollte pausieren.');
     },
     stopB() {
       this.playingB = false;
       this.pausingB = false;
       playerB.stop();
       this.stopTimerB();
-      //playerB.resetAllNodes();
       this.insertMetadataB();
-      console.log('Deck B sollte stoppen.');
     },
     nextB() {
-      //playerB.stop();
-      //playerB.resetAllNodes();
       playerB.next();
       this.insertMetadataB();
       this.playB();
-      // if (this.playingB) {
-      //   this.playB();
-      // }
     },
     prevB() {
-      //playerB.stop();
-      //playerB.resetAllNodes();
       playerB.prev();
       this.insertMetadataB();
       this.playB();
-      // if (this.playingB) {
-      //   this.playB();
-      // }
     },
-
-    printTest(val) {
-      console.log('test print ' + val);
-    },
-
     getCurrentIdA() {
       this.currentIdA = playerA.currentIndex;
-      this.printTest('aktuelle id Deck A: ' + this.currentIdA);
     },
     getCurrentIdB() {
       this.currentIdB = playerB.currentIndex;
-      this.printTest('aktuelle id Deck A: ' + this.currentIdB);
     },
     /**
      * refreshes shown metadata of a song
@@ -561,7 +500,6 @@ export default {
       this.currentArtistA = artist;
       this.currentTitleA = title;
       this.lengthA = minutes + ':' + seconds;
-      // this.lengthA=duration
       this.getCurrentIdA();
     },
     insertMetadataB() {
@@ -606,11 +544,9 @@ export default {
       this.getCurrentIdA();
       if (this.playingA) {
         if (playlistA.musicLibrary.list[playerA.currentIndex].metaData.artist !== this.listA[this.currentIdA].artist) {
-          //playerA.resetAllNodes();
           this.playA();
         }
       } else {
-        //playerA.resetAllNodes();
         playerA.stop();
       }
     },
@@ -619,18 +555,15 @@ export default {
       this.getCurrentIdB();
       if (this.playingB) {
         if (playlistB.musicLibrary.list[playerB.currentIndex].metaData.artist !== this.listB[this.currentIdB].artist) {
-          //playerB.resetAllNodes();
           this.playB();
         }
       } else {
-        //playerB.resetAllNodes();
         playerB.stop();
       }
     },
     changePlaylistOrder(deck) {
       if (deck === 'A') {
         this.refreshPlaylistA();
-        // console.log(playerA.currentIndex)
       } else if (deck === 'B') {
         this.refreshPlaylistB();
       } else {
@@ -695,29 +628,6 @@ export default {
 
         x += barWidth + 3; // Gives 1px space between each bar
       }
-      /*this.canvasCtxA.fillStyle = 'rgba(185,239,224,1)';
-      this.canvasCtxA.fillRect(0, 0, this.canvasA.width, this.canvasA.height);
-
-      this.canvasCtxA.lineWidth = 4;
-      this.canvasCtxA.strokeStyle = 'rgb(82,141,125)';
-      this.canvasCtxA.beginPath();
-
-      let sliceWidth = this.canvasA.width * 1.0 / bufferLengthA;
-      let x = 0;
-
-      for (let i = 0; i < bufferLengthA; i++) {
-        let v = dataArrayA[i] / 128.0;
-        let y = v * this.canvasA.height / 2;
-
-        if (i == 0) {
-          this.canvasCtxA.moveTo(x, y);
-        } else {
-          this.canvasCtxA.lineTo(x, y);
-        }
-        x += sliceWidth;
-      }
-      this.canvasCtxA.lineTo(this.canvasA.width, this.canvasA.height / 2);
-      this.canvasCtxA.stroke();*/
     },
     /**
      * visualizing sound for deck B
@@ -743,53 +653,24 @@ export default {
 
         x += barWidth + 3; // Gives 1px space between each bar
       }
-
-      /*this.canvasCtxB.fillStyle = 'rgb(187,177,248)';
-      this.canvasCtxB.fillRect(0, 0, this.canvasB.width, this.canvasB.height);
-
-      this.canvasCtxB.lineWidth = 4;
-      this.canvasCtxB.strokeStyle = 'rgb(100,94,157)';
-      this.canvasCtxB.beginPath();
-
-      let sliceWidth = this.canvasB.width * 1.0 / bufferLengthB;
-      let x = 0;
-
-      for (let i = 0; i < bufferLengthB; i++) {
-        let v = dataArrayB[i] / 128.0;
-        let y = v * this.canvasB.height / 2;
-
-        if (i == 0) {
-          this.canvasCtxB.moveTo(x, y);
-        } else {
-          this.canvasCtxB.lineTo(x, y);
-        }
-        x += sliceWidth;
-      }
-      this.canvasCtxB.lineTo(this.canvasB.width, this.canvasB.height / 2);
-      this.canvasCtxB.stroke();*/
     },
-
     /**
      * for manipulating Gain in player A and B
      */
     setVolumeA(value) {
       playerA.setVolume(value);
-      console.log('Player A Gain: ' + playerA.gain.gain.value);
     },
     setVolumeB(value) {
       playerB.setVolume(value);
-      console.log('Player B Gain: ' + playerB.gain.gain.value);
     },
     setMaster(value) {
       masterGain.gain.value = value;
-      console.log('Master Gain: ' + masterGain.gain.value);
     },
     /**
      * set non-linear Crossfader
      */
     setCrossfader(value) {
       crossfader.setBalance(value);
-      console.log('Crossfader Balance: ' + value);
     },
     /**
      * set Tempo in player A and B
@@ -797,23 +678,19 @@ export default {
     setTempoA(value) {
       this.speedA = -500 * value + 1500;
       playerA.setTempo(value);
-      console.log('Player A Tempo: ' + playerA.playingSpeed);
 
     },
     setTempoB(value) {
       playerB.setTempo(value);
-      console.log('Player B Tempo: ' + playerB.playingSpeed);
     },
     /**
      * seek a song at a certain point
      */
     setSeekA(time) {
       playerA.seek(time);
-      console.log(time);
     },
     setSeekB(time) {
       playerB.seek(time);
-      console.log(time);
     },
     /**
      * sets the equalizer of a certain frequency and Q value
@@ -854,7 +731,6 @@ export default {
     },
   },
   mounted() {
-    //this.insertMetadata(playerA.current.metaData.artist.toString(), playerA.current.metaData.title.toString());
     this.handleInitButton();
     this.playingA = false;
     this.playingB = false;
@@ -865,53 +741,20 @@ export default {
   watch: {
     // whenever question changes, this function will run
     currentIdA: function () {
-      // this.speed = 1000;
-      // this.startTimerA();
       this.insertMetadataA();
     },
     currentIdB: function () {
-      // this.startTimerB();
       this.insertMetadataB();
-    }
-    ,
+    },
     speed: function () {
       // this.resumeTimerA();
       // this.resumeTimerB();
-      console.log('speed ist: ' + this.speedA);
-    }
-    ,
-    /*   mutedA: function () {
-         if (this.mutedA) {
-           this.mutedStringA = 'muted';
-           this.setVolumeA(0);
-         } else {
-           this.mutedStringA = 'not muted';
-         }
-       }
-       ,
-       mutedB: function () {
-         if (this.mutedB) {
-           this.mutedStringB = 'muted';
-           this.setVolumeB(0);
-         } else {
-           this.mutedStringB = 'not muted';
-         }
-       }*/
-  }
-  ,
-  // playingA: function () {
-  //   if (playerA.currentPosition() < lib.list[this.listA[this.currentIdA].songId].metaData.length.total) {
-  //     this.timeIDA = window.setTimeout(this.getCurrentTime, 1000);
-  //   } else {
-  //     console.log('Ende');
-  //   }
-  // }
-}
-;
+    },
+  },
+};
 </script>
 
 <style scoped>
-
 #loading-state {
   min-height: 100vh;
   max-height: 100vh;

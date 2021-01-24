@@ -66,7 +66,6 @@ export default {
   props: {
     horizontal: Boolean,
     tempo: Boolean,
-    //value3:Number
   },
   methods: {
     emitValue(val) {

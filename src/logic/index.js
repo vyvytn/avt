@@ -1,4 +1,4 @@
-// audio logic (preliminary) entry point
+// example use of logic
 
 import axios from "axios";
 
@@ -16,7 +16,7 @@ const ctx = new AudioContext(); // shared context
 
 const masterGain = ctx.createGain(); // gain shared accross players
 masterGain.connect( ctx.destination );
-masterGain.value = 1.0;
+masterGain.gain.value = 1.0;
 
 const crossfader = new Crossfader( ctx );
 const [ leftOutNode, rightOutNode ] = crossfader.generateOutputNodes( masterGain );
@@ -31,62 +31,64 @@ const rightPlayer = new AudioPlayer( ctx, rightOutNode, rightPlaylist );
 (async () => {
   axios.get( serverConnection + "/static/Bosshafte Beats - Sunglass Evo.mp3", { responseType: "arraybuffer" } )
     .then( async res => {
+      const bb = new Song( new MP3( res.data ) );
+      await bb.prepareForPlayback( ctx );
+      playlist.add( lib.insert( bb ) );
+
+      /* freesound */
       // const results = await search( "bruh moment" )
       // const bruh = results[0];
       // await bruh.prepareForPlayback( ctx );
       // playlist.add( lib.insert( bruh ) );
 
-      const bb = new Song( new MP3( res.data ) );
-      await bb.prepareForPlayback( ctx );
-      playlist.add( lib.insert( bb ) );
-
       player.play();
 
-      window.setTimeout( () => {
-        player.effects.toggle( "Verzerrer" );
-      }, 2000 );
-      window.setTimeout( () => {
-        player.effects.toggle( "Telefon" );
-      }, 4000 );
-       window.setTimeout( () => {
-        player.effects.toggle( "Verzerrer" );
-      }, 8000 );
-      window.setTimeout( () => {
-        player.effects.toggle( "Telefon" );
-      }, 10000 );
-
+      /* effects */
       // window.setTimeout( () => {
-      //   player.seek( 20 );
-      //   player.setTempo( 1.5 );
-      //   player.next();
+      //   player.effects.toggle( "Verzerrer" );
+      // }, 2000 );
+      // window.setTimeout( () => {
+      //   player.effects.toggle( "Telefon" );
       // }, 4000 );
-      // window.setTimeout( () => {
-      //   player.setTempo( 2 );
+      //  window.setTimeout( () => {
+      //   player.effects.toggle( "Verzerrer" );
       // }, 8000 );
       // window.setTimeout( () => {
-      //   player.pause();
+      //   player.effects.toggle( "Telefon" );
       // }, 10000 );
-      // window.setTimeout( () => {
-      //   player.play();
-      // }, 12000 );
-      // window.setTimeout( () => {
-      //   console.log( "1x + bass boosted" )
-      //   player.setEq( 64, 25 );
-      //   player.setTempo( 1 );
-      // }, 14000 );
-      // window.setTimeout( () => {
-      //   console.log( "next" )
-      //   player.next();
-      //   console.log( "playing: " + player.current.metaData.artist + " - " + player.current.metaData.title );
-      // }, 15000 );
+
+      window.setTimeout( () => {
+        player.seek( 20 );
+        player.setTempo( 1.5 );
+        player.next();
+      }, 4000 );
+      window.setTimeout( () => {
+        player.setTempo( 2 );
+      }, 8000 );
+      window.setTimeout( () => {
+        player.pause();
+      }, 10000 );
+      window.setTimeout( () => {
+        player.play();
+      }, 12000 );
+      window.setTimeout( () => {
+        console.log( "1x + bass boosted" )
+        player.setEq( 64, 25 );
+        player.setTempo( 1 );
+      }, 14000 );
+      window.setTimeout( () => {
+        console.log( "next" )
+        player.next();
+        console.log( "playing: " + player.current.metaData.artist + " - " + player.current.metaData.title );
+      }, 15000 );
       window.setTimeout( () => {
         player.pause();
         rightPlayer.pause();
       }, 20000 );
-
     } )
     .then( () => axios.get( serverConnection + "/static/Black Muffin - Die and Retry.mp3", { responseType: "arraybuffer" } ) )
     .then( async res => {
+      /* 2nd player */
       const bm = new Song( new MP3( res.data ) );
       await bm.prepareForPlayback( ctx );
 
@@ -94,20 +96,20 @@ const rightPlayer = new AudioPlayer( ctx, rightOutNode, rightPlaylist );
       rightPlaylist.add( lib.insert( bm ) );
       console.log( "inserted 2nd song" )
 
-      // rightPlayer.play();
-      // console.log( "play 2nd" )
+      rightPlayer.play();
+      console.log( "play 2nd" )
 
-      // window.setTimeout( () => {
-      //   console.log( "cross 1" )
-      //   crossfader.setBalance( 1 );
-      // }, 2000 );
-      // window.setTimeout( () => {
-      //   console.log( "cross 0" )
-      //   crossfader.setBalance( 0 );
-      // }, 4000 );
-      // window.setTimeout( () => {
-      //   console.log( "cross .25" )
-      //   crossfader.setBalance( .25 );
-      // }, 6000 );
+      window.setTimeout( () => {
+        console.log( "cross 1" )
+        crossfader.setBalance( 1 );
+      }, 2000 );
+      window.setTimeout( () => {
+        console.log( "cross 0" )
+        crossfader.setBalance( 0 );
+      }, 4000 );
+      window.setTimeout( () => {
+        console.log( "cross .25" )
+        crossfader.setBalance( .25 );
+      }, 6000 );
     })
 })();

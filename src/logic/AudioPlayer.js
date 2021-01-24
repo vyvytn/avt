@@ -109,13 +109,6 @@ export default class AudioPlayer {
     *   for the whole duration (check song.metaData)
     */
   currentPosition() {
-    /* // debug
-    console.log( "now+time", this.now, this.lastTimestamp )
-    console.log( "tempo bonus", this.tempoTimeBonus )
-    console.log( "now-last*playing", ((this.now - this.lastTimestamp) * this.playingSpeed) )
-    console.log( "seek", this.seekTo || 0 )
-    */
-
     if ( this.isPause ) {
       return this.seekTo;
     } else {

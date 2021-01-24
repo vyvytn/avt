@@ -41,7 +41,6 @@ export default {
   methods: {
     uploadSong(file) {
       this.fileList.push(file.name);
-      // this.$emit('songFile', file
       this.$emit('upload', file);
       this.uploadSuccess = true;
     }

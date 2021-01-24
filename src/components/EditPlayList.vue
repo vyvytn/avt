@@ -141,9 +141,6 @@ export default {
     };
   },
   methods: {
-    log(evt) {
-      console.log(evt);
-    },
     deleteSong(sId, idx) {
       this.library.splice(idx, 1);
       this.deleteFromPlaylistA(sId);
