@@ -50,6 +50,8 @@
     - activated effects and equalizer will be adopted
     - no end/beginning - endless looping of a playlist
 
+![Play a Song](https://github.com/vyvytn/avt/blob/main/documentation/image/playSong.png)
+
 ### seek a song
 - manipulating the slider will lead you to the chosen point in a song
 
