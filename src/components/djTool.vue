@@ -179,8 +179,6 @@ import Crossfader from '../logic/Crossfader';
 import VueSlider from 'vue-slider-component';
 import 'vue-slider-component/theme/default.css';
 
-const serverConnection = 'https://dj-api.jneidel.com';
-
 /**
  * Web Audio Api
  * creating audio context and mastergain
@@ -224,8 +222,8 @@ const playerB = new AudioPlayer(ctx, analyzerB, playlistB);
 /**
  * get song and connect to mastergain
  */
-let songUrl = serverConnection + '/static/example.mp3';
-axios.get(songUrl, { responseType: 'arraybuffer' })
+
+axios.get('/static/example.mp3', { responseType: 'arraybuffer' })
   .then(async res => {
     const bb = new Song(new MP3(res.data));
     await bb.prepareForPlayback(ctx);
@@ -233,7 +231,7 @@ axios.get(songUrl, { responseType: 'arraybuffer' })
     playlistA.add(index);
     playlistB.add(index);
   })
-  .then(() => axios.get(serverConnection + '/static/Black Muffin - Die and Retry.mp3', { responseType: 'arraybuffer' }))
+  .then(() => axios.get('/static/Black Muffin - Die and Retry.mp3', { responseType: 'arraybuffer' }))
   .then(async res => {
     const bm = new Song(new MP3(res.data));
     await bm.prepareForPlayback(ctx);
@@ -241,7 +239,7 @@ axios.get(songUrl, { responseType: 'arraybuffer' })
     playlistA.add(index);
     playlistB.add(index);
   })
-  .then(() => axios.get(serverConnection + '/static/Bosshafte Beats - Sunglass Evo.mp3', { responseType: 'arraybuffer' }))
+  .then(() => axios.get('/static/Bosshafte Beats - Sunglass Evo.mp3', { responseType: 'arraybuffer' }))
   .then(async res => {
     const m = new Song(new MP3(res.data));
     await m.prepareForPlayback(ctx);
