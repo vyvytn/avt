@@ -183,7 +183,7 @@ import 'vue-slider-component/theme/default.css';
  * Web Audio Api
  * creating audio context and mastergain
  */
-const ctx = new AudioContext(); // shared context
+const ctx = new (window.AudioContext || window.webkitAudioContext)(); // shared context
 const masterGain = ctx.createGain(); // gain shared accross players
 masterGain.connect(ctx.destination);
 masterGain.gain.value = 0.5;
@@ -608,7 +608,7 @@ export default {
       window.RequestAnimationFrame =
         window.requestAnimationFrame(this.frameLooperA) ||
         window.webkitRequestAnimationFrame(this.frameLooperA);
-      analyzerA.getByteTimeDomainData(dataArrayA);
+      analyzerA.getByteFrequencyData(dataArrayA);
       this.canvasCtxA.clearRect(0, 0, this.canvasA.width, this.canvasA.height);
 
       let barWidth = (this.canvasA.width / bufferLengthA) * 4;
@@ -634,7 +634,7 @@ export default {
       window.RequestAnimationFrame =
         window.requestAnimationFrame(this.frameLooperB) ||
         window.webkitRequestAnimationFrame(this.frameLooperB);
-      analyzerB.getByteTimeDomainData(dataArrayB);
+      analyzerB.getByteFrequencyData(dataArrayB);
 
       let barWidth = (this.canvasB.width / bufferLengthB) * 4;
       let barHeight;
