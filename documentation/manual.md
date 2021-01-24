@@ -50,7 +50,10 @@
     - activated effects and equalizer will be adopted
     - no end/beginning - endless looping of a playlist
 
-![Play a Song](https://github.com/vyvytn/avt/blob/main/documentation/image/playSong.png)
+![Play a Song](image/playSong.png)
+<!-- smaller alternative:
+<img src="image/playSong.png" width="300px" alt="Play a Song"/>
+-->
 
 ### seek a song
 - manipulating the slider will lead you to the chosen point in a song
